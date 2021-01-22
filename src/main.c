@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 const char btn_next[] = {0x16};
 
@@ -15,7 +16,7 @@ const char btn_next[] = {0x16};
 enum GAME_STATE {MENU, DIAL, CHOICE, END};
 enum GAME_STATE game_st = DIAL;
 
-enum DIAL_T {N/*NARRATOR*/, C/*CHOICE*/, F/*FIN*/, J/*JUMP*/, LABEL,
+enum DIAL_T {N/*NARRATOR*/, C/*CHOICE*/, F/*FIN*/, J/*JUMP*/, LABEL, MOV,
 SWPEL/*SWAP LEFT EYE*/,SWPER/*SWAP RIGHT EYE*/,SWPM/*SWAP MOUTH*/ ,A/*ANGE*/,H/*HIDE/SHOW*/};
 
 //----Struct definition
@@ -186,7 +187,7 @@ void loadCharacterSprites(){
 
     //todo : get image size
     CharaList[i].y = GetScreenHeight()-400;
-    CharaList[i].x = (GetScreenWidth()>>1)-100; //horizontal center
+    CharaList[i].x = (GetScreenWidth()>>1);
 
     char buff[1];
 
@@ -194,16 +195,15 @@ void loadCharacterSprites(){
     for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
     {
       itoa(i2+1,buff,10);
-      // strcpy(buff,"2");
       char file_expression[32];
       strcpy(file_expression, expression_filename);
       strcat(file_expression, buff);
       strcat(file_expression, ".png");
-      printf(file_expression);
+      // printf(file_expression);
       CharaList[i].expression[i2] = LoadTexture(file_expression);
     }
 
-    CharaList[i].expression_index=0;
+    CharaList[i].expression_index=0; //default
   }
   
 }
@@ -246,14 +246,22 @@ void draw_ange_face(){
 
 void draw_dial(){  
   DrawText(chara_name, 10, 75, 20, DARKGRAY);
-  DrawText(&disp_text, 10, 100, 20, DARKGRAY);
+  DrawText(disp_text, 10, 100, 20, DARKGRAY);
   
   //Dessin du visage
   // if (dispAnge){draw_ange_face();};
 
-  DrawTexture(CharaList[0].base_image, CharaList[0].x, CharaList[0].y, WHITE);
-  DrawTexture(CharaList[0].expression[CharaList[0].expression_index], CharaList[0].x, CharaList[0].y, WHITE);
 
+  //Draw characters on the screen
+  for (int i = 0; i < CHARACTER_NUMBER; i++)
+  {
+    if (CharaList[i].visible){ //will change later
+      DrawTexture(CharaList[i].base_image, CharaList[i].x, CharaList[i].y, WHITE);
+      DrawTexture(CharaList[i].expression[CharaList[i].expression_index], CharaList[i].x, CharaList[i].y, WHITE);
+    }
+  }
+  
+  
   DrawText(CharaList[0].name,300,10,10,BLACK);
     
 }
@@ -290,13 +298,39 @@ void init_dial(){
     break;
   }
   case SWPM:{
-    sprM=c_atoi(SCRPT[index].c);
+    
+    strncpy(buffText, SCRPT[index].c, 10);
+    first_word = strtok(buffText," ");
+    
+    char id_expression[10];
+
+    for (i = 0; i < CHARACTER_NUMBER; i++){
+      if (CharaList[i].key!=NULL){
+      if (strcmp(first_word, CharaList[i].key)==0){
+        strcpy(id_expression,SCRPT[index].c+strlen(first_word)+1);
+
+        CharaList[i].expression_index = c_atoi(id_expression);
+
+      }
+      }
+    }
+
     index++;
     break;
   }
   case H:{
-    if (dispAnge){/*clrscr();*/} else {draw_ange();}
-    dispAnge=!dispAnge;
+
+    strncpy(buffText, SCRPT[index].c, 10);
+    first_word = strtok(buffText," ");
+    
+    for (i = 0; i < CHARACTER_NUMBER; i++){
+      if (CharaList[i].key!=NULL){
+      if (strcmp(first_word, CharaList[i].key)==0){
+        CharaList[i].visible=!CharaList[i].visible;
+      }
+      }
+    }
+
     index++;
     break;
   }
@@ -304,17 +338,16 @@ void init_dial(){
     //Parse le texte pour chercher les noms
     //On veux éviter de faire ça à chaque fois si possible
     
-      strncpy(buffText, SCRPT[index].c, 10);
-      first_word = strtok(buffText," ");
+    strncpy(buffText, SCRPT[index].c, 10);
+    first_word = strtok(buffText," ");
     
-    
-
-    for (i = 0; i < sizeof(CharaList)/sizeof(CharaList[0]); i++){
+  
+    for (i = 0; i < CHARACTER_NUMBER; i++){
       if (CharaList[i].key!=NULL){
       if (strcmp(first_word, CharaList[i].key)==0){
         chara_name=CharaList[i].name;
-          SCRPT[index].c += strlen(first_word)+1;
-          init_done=true;       
+        SCRPT[index].c += strlen(first_word)+1;
+        init_done=true; //what?
 
         break;
       }
@@ -322,8 +355,7 @@ void init_dial(){
         chara_name="";
       }
       }
-      
-      }
+    }
     break;
   }
   case F:{
@@ -336,6 +368,28 @@ void init_dial(){
     index++;
     break;
   }
+  case MOV:{
+
+    char mov_to[10];
+
+    strncpy(buffText, SCRPT[index].c, 10);
+    first_word = strtok(buffText," ");
+  
+    for (i = 0; i < CHARACTER_NUMBER; i++){
+      if (CharaList[i].key!=NULL){
+      if (strcmp(first_word, CharaList[i].key)==0){
+        strcpy(mov_to,SCRPT[index].c+strlen(first_word)+1);
+
+        CharaList[i].gotox = c_atoi(mov_to);
+
+        break;
+      }
+      }
+    }
+
+    index++;
+    break;
+  }
   }
   }
 }
@@ -343,6 +397,20 @@ void init_dial(){
 void updt_dial(){
   
   init_dial();
+  
+  for (int i = 0; i < CHARACTER_NUMBER; i++)
+  {
+    if (CharaList[i].x!=CharaList[i].gotox){
+      CharaList[i].x += (CharaList[i].gotox-CharaList[i].x)/10;
+
+      //Todo : have some real tweening going on
+
+      //-c * math.cos(t/d * (math.pi/2)) + c + b
+      //-CharaList[i].gotox * math.cos(10/3 * (math.pi/2)) + CharaList[i].x + 100
+
+      // CharaList[i].x = -CharaList[i].gotox * cos(10/3 * (3.14f/2)) + CharaList[i].x + 100;
+    }
+  }
   
 
   if (SCRPT[index].t==A || SCRPT[index].t==N){
@@ -404,6 +472,8 @@ void updt_menu(){
 }
 
 void draw_choice(){
+    // draw_dial();
+
     int choice_index=0; //Pour l'affichage
 
     nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];

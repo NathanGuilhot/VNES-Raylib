@@ -9,12 +9,14 @@
 	[#] Trouver un moyen de le rendre flexible dans le code
 	[#] Implementation 
 	[#] Define characters in script files
-	[-] Load character image and expressions
-	[-] Change expression in SCRPT
-	[-] Change position in SCRPT
-		[-] Hard move
-		[-] Interpolation
-	[-] Hide/Show
+	[#] Load character image and expressions
+	[#] Change expression in SCRPT
+	[#---] Change position in SCRPT
+		[#] Interpolation
+		[-] Variable duration
+		[-] Real Tweening
+		[-] GotoY support
+	[#] Hide/Show
 [#---] Flags
 	[#] DataStructure
 	[-] Implémentation

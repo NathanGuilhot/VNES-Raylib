@@ -6,40 +6,36 @@
 // #define MAX_EXPRESSION 2
 
 
-CHARA CharaList[] = { //This is a bad idea but that work for now
+CHARA CharaList[] = { //This is a bad idea but that work for now //Or is it ?
       {.key="A", .name="Ange", .image_name="ange"},
 };
 
 
 Passage SCRPT[] = {
 {LABEL,"START"},
-      {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},
-      {N, "A Il y a peu de monde ici.\nC'est calme."},
-      {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
+      // {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},
+      // {N, "Il y a peu de monde ici.\nC'est calme."},
+      // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
+      {MOV, "A 200"},
       {N, "Tu trouves enfin la personne\nque tu cherchais."},
       //Show ANGE
-      {SWPM,"4"},
-      {SWPEL,"0"},
-      {SWPER,"0"},
-      {H, "show"},
+      {SWPM,"A 1"},
+      {H, "A"},
       {N, "A Ah, tu es la!"},
-      {SWPM,"1"},
+      {MOV, "A 400"},
+      {SWPM,"A 0"},
       {N, "A Ca me fait plaisir de te voir,\ntu vas bien?"},
       {C,"0"},
 
   //> "Oui ca va! Et toi ?"},
 {LABEL,"cava"},
-      {SWPM,"4"},
-      {SWPEL,"3"},
-      {SWPER,"3"},
-      {N, "A Moi aussi je vais bien,         tres bien meme!"},
-      {SWPM,"1"},
-      {SWPEL,"6"},
-      {SWPER,"6"},
-      {N, "J'avais un peu peur qu'on       arrive pas a se retrouver,"},
+      {SWPM,"A 1"},
+      {N, "A Moi aussi je vais bien,\ntres bien meme!"},
+      {SWPM,"A 0"},
+      {N, "J'avais un peu peur qu'on\narrive pas a se retrouver,"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "mais finalement il n'y avait    pas a s'inquieter!"},
+      {N, "mais finalement il n'y avait\npas a s'inquieter!"},
       {J,"Mer1"},
 
   //> "Desole du retard"
@@ -47,11 +43,11 @@ Passage SCRPT[] = {
       {SWPM,"4"},
       {SWPEL,"1"},
       {SWPER,"1"},
-      {N, "Ne t'excuse pas, tu es la       c'est l'essentiel!"},
+      {N, "Ne t'excuse pas, tu es la\nc'est l'essentiel!"},
       {SWPM,"1"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "Et j'ai pu profiter du          paysage en attendant!"},
+      {N, "Et j'ai pu profiter du\npaysage en attendant!"},
       {J,"Mer1"},
 
   //> "C'etait dur de te trouver"
@@ -59,26 +55,26 @@ Passage SCRPT[] = {
       {SWPM,"4"},
       {SWPEL,"3"},
       {SWPER,"3"},
-      {N, "Haha, mes indications etaient   si vagues que ca?"},
+      {N, "Haha, mes indications etaient\nsi vagues que ca?"},
       {SWPM,"1"},
       {SWPEL,"9"},
       {SWPER,"10"},
-      {N, "Desole, je ne connais pas       beaucoup la region."},
+      {N, "Desole, je ne connais pas\nbeaucoup la region."},
       {SWPM,"4"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "Mais je trouvais cette plage    pas trop mal."},
+      {N, "Mais je trouvais cette plage\npas trop mal."},
       {SWPM,"1"},
       {N, "Au moins ici on est au calme!"},
   
 {LABEL,"Mer1"},
       {SWPEL,"6"},
       {SWPER,"6"},
-      {N, "Son attention se porte alors    sur la mer."},
-      {N, "Elle est calme, reguliere,      et s'etend a perte de vue."},
+      {N, "Son attention se porte alors\nsur la mer."},
+      {N, "Elle est calme, reguliere,\net s'etend a perte de vue."},
       {SWPEL,"3"},
       {SWPER,"3"},
-      {A, "C'est beau,                     tu ne trouves pas?"},
+      {A, "C'est beau,\ntu ne trouves pas?"},
       // {C, "1"}, 
   
   //> "Oui, c'est tres joli!"},
