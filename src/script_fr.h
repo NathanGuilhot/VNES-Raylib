@@ -3,9 +3,11 @@
 
 #define LABELS_NUMBERS 10
 #define CHARACTER_NUMBER 2
+// #define MAX_EXPRESSION 2
+
 
 CHARA CharaList[] = { //This is a bad idea but that work for now
-      {.key="A", .name="Ange"},
+      {.key="A", .name="Ange", .image_name="ange"},
 };
 
 

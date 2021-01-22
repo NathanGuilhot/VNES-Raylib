@@ -63,12 +63,23 @@ void AddFlag(char* pKey, int pValue){
 	flag_index++;
 }
 
+#define MAX_EXPRESSION 2 //will be defined in script.h later
 
 //---- Characters
 typedef struct{
 	char* key;
 	char* name;
-	//IMG, EXPRESSION_LIST
+  char* image_name;
+
+  bool visible;
+	int x; int y;
+	int gotox; int gotoy; //for interpolation
+  int zindex;
+  
+  int expression_index;
+  Texture2D base_image;
+  Texture2D expression[MAX_EXPRESSION];
+
 } CHARA;
 
 

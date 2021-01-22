@@ -1,6 +1,7 @@
 # VNES - Tracking progress
 
-##Feature in progress
+## Features in progress
+*(you can see the Raw if you want to understand what is this mess)*
 
 [###-] Labels
 [###----] Flexible characters addition
@@ -20,13 +21,14 @@
 	[-] Conditional Jump
 [#] Chercher comment faire un split en C
 	-> char strtok (char* str, const char* delim); 
-[-] Serious reformating
+[#---] Serious reformating
 	[-] Split into multiple files
-	[-] Src folder for the code
+	[#] Src folder for the code
 	[-] delete unused variables and comments
-[-] Replace n_pressed and inputs check by a function
+[-] Replace n_pressed and inputs check by a function // will be used on other engine; can be easely modified for each platform
 	[-] BTN()
 	[-] BTNP()
+[-] Fix how the .md look
 
 
 -----
