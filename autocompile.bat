@@ -1,0 +1,1 @@
+when_changed *.c build
