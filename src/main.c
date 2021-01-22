@@ -83,7 +83,6 @@ typedef struct{
 } CHARA;
 
 
-int chara_index = 0;
 char* chara_name = "Character Name";
 char buffText[10];  //Utile pour le parse du text
 char* first_word;
@@ -164,6 +163,51 @@ void ParseLabels(){
   }
 }
 
+void loadCharacterSprites(){
+  for (int i = 0; i < CHARACTER_NUMBER; i++)
+  {
+    //CharaList[i].image_name
+
+    //Load base sprite
+    char filename[32] = "./assets/img/";
+    strcat(filename, CharaList[i].image_name);
+    strcat(filename, " ");
+
+    char base_filename[32];
+    strcpy(base_filename, filename);
+    strcat(base_filename, "base.png");
+
+    char expression_filename[32];
+    strcpy(expression_filename, filename);
+    // strcat(expression_filename, "1.png");
+
+
+    CharaList[i].base_image = LoadTexture(base_filename);
+
+    //todo : get image size
+    CharaList[i].y = GetScreenHeight()-400;
+    CharaList[i].x = (GetScreenWidth()>>1)-100; //horizontal center
+
+    char buff[1];
+
+    //Load expressions
+    for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
+    {
+      itoa(i2+1,buff,10);
+      // strcpy(buff,"2");
+      char file_expression[32];
+      strcpy(file_expression, expression_filename);
+      strcat(file_expression, buff);
+      strcat(file_expression, ".png");
+      printf(file_expression);
+      CharaList[i].expression[i2] = LoadTexture(file_expression);
+    }
+
+    CharaList[i].expression_index=0;
+  }
+  
+}
+
 
 const char expr[]={ //liste des expressions
   211	,212	,213	,214	,215	, 216	,217	, 218	, 219	,220	,221
@@ -205,8 +249,10 @@ void draw_dial(){
   DrawText(&disp_text, 10, 100, 20, DARKGRAY);
   
   //Dessin du visage
-  if (dispAnge){draw_ange_face();};
+  // if (dispAnge){draw_ange_face();};
 
+  DrawTexture(CharaList[0].base_image, CharaList[0].x, CharaList[0].y, WHITE);
+  DrawTexture(CharaList[0].expression[CharaList[0].expression_index], CharaList[0].x, CharaList[0].y, WHITE);
 
   DrawText(CharaList[0].name,300,10,10,BLACK);
     
@@ -309,6 +355,8 @@ void updt_dial(){
                   index++;
                   cursor=1;
                   init_done=false;
+
+                  
                   // disp_text[64];
                   memset(disp_text, 0, 64); //Vider le string
               }
@@ -429,14 +477,12 @@ int main()
     //--------------------------------------------------------------------------------------
     const int screenWidth = 800;
     const int screenHeight = 450;
-    ParseLabels();
-
-    // AddChara("A","Ange");
-    // AddChara("B","BETA");
-
 
     InitWindow(screenWidth, screenHeight, "VNES_PC");
-    
+
+
+    loadCharacterSprites();
+    ParseLabels();
 
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second

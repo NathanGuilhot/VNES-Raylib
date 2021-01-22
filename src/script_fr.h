@@ -2,7 +2,7 @@
 //0'v'   1 :)  	2 :|   	3 :(   	4 :D  	5 D:    6 A_A	7 /	8 \	9 é	10 è
 
 #define LABELS_NUMBERS 10
-#define CHARACTER_NUMBER 2
+#define CHARACTER_NUMBER 1
 // #define MAX_EXPRESSION 2
 
 
