@@ -71,26 +71,21 @@ typedef struct{
 	//IMG, EXPRESSION_LIST
 } CHARA;
 
-#define CHARACTER_NUMBER 2
+
 int chara_index = 0;
 char* chara_name = "Character Name";
 char buffText[10];  //Utile pour le parse du text
 char* first_word;
 
-CHARA CharaList[CHARACTER_NUMBER];
+// void AddChara(char* pKey, char* pName){
+// 	  CharaList[chara_index].key = pKey;
+// 	  CharaList[chara_index].name = pName;
 
-void AddChara(char* pKey, char* pName){
-	  CharaList[chara_index].key = pKey;
-	  CharaList[chara_index].name = pName;
-
-	chara_index++;
-}
+// 	chara_index++;
+// }
 bool init_done=false; //Used to only launch init_dial once
 
 
-
-
-char pad; //controller
 bool a_pressed = false; //A
 bool b_pressed = false; //B
 bool u_pressed = false; //UP
@@ -117,8 +112,9 @@ char* txt_choix = "choix";
 
 
 
-
 #define FR 1 //bolean, 1 = FR 0 = EN
+
+
 //Visual Novel Content
 #if FR
   #include "script_fr.h"
@@ -131,11 +127,13 @@ typedef struct {
   int value;
 } Label;
 
-Label ListLabels[10];
-// ListLabels[0].name = "null";
+
+
+Label ListLabels[LABELS_NUMBERS];
+
 
 void ParseLabels(){
-  for (i2 = 0; i2 < sizeof(ListLabels)/sizeof(ListLabels[0]); i2++){
+  for (i2 = 0; i2 < LABELS_NUMBERS; i2++){
           ListLabels[i2].name = "null";
           ListLabels[i2].value = 0;
   }
@@ -144,7 +142,7 @@ void ParseLabels(){
   for (i=0; i<sizeof(SCRPT)/sizeof(SCRPT[0]);i++){
   if (SCRPT[i].t==LABEL){
     //L'ajouter à la liste, au premier endroit vide
-    for (i2 = 0; i2 < sizeof(ListLabels)/sizeof(ListLabels[0]); i2++){
+    for (i2 = 0; i2 < LABELS_NUMBERS; i2++){
       if (ListLabels[i2].name=="null"){
         ListLabels[i2].name = SCRPT[i].c;
         ListLabels[i2].value = i;
@@ -254,7 +252,7 @@ void init_dial(){
     
     
 
-    for (i = 0; i < CHARACTER_NUMBER; i++){
+    for (i = 0; i < sizeof(CharaList)/sizeof(CharaList[0]); i++){
       if (CharaList[i].key!=NULL){
       if (strcmp(first_word, CharaList[i].key)==0){
         chara_name=CharaList[i].name;
@@ -422,7 +420,7 @@ int main()
     const int screenHeight = 450;
     ParseLabels();
 
-    AddChara("A","Ange");
+    // AddChara("A","Ange");
     // AddChara("B","BETA");
 
 
@@ -436,79 +434,79 @@ int main()
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // Update
+    // Update
+    
+    switch (game_st){
+        case MENU:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
+        updt_menu();
         
+        break;
+        }
+        case DIAL:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
+        updt_dial();
+        
+        break;
+        }
+        case CHOICE:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
+        updt_choice();
+        
+        break; 
+        }
+        case END:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
+        updt_end();
+        
+        break;
+        }
+    }   
+    
+    BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
         switch (game_st){
-            case MENU:{
-            // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
-            updt_menu();
-            
-            break;
-            }
-            case DIAL:{
-            // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
-            updt_dial();
-            
-            break;
-            }
-            case CHOICE:{
-            // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
-            updt_choice();
-            
-            break; 
-            }
-            case END:{
-            // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
-            updt_end();
-            
-            break;
-            }
-        }   
+        case MENU:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
         
-        BeginDrawing();
+        draw_menu();
+        break;
+        
+        }
+        case DIAL:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
+        
+        draw_dial();
 
-            ClearBackground(RAYWHITE);
+        break;
+        
+        }
+        case CHOICE:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
+        
+        draw_choice();
 
-            switch (game_st){
-                case MENU:{
-                // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
-                
-                draw_menu();
-                break;
+        break; 
+        }
+        case END:{
+        // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
+        
+        draw_end();
 
-                }
-                case DIAL:{
-                // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
-                
-                draw_dial();
+        break;
+        }
+        }   
 
-                break;
-                
-                }
-                case CHOICE:{
-                // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
-                
-                draw_choice();
+        // DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
 
-                break; 
-                }
-                case END:{
-                // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
-                
-                draw_end();
+        DrawFPS(10, 10);
 
-                break;
-                }
-            }   
+        if(a_pressed){DrawText("A", 200, 10, 20, DARKGRAY);}
 
-            // DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
-
-            DrawFPS(10, 10);
-
-            if(a_pressed){DrawText("A", 200, 10, 20, DARKGRAY);}
-
-        EndDrawing();
-        //----------------------------------------------------------------------------------
+    EndDrawing();
+    //----------------------------------------------------------------------------------
     }
 
     // De-Initialization

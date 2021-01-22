@@ -3,36 +3,71 @@
 ##Feature in progress
 
 [###-] Labels
-[###--] Flexible characters addition
+[###----] Flexible characters addition
 	[#] Datastructure
 	[#] Trouver un moyen de le rendre flexible dans le code
 	[#] Implementation 
-	[-] Change expression
+	[#] Define characters in script files
+	[-] Load character image and expressions
+	[-] Change expression in SCRPT
+	[-] Change position in SCRPT
+		[-] Hard move
+		[-] Interpolation
 	[-] Hide/Show
 [#---] Flags
 	[#] DataStructure
 	[-] Implémentation
 	[-] Conditional Jump
 [#] Chercher comment faire un split en C
-	- char strtok (char* str, const char* delim); 
+	-> char strtok (char* str, const char* delim); 
+[-] Serious reformating
+	[-] Split into multiple files
+	[-] Src folder for the code
+	[-] delete unused variables and comments
+[-] Replace n_pressed and inputs check by a function
+	[-] BTN()
+	[-] BTNP()
 
 
 -----
+Note taking / brainstroming
 
 Datastructure personnage:
 	{
 	 key (un char*)
 	 nom (char* qui vas être affiché)
-	 img_base (type à definir en fonction des moteur; char* pour neslib) <pointeur!
-	 *//Liste expressions ?*
+	 char* image_name
+
+	 //engine defined:
+	 Texture2D base_image;
+	 Texture2D expression[MAX_EXPRESSION];
+	 int expression_index = 0; //can be user defined I guess, nothing's stoping you
+
+	 bool visible = false;
+	 int x; int y;
+	 int gotox; int gotoy; //for interpolation
+
+	 int z_index (?? I will probably need it one day for sure);
+
+	 
 	}
+
+Idea:
+Define the name of a file, and the engine will handle loading it into the array with all needed expression
+
+CharaList[n].img = "ange"
+load -> ange base.png, ange happy 1.png, ange happy 2.png, ange angry 2.png...
+	or juste "ange base.png" and "ange 1.png" "ange 2.png" "ange n.png" <- Expression, put into an array (less complex I guess, but less user friendly)
+																			^ Well, why don't you make a enum ? Or a hashtable ?
+
 
 NOMBRE_PERSONNAGES;
 Chara_index = 0; //Pour la génération
 
 Perso ListePerso[NOMBRE_PERSONNAGES];//Fait genre c'est un array avec une longueur arbitraire
+^ Up
 
-
+//Bad idea, there's no need to add characters at runtime! => Array now defined in script.h
 void AddPerso(pKey, pName, &pImg, &listExpression(?)){
 	ListePerso[Chara_index].key = pKey
 	ListePerso[Chara_index].name = pName
