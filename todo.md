@@ -4,7 +4,7 @@
 *(you can see the Raw if you want to understand what is this mess)*
 
 [###-] Labels
-[###----] Flexible characters addition
+[######--] Flexible characters addition
 	[#] Datastructure
 	[#] Trouver un moyen de le rendre flexible dans le code
 	[#] Implementation 
@@ -46,14 +46,15 @@ Datastructure personnage:
 	 Texture2D base_image;
 	 Texture2D expression[MAX_EXPRESSION];
 	 int expression_index = 0; //can be user defined I guess, nothing's stoping you
-
+	
 	 bool visible = false;
 	 int x; int y;
 	 int gotox; int gotoy; //for interpolation
-
+	
 	 int z_index (?? I will probably need it one day for sure);
 
-	 
+
+​	 
 	}
 
 Idea:
@@ -110,12 +111,13 @@ void AddFlags(char* pKey, bool pValue){
 
 }
 
-
 //Jump
 t = CJUMP
 c = FLAGKEY 1 KEYLABEL1 0 KEYLABEL2
-	-> Si l'un des deux est ommis, juste faire index++
-	-> True et false serait plus intuitif à la redaction; il faut supporter les deux si possible (mieux pour évolution future)
+c = FLAGKEY (SIGN VALUE KEYLABEL1) (SIGN VALUE KEYLABEL2)
+
+​	-> Si l'un des deux est ommis, juste faire index++
+​	-> True et false serait plus intuitif à la redaction; il faut supporter les deux si possible (mieux pour évolution future)
 
 //Change flag
 t = FLAGS
