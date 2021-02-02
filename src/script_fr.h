@@ -4,12 +4,16 @@
 #define LABELS_NUMBERS 10
 #define CHARACTER_NUMBER 1
 // #define MAX_EXPRESSION 2
+#define FLAGS_NUMBER 10
 
 
-CHARA CharaList[] = { //This is a bad idea but that work for now //Or is it ?
+CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
       {.key="A", .name="Ange", .image_name="ange"},
 };
 
+FLAGS FlagList[FLAGS_NUMBER] = {
+      {.key="LOVE", .value=0}
+};
 
 Passage SCRPT[] = {
 {LABEL,"START"},
@@ -18,10 +22,12 @@ Passage SCRPT[] = {
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
       {MOV, "A 200"},
       {N, "Tu trouves enfin la personne\nque tu cherchais."},
-      //Show ANGE
+      {CFLAGS, "LOVE 1"},
       {SWPM,"A 1"},
       {H, "A"},
       {N, "A Ah, tu es la!"},
+      // {CJUMP, "LOVE == 0 cava"},
+      {CJUMP, "LOVE > 0 cava"},
       {MOV, "A 400"},
       {SWPM,"A 0"},
       {N, "A Ca me fait plaisir de te voir,\ntu vas bien?"},
@@ -32,10 +38,10 @@ Passage SCRPT[] = {
       {SWPM,"A 1"},
       {N, "A Moi aussi je vais bien,\ntres bien meme!"},
       {SWPM,"A 0"},
-      {N, "J'avais un peu peur qu'on\narrive pas a se retrouver,"},
+      {N, "A J'avais un peu peur qu'on\narrive pas a se retrouver,"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "mais finalement il n'y avait\npas a s'inquieter!"},
+      {N, "A mais finalement il n'y avait\npas a s'inquieter!"},
       {J,"Mer1"},
 
   //> "Desole du retard"
@@ -43,11 +49,11 @@ Passage SCRPT[] = {
       {SWPM,"4"},
       {SWPEL,"1"},
       {SWPER,"1"},
-      {N, "Ne t'excuse pas, tu es la\nc'est l'essentiel!"},
+      {N, "A Ne t'excuse pas, tu es la\nc'est l'essentiel!"},
       {SWPM,"1"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "Et j'ai pu profiter du\npaysage en attendant!"},
+      {N, "A Et j'ai pu profiter du\npaysage en attendant!"},
       {J,"Mer1"},
 
   //> "C'etait dur de te trouver"
@@ -55,17 +61,17 @@ Passage SCRPT[] = {
       {SWPM,"4"},
       {SWPEL,"3"},
       {SWPER,"3"},
-      {N, "Haha, mes indications etaient\nsi vagues que ca?"},
+      {N, "A Haha, mes indications etaient\nsi vagues que ca?"},
       {SWPM,"1"},
       {SWPEL,"9"},
       {SWPER,"10"},
-      {N, "Desole, je ne connais pas\nbeaucoup la region."},
+      {N, "A Desole, je ne connais pas\nbeaucoup la region."},
       {SWPM,"4"},
       {SWPEL,"0"},
       {SWPER,"0"},
-      {N, "Mais je trouvais cette plage\npas trop mal."},
+      {N, "A Mais je trouvais cette plage\npas trop mal."},
       {SWPM,"1"},
-      {N, "Au moins ici on est au calme!"},
+      {N, "A Au moins ici on est au calme!"},
   
 {LABEL,"Mer1"},
       {SWPEL,"6"},
@@ -74,7 +80,7 @@ Passage SCRPT[] = {
       {N, "Elle est calme, reguliere,\net s'etend a perte de vue."},
       {SWPEL,"3"},
       {SWPER,"3"},
-      {A, "C'est beau,\ntu ne trouves pas?"},
+      {N, "A C'est beau,\ntu ne trouves pas?"},
       // {C, "1"}, 
   
   //> "Oui, c'est tres joli!"},

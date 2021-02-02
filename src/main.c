@@ -75,18 +75,6 @@ typedef struct
   int value;
 } FLAGS;
 
-#define FLAGS_NUMBER 10
-int flag_index = 0;
-
-FLAGS FlagList[FLAGS_NUMBER];
-
-void AddFlag(char *pKey, int pValue)
-{
-  FlagList[flag_index].key = pKey;
-  FlagList[flag_index].value = pValue;
-
-  flag_index++;
-}
 
 #define MAX_EXPRESSION 2 //will be defined in script.h later
 
@@ -111,8 +99,11 @@ typedef struct
 } CHARA;
 
 char *chara_name = "Character Name";
-char buffText[10]; //Utile pour le parse du text
+char buffText[20]; //Utile pour le parse du text
 char *first_word;
+char *second_word;
+char *third_word;
+char *fourth_word;
 
 // void AddChara(char* pKey, char* pName){
 // 	  CharaList[chara_index].key = pKey;
@@ -356,7 +347,7 @@ void init_dial()
     }
     case J:
     {
-      for (i = 0; i < sizeof(ListLabels) / sizeof(ListLabels[0]); i++)
+      for (i = 0; i < LABELS_NUMBERS; i++)
       {
         if (ListLabels[i].name == SCRPT[index].c)
         {
@@ -381,7 +372,7 @@ void init_dial()
     case SWPM:
     {
 
-      strncpy(buffText, SCRPT[index].c, 10);
+      strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
       char id_expression[10];
@@ -405,7 +396,7 @@ void init_dial()
     case H:
     {
 
-      strncpy(buffText, SCRPT[index].c, 10);
+      strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
       for (i = 0; i < CHARACTER_NUMBER; i++)
@@ -427,7 +418,7 @@ void init_dial()
       //Parse le texte pour chercher les noms
       //On veux éviter de faire ça à chaque fois si possible
 
-      strncpy(buffText, SCRPT[index].c, 10);
+      strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
       for (i = 0; i < CHARACTER_NUMBER; i++)
@@ -450,7 +441,7 @@ void init_dial()
       }
       break;
     }
-    case F:
+    case F: //FIN
     {
       game_st = END;
       index = 0;
@@ -467,7 +458,7 @@ void init_dial()
 
       char mov_to[10];
 
-      strncpy(buffText, SCRPT[index].c, 10);
+      strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
       for (i = 0; i < CHARACTER_NUMBER; i++)
@@ -491,31 +482,122 @@ void init_dial()
     case CJUMP:
     {
       //CONDITIONAL JUMP
-      //C = FLAGKEY SIGN VALUE KEYLABEL1
+      //C = FLAGKEY SIGN VALUE KEYLABEL
 
       //PARSE C
+      strncpy(buffText, SCRPT[index].c, 20);
+      first_word  = strtok(buffText, " ");  //FLAGKEY
+      second_word = strtok(NULL, " ");      //SIGN
+      third_word  = strtok(NULL, " ");      //VALUE
+      fourth_word  = strtok(NULL, " ");     //KEYLABEL
 
       //GET THE FLAGKEY
+      for (i = 0; i < FLAGS_NUMBER; i++)
+      {
+        if (FlagList[i].key != NULL)
+        {
+          if (strcmp(first_word, FlagList[i].key) == 0)
+          {
+            static bool flag_condition;
 
-      //EVALUATE CONDITION (DETERMINED BY THE SIGN)
+            //EVALUATE CONDITION (DETERMINED BY THE SIGN)
+            if (strcmp(second_word,">")==0) //+
+            {
+              flag_condition = (FlagList[i].value > c_atoi(third_word));
+            }
+            else if (strcmp(second_word,"<")==0) //+
+            {
+              flag_condition = (FlagList[i].value < c_atoi(third_word));
+            }
+            else if (strcmp(second_word,">=")==0) //+
+            {
+              flag_condition = (FlagList[i].value >= c_atoi(third_word));
 
-      //JUMP TO THE LABEL IF TRUE
+            }
+            else if (strcmp(second_word,"<=")==0) //+
+            {
+              flag_condition = (FlagList[i].value <= c_atoi(third_word));
+              
+            }
+            else if (strcmp(second_word,"==")==0) //+
+            {
+              flag_condition = (FlagList[i].value == c_atoi(third_word));
+              
+            }
+            else if (strcmp(second_word,"!=")==0) //+
+            {
+              flag_condition = (FlagList[i].value != c_atoi(third_word));
+            }
 
-      //ELSE : INDEX++ (et là tu mets un CJUMP ou un JUMP)
+            //JUMP TO THE LABEL IF TRUE
+            if (flag_condition){
+              // index = c_atoi(fourth_word);
+              //FIND THE KEYLABEL FIRST
+              for (i = 0; i < LABELS_NUMBERS; i++)
+              {
+                if (strcmp(ListLabels[i].name, fourth_word)==0)
+                {
+                  index = ListLabels[i].value;
+                  break;
+                }
+              }
+            }
+            else{
+              index++;
+            }
 
+            break;
+          }
+        }
+      }
+
+      break;
     }
     case CFLAGS:
     {
       //CHANGE FLAG VALUE
       //C = FLAGKEY (optional +/-) VALUE
 
-      //GET THE FLAGKEY
+      strncpy(buffText, SCRPT[index].c, 20);
+      first_word  = strtok(buffText, " ");
+      second_word = strtok(NULL, " ");
+      third_word  = strtok(NULL, " ");
 
-      //CHECK IF SECOND ARGUMENT IS + OR -
-        //IF TRUE : ADD OR SUBSTRACT THE THIRD ARGUMENT
-        //ELSE    : DEFINE VALUE OF FLAG TO THIRD ARGUMENT
-      
-      //INDEX ++
+      //GET THE FLAGKEY
+      for (i = 0; i < FLAGS_NUMBER; i++)
+      {
+        if (FlagList[i].key != NULL)
+        {
+          if (strcmp(first_word, FlagList[i].key) == 0)
+          {
+            //CHECK IF SECOND ARGUMENT IS + OR -
+            if (strcmp(second_word,"+")==0) //+
+            {
+              FlagList[i].value += c_atoi(third_word);
+            }
+            else if (strcmp(second_word,"-")==0) //-
+            {
+              FlagList[i].value -= c_atoi(third_word);
+            }
+            else if (strcmp(second_word,"*")==0) //*
+            {
+              FlagList[i].value *= c_atoi(third_word);
+            }
+            else if (strcmp(second_word,"/")==0) // /
+            {
+              FlagList[i].value /= c_atoi(third_word);
+            }
+            else{
+              FlagList[i].value = c_atoi(second_word);
+            }
+
+            index++;
+            break;
+          }
+        }
+      }
+
+      break;
     }
 
     }

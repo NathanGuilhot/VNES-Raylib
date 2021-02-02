@@ -3,34 +3,34 @@
 ## Features in progress
 *(you can see the Raw if you want to understand what is this mess)*
 
-[###-] Labels
-[######--] Flexible characters addition
-	[#] Datastructure
-	[#] Trouver un moyen de le rendre flexible dans le code
-	[#] Implementation 
-	[#] Define characters in script files
-	[#] Load character image and expressions
-	[#] Change expression in SCRPT
-	[#---] Change position in SCRPT
-		[#] Interpolation
-		[-] Variable duration
-		[-] Real Tweening
-		[-] GotoY support
-	[#] Hide/Show
-[#---] Flags
-	[#] DataStructure
-	[-] Implémentation
-	[-] Conditional Jump
-[#] Chercher comment faire un split en C
-	-> char strtok (char* str, const char* delim); 
-[#---] Serious reformating
-	[-] Split into multiple files
-	[#] Src folder for the code
-	[-] delete unused variables and comments
-[-] Replace n_pressed and inputs check by a function // will be used on other engine; can be easely modified for each platform
-	[-] BTN()
-	[-] BTNP()
-[-] Fix how the .md look
+- [ ] Labels
+  - [x] Flexible characters addition
+    	- [x] Datastructure
+     - [ ] Trouver un moyen de le rendre flexible dans le code
+       	- [x] Implementation 
+        - [ ] Define characters in script files
+          	- [x] Load character image and expressions
+           - [x] Change expression in SCRPT
+           - [ ] Change position in SCRPT
+               - [x] Interpolation
+                 	- [ ] Variable duration
+                  - [ ] Real Tweening
+                 	- [ ] GotoY support
+           - [x] Hide/Show
+  - [x] Flags
+    - [x] Data Structure
+    - [x] Implementation
+    - [x] Conditional Jump
+    - [x] Chercher comment faire un split en C
+      -> char strtok (char* str, const char* delim); 
+  - [ ] Serious reformatting
+    - [ ] Split into multiple files
+    - [x] Src folder for the code
+    - [ ] delete unused variables and comments
+    - [ ] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
+      - [ ] BTN()
+      - [ ] BTNP()
+  - [x] Fix how the .md look
 
 
 -----
@@ -118,6 +118,9 @@ c = FLAGKEY (SIGN VALUE KEYLABEL1) (SIGN VALUE KEYLABEL2)
 
 ​	-> Si l'un des deux est ommis, juste faire index++
 ​	-> True et false serait plus intuitif à la redaction; il faut supporter les deux si possible (mieux pour évolution future)
+
+SIGN:
+	<, >, ==, <=, >=, !=
 
 //Change flag
 t = FLAGS
