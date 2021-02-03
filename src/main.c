@@ -30,8 +30,8 @@ enum DIAL_T
   J /*JUMP TO LABEL*/,
   H /*HIDE/SHOW*/,
   LABEL,
-  MOV, /*Move sprite*/
-  CJUMP, /*CONDITIONAL JUMP*/
+  MOV,    /*Move sprite*/
+  CJUMP,  /*CONDITIONAL JUMP*/
   CFLAGS, /*CHANGE VALUE OF A FLAG*/
   SWPM /*SWAP EXPRESSION*/,
 
@@ -75,8 +75,7 @@ typedef struct
   int value;
 } FLAGS;
 
-
-#define MAX_EXPRESSION 2 //will be defined in script.h later
+#define MAX_EXPRESSION 2 //will be defined in script.h later (?)
 
 //---- Characters
 typedef struct
@@ -119,6 +118,118 @@ bool u_pressed = false; //UP
 bool d_pressed = false; //DOWN
 bool l_pressed = false; //LEFT (gauche)
 bool r_pressed = false; //RIGHT (drouate)
+
+bool BTN(char *pKey)
+{ //Maybe replace the string by an enum?
+  if (strcmp(pKey, "A") == 0)
+  {
+    a_pressed = (IsKeyDown(KEY_SPACE));
+    return a_pressed;
+  }
+  else if (strcmp(pKey, "B") == 0)
+  {
+    b_pressed = (IsKeyDown(KEY_ESCAPE));
+    return b_pressed;
+  }
+  else if (strcmp(pKey, "UP") == 0)
+  {
+    u_pressed = (IsKeyDown(KEY_UP));
+    return u_pressed;
+  }
+  else if (strcmp(pKey, "DOWN") == 0)
+  {
+    d_pressed = (IsKeyDown(KEY_DOWN));
+    return d_pressed;
+  }
+  else if (strcmp(pKey, "LEFT") == 0)
+  {
+    l_pressed = (IsKeyDown(KEY_LEFT));
+    return l_pressed;
+  }
+  else if (strcmp(pKey, "RIGHT") == 0)
+  {
+    r_pressed = (IsKeyDown(KEY_RIGHT));
+    return r_pressed;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool BTNP(char *pKey)
+{ //
+  if (strcmp(pKey, "A") == 0)
+  {
+    if (!a_pressed)
+    {
+      // a_pressed = BTN(pKey);
+      // return a_pressed;
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "B") == 0)
+  {
+    if (!b_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "UP") == 0)
+  {
+    if (!u_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "DOWN") == 0)
+  {
+    if (!d_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "LEFT") == 0)
+  {
+    if (!l_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "RIGHT") == 0)
+  {
+    if (!r_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+
+  return false;
+}
 
 const bool debug_mode = false;
 
@@ -486,10 +597,10 @@ void init_dial()
 
       //PARSE C
       strncpy(buffText, SCRPT[index].c, 20);
-      first_word  = strtok(buffText, " ");  //FLAGKEY
-      second_word = strtok(NULL, " ");      //SIGN
-      third_word  = strtok(NULL, " ");      //VALUE
-      fourth_word  = strtok(NULL, " ");     //KEYLABEL
+      first_word = strtok(buffText, " "); //FLAGKEY
+      second_word = strtok(NULL, " ");    //SIGN
+      third_word = strtok(NULL, " ");     //VALUE
+      fourth_word = strtok(NULL, " ");    //KEYLABEL
 
       //GET THE FLAGKEY
       for (i = 0; i < FLAGS_NUMBER; i++)
@@ -501,48 +612,47 @@ void init_dial()
             static bool flag_condition;
 
             //EVALUATE CONDITION (DETERMINED BY THE SIGN)
-            if (strcmp(second_word,">")==0) //+
+            if (strcmp(second_word, ">") == 0) //+
             {
               flag_condition = (FlagList[i].value > c_atoi(third_word));
             }
-            else if (strcmp(second_word,"<")==0) //+
+            else if (strcmp(second_word, "<") == 0) //+
             {
               flag_condition = (FlagList[i].value < c_atoi(third_word));
             }
-            else if (strcmp(second_word,">=")==0) //+
+            else if (strcmp(second_word, ">=") == 0) //+
             {
               flag_condition = (FlagList[i].value >= c_atoi(third_word));
-
             }
-            else if (strcmp(second_word,"<=")==0) //+
+            else if (strcmp(second_word, "<=") == 0) //+
             {
               flag_condition = (FlagList[i].value <= c_atoi(third_word));
-              
             }
-            else if (strcmp(second_word,"==")==0) //+
+            else if (strcmp(second_word, "==") == 0) //+
             {
               flag_condition = (FlagList[i].value == c_atoi(third_word));
-              
             }
-            else if (strcmp(second_word,"!=")==0) //+
+            else if (strcmp(second_word, "!=") == 0) //+
             {
               flag_condition = (FlagList[i].value != c_atoi(third_word));
             }
 
             //JUMP TO THE LABEL IF TRUE
-            if (flag_condition){
+            if (flag_condition)
+            {
               // index = c_atoi(fourth_word);
               //FIND THE KEYLABEL FIRST
               for (i = 0; i < LABELS_NUMBERS; i++)
               {
-                if (strcmp(ListLabels[i].name, fourth_word)==0)
+                if (strcmp(ListLabels[i].name, fourth_word) == 0)
                 {
                   index = ListLabels[i].value;
                   break;
                 }
               }
             }
-            else{
+            else
+            {
               index++;
             }
 
@@ -559,9 +669,9 @@ void init_dial()
       //C = FLAGKEY (optional +/-) VALUE
 
       strncpy(buffText, SCRPT[index].c, 20);
-      first_word  = strtok(buffText, " ");
+      first_word = strtok(buffText, " ");
       second_word = strtok(NULL, " ");
-      third_word  = strtok(NULL, " ");
+      third_word = strtok(NULL, " ");
 
       //GET THE FLAGKEY
       for (i = 0; i < FLAGS_NUMBER; i++)
@@ -571,23 +681,24 @@ void init_dial()
           if (strcmp(first_word, FlagList[i].key) == 0)
           {
             //CHECK IF SECOND ARGUMENT IS + OR -
-            if (strcmp(second_word,"+")==0) //+
+            if (strcmp(second_word, "+") == 0) //+
             {
               FlagList[i].value += c_atoi(third_word);
             }
-            else if (strcmp(second_word,"-")==0) //-
+            else if (strcmp(second_word, "-") == 0) //-
             {
               FlagList[i].value -= c_atoi(third_word);
             }
-            else if (strcmp(second_word,"*")==0) //*
+            else if (strcmp(second_word, "*") == 0) //*
             {
               FlagList[i].value *= c_atoi(third_word);
             }
-            else if (strcmp(second_word,"/")==0) // /
+            else if (strcmp(second_word, "/") == 0) // /
             {
               FlagList[i].value /= c_atoi(third_word);
             }
-            else{
+            else
+            {
               FlagList[i].value = c_atoi(second_word);
             }
 
@@ -599,7 +710,6 @@ void init_dial()
 
       break;
     }
-
     }
   }
 }
@@ -626,37 +736,29 @@ void updt_dial()
 
   if (SCRPT[index].t == A || SCRPT[index].t == N)
   {
-    if (IsKeyDown(KEY_SPACE))
+    if (BTNP("A"))
     {
-      if (!a_pressed)
+      if (cursor < strlen(SCRPT[index].c))
       {
-        a_pressed = true;
-        if (cursor < strlen(SCRPT[index].c))
+        cursor = strlen(SCRPT[index].c);
+      } //Affiche tout le texte; pas top parce que taille varibale pour le texte
+      else
+      {
+        if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
         {
-          cursor = strlen(SCRPT[index].c);
-        } //Affiche tout le texte; pas top parce que taille varibale pour le texte
+          index++;
+          cursor = 1;
+          init_done = false;
+
+          // disp_text[64];
+          memset(disp_text, 0, 64); //Vider le string
+        }
         else
         {
-          if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
-          {
-            index++;
-            cursor = 1;
-            init_done = false;
-
-            // disp_text[64];
-            memset(disp_text, 0, 64); //Vider le string
-          }
-          else
-          {
-            game_st = END;
-            cursor = 0;
-          }
+          game_st = END;
+          cursor = 0;
         }
       }
-    }
-    else
-    {
-      a_pressed = false;
     }
 
     if (cursor < strlen(SCRPT[index].c))
@@ -680,22 +782,15 @@ void draw_menu()
 
 void updt_menu()
 {
-  if (IsKeyDown(KEY_SPACE))
+  if (BTNP("A"))
   {
-    if (!a_pressed)
+    game_st = DIAL;
+    //   clrscr();
+    if (dispAnge)
     {
-      game_st = DIAL;
-      //   clrscr();
-      if (dispAnge)
-      {
-        draw_ange();
-      }
-      a_pressed = true;
+      draw_ange();
     }
-  }
-  else
-  {
-    a_pressed = false;
+    a_pressed = true;
   }
 }
 
@@ -720,37 +815,30 @@ void draw_choice()
 void updt_choice()
 {
   //Selection
-  if (IsKeyDown(KEY_SPACE))
+  if (BTNP("A"))
   {
-    if (!a_pressed)
+    // index = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
+    for (i = 0; i < LABELS_NUMBERS; i++)
     {
-      // index = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
-      for (i = 0; i < sizeof(ListLabels) / sizeof(ListLabels[0]); i++)
+      //char jumpto = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
+      if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
       {
-        //char jumpto = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
-        if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
-        {
-          index = ListLabels[i].value;
-        }
+        index = ListLabels[i].value;
       }
-      // index--;
-      game_st = DIAL;
-      //   clrscr();
-      if (dispAnge)
-      {
-        draw_ange();
-      } //(?)
-      a_pressed = true;
-      choice_sel = 0;
     }
-  }
-  else
-  {
-    a_pressed = false;
+    // index--;
+    game_st = DIAL;
+    //   clrscr();
+    if (dispAnge)
+    {
+      draw_ange();
+    } //(?)
+    a_pressed = true;
+    choice_sel = 0;
   }
 
   //Up & Down
-  if (IsKeyPressed(KEY_DOWN))
+  if (BTNP("DOWN"))
   {
     if (choice_sel < nb_choice - 1)
     {
@@ -758,7 +846,7 @@ void updt_choice()
       choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
     }
   }
-  if (IsKeyPressed(KEY_UP))
+  if (BTNP("UP"))
   {
     if (choice_sel > 0)
     {
@@ -777,19 +865,12 @@ void draw_end()
 
 void updt_end()
 {
-  if (IsKeyDown(KEY_SPACE))
+  if (BTNP("A"))
   {
-    if (!a_pressed)
-    {
-      game_st = MENU;
-      //   clrscr();
-      a_pressed = true;
-      index = 0;
-    }
-  }
-  else
-  {
-    a_pressed = false;
+    game_st = MENU;
+    //   clrscr();
+    a_pressed = true;
+    index = 0;
   }
 }
 

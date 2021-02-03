@@ -8,8 +8,11 @@
     	- [x] Datastructure
      - [ ] Trouver un moyen de le rendre flexible dans le code
        	- [x] Implementation 
+        
         - [ ] Define characters in script files
+          
           	- [x] Load character image and expressions
+          
            - [x] Change expression in SCRPT
            - [ ] Change position in SCRPT
                - [x] Interpolation
@@ -27,9 +30,9 @@
     - [ ] Split into multiple files
     - [x] Src folder for the code
     - [ ] delete unused variables and comments
-    - [ ] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
-      - [ ] BTN()
-      - [ ] BTNP()
+    - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
+      - [x] BTN()
+      - [x] BTNP()
   - [x] Fix how the .md look
 
 
@@ -55,7 +58,7 @@ Datastructure personnage:
 
 
 ​	 
-	}
+​	}
 
 Idea:
 Define the name of a file, and the engine will handle loading it into the array with all needed expression
