@@ -5,27 +5,31 @@
 
 - [ ] Labels
   - [x] Flexible characters addition
-    	- [x] Datastructure
-     - [ ] Trouver un moyen de le rendre flexible dans le code
-       	- [x] Implementation 
-        
+    
+    	- [x] Datastructure 
+    
+ - [ ] Trouver un moyen de le rendre flexible dans le code
+        - [x] Implementation 
+    
         - [ ] Define characters in script files
           
-          	- [x] Load character image and expressions
+          - [x] Load character image and expressions
           
            - [x] Change expression in SCRPT
            - [ ] Change position in SCRPT
                - [x] Interpolation
                  	- [ ] Variable duration
                   - [ ] Real Tweening
-                 	- [ ] GotoY support
+             	- [ ] GotoY support
            - [x] Hide/Show
+    
   - [x] Flags
     - [x] Data Structure
     - [x] Implementation
     - [x] Conditional Jump
     - [x] Chercher comment faire un split en C
       -> char strtok (char* str, const char* delim); 
+    
   - [ ] Serious reformatting
     - [ ] Split into multiple files
     - [x] Src folder for the code
@@ -33,7 +37,63 @@
     - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
       - [x] BTN()
       - [x] BTNP()
+  
   - [x] Fix how the .md look
+
+    
+
+  - [ ] Background manager
+  
+    - [ ] Load image
+  - [ ] Draw the background
+    - [ ] Change in script
+
+  - [ ] Sound manager
+
+    - [ ] Load Sound and Music
+
+    - [ ] Play Sound from SCRPT
+
+    - [ ] Play Music from SCRPT (loop, fade (???))
+
+      
+
+  - [ ] UI System
+  
+    - [x] Datastructure
+    - [ ] UI Navigation logic
+  - [ ] Draw the UI
+    - [ ] UI 
+
+    
+
+  - [ ] Draw free image on screen
+
+    - [ ] Datastructure
+
+    - [ ] Draw images on screen
+
+    - [ ] Define in SCRPT
+
+    - [ ] Load image
+
+    - [ ] Toggle visibility
+
+    - [ ] Position
+
+    - [ ] Tweening
+
+    - [ ] Z-Index (??)
+
+    - [ ] Animation (????)
+
+      
+
+  - [ ] Savefile
+  
+    - [ ] Basic Interface for testing
+    - [ ] Save
+    - [ ] Load
 
 
 -----

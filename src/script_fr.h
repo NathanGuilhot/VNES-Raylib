@@ -27,7 +27,7 @@ Passage SCRPT[] = {
       {H, "A"},
       {N, "A Ah, tu es la!"},
       // {CJUMP, "LOVE == 0 cava"},
-      {CJUMP, "LOVE > 0 cava"},
+      // {CJUMP, "LOVE > 0 cava"},
       {MOV, "A 400"},
       {SWPM,"A 0"},
       {N, "A Ca me fait plaisir de te voir,\ntu vas bien?"},
@@ -81,7 +81,7 @@ Passage SCRPT[] = {
       {SWPEL,"3"},
       {SWPER,"3"},
       {N, "A C'est beau,\ntu ne trouves pas?"},
-      // {C, "1"}, 
+      {C, "1"}, 
   
   //> "Oui, c'est tres joli!"},
   {SWPEL,"0"},
@@ -1214,10 +1214,10 @@ Passage SCRPT[] = {
 const Choice ListeChoix[]= {
   {"Oui ca va! Et toi?","cava"},
   {"Desole du retard","retard"},
-  {"C'etait dur de te trouver","durtrouver"}
+  {"C'etait dur de te trouver","durtrouver"},
   
-//   {"Oui, c'est tres joli!",55},
-//   {"Bof, c'est la mer quoi.",66},
+  {"Oui, c'est tres joli!","cava"},
+  {"Bof, c'est la mer quoi.","retard"},
   
 //   {"J'en vois le bout!",97},
 //   {"J'ai du mal a avancer...",113},

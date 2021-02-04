@@ -9,7 +9,12 @@
 #include <string.h>
 #include <math.h>
 
+
 const char btn_next[] = {0x16};
+
+
+#include "UI_DEFS.h"
+
 
 //----Enums
 
@@ -41,6 +46,18 @@ enum DIAL_T
   A /*ANGE*/,
 };
 
+enum MENU_ITEM_TYPE
+{
+  CHOICE_ITEM,
+  SLIDER,
+  CHECKBOX,
+  INPUT,
+  LIST,
+  SCRIPT_RUNNER,
+  MENU_NAV
+};
+
+
 //----Struct definition
 typedef struct Passage Passage;
 struct Passage
@@ -56,10 +73,115 @@ struct Choice
   char *jmp; //Indice du label de destination
 };
 
+// UI struct
+typedef struct
+{
+  char *label;
+  bool visible;
+  enum MENU_ITEM_TYPE type;
+  int param; //Change type later //Originally planned to be a function to call //Label index if 
+  int *variable;
+  int values[4];
+} MENU_ITEM;
+
+#define MAX_ITEMS_MENU_PAGE 10
+
+typedef struct {
+  char* title;
+  bool visible;
+  MENU_ITEM items[MAX_ITEMS_MENU_PAGE];
+  //Backfunction ?
+  //Page_destination ?
+} MENU_PAGE;
+
+int volumeTest = 50;  //[0;100]
+int checkTest = 0;    //[0;1]
+
+MENU_PAGE ListMenuPage[]={
+  {"CHOIX", false,
+    .items = {
+      {"BTN1",  false,CHOICE_ITEM, 0},
+      {"BTN2",  false,CHOICE_ITEM, 0},
+      {"BTN3",  false,CHOICE_ITEM, 0},
+      {"BTN4",  false,CHOICE_ITEM, 0},
+    }
+  },
+  {"Test", false,
+    .items = {
+      {"BTN1",  true,CHOICE_ITEM, 0},
+      {"Slider",  true,SLIDER,        0,0,{0,100}},
+      {"CheckBox",true,CHECKBOX,      0,0, {0,1}},
+      {"Function",true,SCRIPT_RUNNER, CHOICE,0, {0,1}},
+    }
+  }  
+};
+
+int MenuPageNumber = sizeof(ListMenuPage)/sizeof(ListMenuPage[0]);
+
+
+
+void DrawUI(int pCursor){
+  for (int i = 0; i < MenuPageNumber; i++)
+  {
+    if (ListMenuPage[i].visible){
+      for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+      {
+        if (ListMenuPage[i].items[i2].visible==true)
+        {
+          Color box_color;
+          switch (ListMenuPage[i].items[i2].type)
+          {
+          case CHOICE_ITEM:
+            box_color = LIGHTGRAY;
+            if (pCursor==i2){
+              box_color = GREEN;
+            }
+
+            DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
+            DrawText(ListMenuPage[i].items[i2].label,
+                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
+                    UI_CHOICE_FONT_SIZE, DARKGRAY);
+            break;
+          case SLIDER:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          case CHECKBOX:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          case INPUT:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          case LIST:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          case SCRIPT_RUNNER:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          case MENU_NAV:
+            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
+            
+            break;
+          default:
+            break;
+          }
+        }   
+
+      }
+    }
+  }
+};
+
+
 //-----Variables utiles
 
 unsigned int index = 0; //index dans le label en cours //328 max sans visage+choice
-unsigned char cursor = 1;
+int cursor = 1;
 char disp_text[64];
 
 int choice_sel = 0;
@@ -158,7 +280,8 @@ bool BTN(char *pKey)
 }
 
 bool BTNP(char *pKey)
-{ //
+{ 
+  
   if (strcmp(pKey, "A") == 0)
   {
     if (!a_pressed)
@@ -438,6 +561,7 @@ void draw_dial()
   }
 
   DrawText(CharaList[0].name, 300, 10, 10, BLACK);
+  DrawUI(choice_sel);
 }
 
 void init_dial()
@@ -451,6 +575,22 @@ void init_dial()
     {
       // clrscr();
       game_st = CHOICE;
+
+      ListMenuPage[0].visible = true;
+      int choice_index = 0; //Pour l'affichage
+
+      nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
+
+      for (i = 1; i <= nb_choice; i++)
+      {
+        choice_index = ChoiceCollection[choice_collection_index][i];
+        // txt_choix = ListeChoix[choice_index].txt;
+        ListMenuPage[0].items[i-1].label = ListeChoix[choice_index].txt;
+        ListMenuPage[0].items[i-1].visible = true;
+        // DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
+        //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
+      }
+
       // init_draw_choice();
       choice_collection_index = c_atoi(SCRPT[index].c);
       choice_sel_index = ChoiceCollection[choice_collection_index][choice_sel + 1];
@@ -796,20 +936,20 @@ void updt_menu()
 
 void draw_choice()
 {
-  // draw_dial();
+  draw_dial();
 
-  int choice_index = 0; //Pour l'affichage
+  // int choice_index = 0; //Pour l'affichage
 
-  nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
+  // nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
 
-  for (i = 1; i <= nb_choice; i++)
-  {
-    choice_index = ChoiceCollection[choice_collection_index][i];
-    txt_choix = ListeChoix[choice_index].txt;
-    DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
-    //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
-  }
-  DrawText(">", 5, 70 + 15 * (choice_sel + 1), 10, BLACK);
+  // for (i = 1; i <= nb_choice; i++)
+  // {
+  //   choice_index = ChoiceCollection[choice_collection_index][i];
+  //   txt_choix = ListeChoix[choice_index].txt;
+  //   DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
+  //   //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
+  // }
+  // DrawText(">", 5, 70 + 15 * (choice_sel + 1), 10, BLACK);
 }
 
 void updt_choice()
@@ -824,6 +964,12 @@ void updt_choice()
       if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
       {
         index = ListLabels[i].value;
+        ListMenuPage[0].visible = false;
+        for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+        {
+          ListMenuPage[0].items[i2].visible=false;
+        }
+        
       }
     }
     // index--;
@@ -878,8 +1024,6 @@ int main()
 {
   // Initialization
   //--------------------------------------------------------------------------------------
-  const int screenWidth = 800;
-  const int screenHeight = 450;
 
   InitWindow(screenWidth, screenHeight, "VNES_PC");
 

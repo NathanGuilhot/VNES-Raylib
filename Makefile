@@ -200,7 +200,7 @@ CFLAGS += -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces
 ifeq ($(BUILD_MODE),DEBUG)
     CFLAGS += -g -O0
 else
-    CFLAGS += -s -O1
+    CFLAGS += -s -O2
 endif
 
 # Additional flags for compiler (if desired)
