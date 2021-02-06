@@ -9,20 +9,14 @@
 #include <string.h>
 #include <math.h>
 
-
-const char btn_next[] = {0x16};
-
-
 #include "UI_DEFS.h"
-
 
 //----Enums
 
 enum GAME_STATE
 {
-  MENU,
+  MAIN_MENU,
   DIAL,
-  CHOICE,
   END
 };
 enum GAME_STATE game_st = DIAL;
@@ -46,18 +40,6 @@ enum DIAL_T
   A /*ANGE*/,
 };
 
-enum MENU_ITEM_TYPE
-{
-  CHOICE_ITEM,
-  SLIDER,
-  CHECKBOX,
-  INPUT,
-  LIST,
-  SCRIPT_RUNNER,
-  MENU_NAV
-};
-
-
 //----Struct definition
 typedef struct Passage Passage;
 struct Passage
@@ -72,111 +54,6 @@ struct Choice
   char *txt; //Texte du choix
   char *jmp; //Indice du label de destination
 };
-
-// UI struct
-typedef struct
-{
-  char *label;
-  bool visible;
-  enum MENU_ITEM_TYPE type;
-  int param; //Change type later //Originally planned to be a function to call //Label index if 
-  int *variable;
-  int values[4];
-} MENU_ITEM;
-
-#define MAX_ITEMS_MENU_PAGE 10
-
-typedef struct {
-  char* title;
-  bool visible;
-  MENU_ITEM items[MAX_ITEMS_MENU_PAGE];
-  //Backfunction ?
-  //Page_destination ?
-} MENU_PAGE;
-
-int volumeTest = 50;  //[0;100]
-int checkTest = 0;    //[0;1]
-
-MENU_PAGE ListMenuPage[]={
-  {"CHOIX", false,
-    .items = {
-      {"BTN1",  false,CHOICE_ITEM, 0},
-      {"BTN2",  false,CHOICE_ITEM, 0},
-      {"BTN3",  false,CHOICE_ITEM, 0},
-      {"BTN4",  false,CHOICE_ITEM, 0},
-    }
-  },
-  {"Test", false,
-    .items = {
-      {"BTN1",  true,CHOICE_ITEM, 0},
-      {"Slider",  true,SLIDER,        0,0,{0,100}},
-      {"CheckBox",true,CHECKBOX,      0,0, {0,1}},
-      {"Function",true,SCRIPT_RUNNER, CHOICE,0, {0,1}},
-    }
-  }  
-};
-
-int MenuPageNumber = sizeof(ListMenuPage)/sizeof(ListMenuPage[0]);
-
-
-
-void DrawUI(int pCursor){
-  for (int i = 0; i < MenuPageNumber; i++)
-  {
-    if (ListMenuPage[i].visible){
-      for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
-      {
-        if (ListMenuPage[i].items[i2].visible==true)
-        {
-          Color box_color;
-          switch (ListMenuPage[i].items[i2].type)
-          {
-          case CHOICE_ITEM:
-            box_color = LIGHTGRAY;
-            if (pCursor==i2){
-              box_color = GREEN;
-            }
-
-            DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
-            DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
-                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
-                    UI_CHOICE_FONT_SIZE, DARKGRAY);
-            break;
-          case SLIDER:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          case CHECKBOX:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          case INPUT:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          case LIST:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          case SCRIPT_RUNNER:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          case MENU_NAV:
-            DrawText(ListMenuPage[i].items[i2].label, 500, 75+(i2*UI_ITEMS_MARGIN), 20, DARKGRAY);
-            
-            break;
-          default:
-            break;
-          }
-        }   
-
-      }
-    }
-  }
-};
-
 
 //-----Variables utiles
 
@@ -240,6 +117,7 @@ bool u_pressed = false; //UP
 bool d_pressed = false; //DOWN
 bool l_pressed = false; //LEFT (gauche)
 bool r_pressed = false; //RIGHT (drouate)
+bool start_pressed = false;
 
 bool BTN(char *pKey)
 { //Maybe replace the string by an enum?
@@ -273,6 +151,11 @@ bool BTN(char *pKey)
     r_pressed = (IsKeyDown(KEY_RIGHT));
     return r_pressed;
   }
+  else if (strcmp(pKey, "START") == 0)
+  {
+    start_pressed = (IsKeyDown(KEY_ENTER));
+    return start_pressed;
+  }
   else
   {
     return false;
@@ -280,14 +163,12 @@ bool BTN(char *pKey)
 }
 
 bool BTNP(char *pKey)
-{ 
-  
+{
+
   if (strcmp(pKey, "A") == 0)
   {
     if (!a_pressed)
     {
-      // a_pressed = BTN(pKey);
-      // return a_pressed;
       return BTN(pKey);
     }
     else
@@ -342,6 +223,17 @@ bool BTNP(char *pKey)
   else if (strcmp(pKey, "RIGHT") == 0)
   {
     if (!r_pressed)
+    {
+      return BTN(pKey);
+    }
+    else
+    {
+      BTN(pKey);
+    }
+  }
+  else if (strcmp(pKey, "START") == 0)
+  {
+    if (!start_pressed)
     {
       return BTN(pKey);
     }
@@ -476,79 +368,13 @@ int c_atoi(char *str)
 #define C_MAX_TEXTSPLIT_COUNT 128
 #define MAX_TEXT_BUFFER_LENGTH 100
 
-// Split string into multiple strings
-const char **c_TextSplit(const char *text, char delimiter, int *count)
-{
-  // NOTE: Current implementation returns a copy of the provided string with '\0' (string end delimiter)
-  // inserted between strings defined by "delimiter" parameter. No memory is dynamically allocated,
-  // all used memory is static... it has some limitations:
-  //      1. Maximum number of possible split strings is set by MAX_TEXTSPLIT_COUNT
-  //      2. Maximum size of text to split is MAX_TEXT_BUFFER_LENGTH
-
-  static const char *result[C_MAX_TEXTSPLIT_COUNT] = {NULL};
-  static char buffer[MAX_TEXT_BUFFER_LENGTH] = {0};
-  memset(buffer, 0, MAX_TEXT_BUFFER_LENGTH);
-
-  result[0] = buffer;
-  int counter = 0;
-
-  if (text != NULL)
-  {
-    counter = 1;
-
-    // Count how many substrings we have on text and point to every one
-    for (int i = 0; i < MAX_TEXT_BUFFER_LENGTH; i++)
-    {
-      buffer[i] = text[i];
-      if (buffer[i] == '\0')
-        break;
-      else if (buffer[i] == delimiter)
-      {
-        buffer[i] = '\0'; // Set an end of string at this point
-        result[counter] = buffer + i + 1;
-        counter++;
-
-        if (counter == C_MAX_TEXTSPLIT_COUNT)
-          break;
-      }
-    }
-  }
-
-  *count = counter;
-  return result;
-}
-
-void draw_ange()
-{
-  //   vrambuf_clear();
-  //   ppu_off();
-
-  //   vram_adr(NTADR_A(0,20));
-  //   vram_fill(11, 32*1);
-
-  //   for (i=0;i<sizeof(ANGESPR)/8; i++){ //Draw_Ange
-  // vram_adr(NTADR_A(11,5+i));
-  // vram_write(ANGESPR[i],8);
-  //   }
-
-  //   ppu_on_all();
-}
-
-void draw_ange_face()
-{
-  //   oam_id = oam_spr(111, 67, expr[sprEl], 2, oam_id); //  o
-  //   oam_id = oam_spr(129, 67, expr[sprEr], 2, oam_id); //          O
-
-  //   oam_id = oam_spr(121, 73, expr[sprM], 2, oam_id);  //    ___
-}
-
 void draw_dial()
 {
-  DrawText(chara_name, 10, 75, 20, DARKGRAY);
-  DrawText(disp_text, 10, 100, 20, DARKGRAY);
-
-  //Dessin du visage
-  // if (dispAnge){draw_ange_face();};
+  if (!inMenuChoice)
+  {
+    DrawText(chara_name, 10, 75, 20, DARKGRAY);
+    DrawText(disp_text, 10, 100, 20, DARKGRAY);
+  }
 
   //Draw characters on the screen
   for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -560,13 +386,15 @@ void draw_dial()
     }
   }
 
-  DrawText(CharaList[0].name, 300, 10, 10, BLACK);
   DrawUI(choice_sel);
+
+  DrawText(":(", 300, 0 + (choice_sel * 20), 20, WHITE);
+  DrawText(":(", 300 - 20, 0, 20, WHITE);
 }
 
-void init_dial()
+void init_dial() //Handle parsing and logic
 {
-  if (init_done == false)
+  // if (init_done == false) //en fait ça faisait absolument rien du tout mdr
   {
     //Managing les passages spéciaux
     switch (SCRPT[index].t)
@@ -574,9 +402,11 @@ void init_dial()
     case C:
     {
       // clrscr();
-      game_st = CHOICE;
+      // game_st = CHOICE;
 
-      ListMenuPage[0].visible = true;
+      ListMenuPage[choice_menu_index].visible = true;
+      inMenuChoice = true;
+      // choice_sel = 0;
       int choice_index = 0; //Pour l'affichage
 
       nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
@@ -585,8 +415,8 @@ void init_dial()
       {
         choice_index = ChoiceCollection[choice_collection_index][i];
         // txt_choix = ListeChoix[choice_index].txt;
-        ListMenuPage[0].items[i-1].label = ListeChoix[choice_index].txt;
-        ListMenuPage[0].items[i-1].visible = true;
+        ListMenuPage[choice_menu_index].items[i - 1].label = ListeChoix[choice_index].txt;
+        ListMenuPage[choice_menu_index].items[i - 1].visible = true;
         // DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
         //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
       }
@@ -680,7 +510,7 @@ void init_dial()
           {
             chara_name = CharaList[i].name;
             SCRPT[index].c += strlen(first_word) + 1;
-            init_done = true; //what?
+            // init_done = true; //what?
 
             break;
           }
@@ -876,7 +706,7 @@ void updt_dial()
 
   if (SCRPT[index].t == A || SCRPT[index].t == N)
   {
-    if (BTNP("A"))
+    if (BTNP("A") && !inMenuPause)
     {
       if (cursor < strlen(SCRPT[index].c))
       {
@@ -908,16 +738,80 @@ void updt_dial()
     strncpy(&disp_text, SCRPT[index].c, cursor);
     // disp_text = SCRPT[index].c;
   }
+
+  //MENU MANAGER
+  if (BTNP("START"))
+  {
+    choice_sel = 0;
+    ListMenuPage[pause_menu_index].visible = !ListMenuPage[pause_menu_index].visible;
+    inMenuPause = !inMenuPause;
+
+    if (inMenuPause)
+    {
+      nb_choice = MAX_ITEMS_MENU_PAGE; //Ugly but at least it doesn't crash
+      //Check how many visible choice exist
+      //Maybe do the same for the choice for consistency sake
+    }
+    else
+    {
+      nb_choice = 0; //reset, if C: it will be handled in the parser
+    }
+  }
+
+  if (inMenuChoice || inMenuPause)
+  {
+    //Handle Input when in menu
+    //Up & Down
+    if (BTNP("DOWN"))
+    {
+      if (choice_sel < nb_choice - 1)
+      {
+        choice_sel++;
+        if (!inMenuPause)
+        {
+          choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
+        }
+      }
+    }
+    if (BTNP("UP"))
+    {
+      if (choice_sel > 0)
+      {
+        choice_sel--;
+        if (!inMenuPause)
+        {
+          choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
+        }
+      }
+    }
+  }
+
+  if (inMenuChoice && !inMenuPause)
+  {
+    //Press A in choice
+    if (BTNP("A"))
+    {
+      for (i = 0; i < LABELS_NUMBERS; i++)
+      {
+        if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
+        {
+          index = ListLabels[i].value;
+
+          inMenuChoice = false;
+          ListMenuPage[choice_menu_index].visible = false;
+          for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+          {
+            ListMenuPage[choice_menu_index].items[i2].visible = false;
+          }
+        }
+      }
+      choice_sel = 0;
+    }
+  }
 }
 
 void draw_menu()
 {
-
-#if FR
-  //   vrambuf_put(NTADR_A(1,1),"Fr",2);
-#else
-  //   vrambuf_put(NTADR_A(1,1),"En",2);
-#endif
 }
 
 void updt_menu()
@@ -925,80 +819,6 @@ void updt_menu()
   if (BTNP("A"))
   {
     game_st = DIAL;
-    //   clrscr();
-    if (dispAnge)
-    {
-      draw_ange();
-    }
-    a_pressed = true;
-  }
-}
-
-void draw_choice()
-{
-  draw_dial();
-
-  // int choice_index = 0; //Pour l'affichage
-
-  // nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
-
-  // for (i = 1; i <= nb_choice; i++)
-  // {
-  //   choice_index = ChoiceCollection[choice_collection_index][i];
-  //   txt_choix = ListeChoix[choice_index].txt;
-  //   DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
-  //   //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
-  // }
-  // DrawText(">", 5, 70 + 15 * (choice_sel + 1), 10, BLACK);
-}
-
-void updt_choice()
-{
-  //Selection
-  if (BTNP("A"))
-  {
-    // index = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
-    for (i = 0; i < LABELS_NUMBERS; i++)
-    {
-      //char jumpto = ListeChoix[ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel+1]].jmp;
-      if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
-      {
-        index = ListLabels[i].value;
-        ListMenuPage[0].visible = false;
-        for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
-        {
-          ListMenuPage[0].items[i2].visible=false;
-        }
-        
-      }
-    }
-    // index--;
-    game_st = DIAL;
-    //   clrscr();
-    if (dispAnge)
-    {
-      draw_ange();
-    } //(?)
-    a_pressed = true;
-    choice_sel = 0;
-  }
-
-  //Up & Down
-  if (BTNP("DOWN"))
-  {
-    if (choice_sel < nb_choice - 1)
-    {
-      choice_sel++;
-      choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
-    }
-  }
-  if (BTNP("UP"))
-  {
-    if (choice_sel > 0)
-    {
-      choice_sel--;
-      choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
-    }
   }
 }
 
@@ -1013,9 +833,7 @@ void updt_end()
 {
   if (BTNP("A"))
   {
-    game_st = MENU;
-    //   clrscr();
-    a_pressed = true;
+    game_st = MAIN_MENU;
     index = 0;
   }
 }
@@ -1040,7 +858,7 @@ int main()
 
     switch (game_st)
     {
-    case MENU:
+    case MAIN_MENU:
     {
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
       updt_menu();
@@ -1051,13 +869,6 @@ int main()
     {
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
       updt_dial();
-
-      break;
-    }
-    case CHOICE:
-    {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
-      updt_choice();
 
       break;
     }
@@ -1076,7 +887,7 @@ int main()
 
     switch (game_st)
     {
-    case MENU:
+    case MAIN_MENU:
     {
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
 
@@ -1088,14 +899,6 @@ int main()
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
 
       draw_dial();
-
-      break;
-    }
-    case CHOICE:
-    {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Choice",6);}
-
-      draw_choice();
 
       break;
     }

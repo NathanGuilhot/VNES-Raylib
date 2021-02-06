@@ -7,15 +7,15 @@
 #define FLAGS_NUMBER 10
 
 
-CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
+extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
       {.key="A", .name="Ange", .image_name="ange"},
 };
 
-FLAGS FlagList[FLAGS_NUMBER] = {
+extern FLAGS FlagList[FLAGS_NUMBER] = {
       {.key="LOVE", .value=0}
 };
 
-Passage SCRPT[] = {
+extern Passage SCRPT[] = {
 {LABEL,"START"},
       // {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},
       // {N, "Il y a peu de monde ici.\nC'est calme."},
@@ -1211,7 +1211,7 @@ Passage SCRPT[] = {
   {N, "Ange s'est deconnecte"}
 };
 
-const Choice ListeChoix[]= {
+extern const Choice ListeChoix[]= {
   {"Oui ca va! Et toi?","cava"},
   {"Desole du retard","retard"},
   {"C'etait dur de te trouver","durtrouver"},
@@ -1294,7 +1294,7 @@ const Choice ListeChoix[]= {
   
 };
 
-const char ChoiceCollection[][5] = {
+extern const char ChoiceCollection[][5] = {
   //{nb_choix,nchoix,...};
   {3,0,1,2},
   {2,3,4},
