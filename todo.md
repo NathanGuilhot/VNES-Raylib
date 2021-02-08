@@ -7,10 +7,10 @@
   - [x] Flexible characters addition
     
     	- [x] Datastructure 
-    
+  
  - [ ] Trouver un moyen de le rendre flexible dans le code
         - [x] Implementation 
-    
+        
         - [ ] Define characters in script files
           
           - [x] Load character image and expressions
@@ -20,7 +20,7 @@
                - [x] Interpolation
                  	- [ ] Variable duration
                   - [ ] Real Tweening
-             	- [ ] GotoY support
+                	- [ ] GotoY support
            - [x] Hide/Show
     
   - [x] Flags
@@ -45,9 +45,11 @@
   - [ ] Background manager
   
     - [ ] Load image
+    
   - [ ] Draw the background
-    - [ ] Change in script
-
+    
+- [ ] Change in script
+  
   - [ ] Sound manager
 
     - [ ] Load Sound and Music
@@ -62,11 +64,11 @@
   
     - [x] Datastructure
     - [ ] UI Navigation logic
-  - [ ] Draw the UI
+      - [ ] Draw the UI
     - [ ] UI 
-
     
-
+    
+    
   - [ ] Draw free image on screen
 
     - [ ] Datastructure
@@ -92,8 +94,17 @@
   - [ ] Savefile
   
     - [ ] Basic Interface for testing
+    
     - [ ] Save
+    
     - [ ] Load
+    
+      
+  
+- [ ] Executer le parser qu'une seule fois
+
+     - [ ] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
+     - [ ] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
 
 
 -----
