@@ -2,7 +2,7 @@
 
 ![VNES LOGO](VNES_LOGO.png)
 
-VNES simple Visual Novel engine in [Raylib](https://www.raylib.com/), aimed to be ported to multiple platforms including console.
+VNES is an simple Visual Novel engine in [Raylib](https://www.raylib.com/), aimed to be ported to multiple platforms including console.
 
 This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_Engine), developed for the NES in C.
 
