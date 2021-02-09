@@ -101,10 +101,10 @@
     
       
   
-- [ ] Executer le parser qu'une seule fois
+- [x] Executer le parser qu'une seule fois
 
-     - [ ] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
-     - [ ] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
+     - [x] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
+     - [x] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
 
 
 -----

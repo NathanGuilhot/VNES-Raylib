@@ -54,6 +54,7 @@ void init_dial() //Handle parsing and logic
         if (ListLabels[i].name == SCRPT[index].c)
         {
           index = ListLabels[i].value;
+          init_dial();
           break;
         }
       }
@@ -63,12 +64,14 @@ void init_dial() //Handle parsing and logic
     {
       sprEl = c_atoi(SCRPT[index].c);
       index++;
+      init_dial();
       break;
     }
     case SWPER:
     {
       sprEr = c_atoi(SCRPT[index].c);
       index++;
+      init_dial();
       break;
     }
     case SWPM:
@@ -93,6 +96,7 @@ void init_dial() //Handle parsing and logic
       }
 
       index++;
+      init_dial();
       break;
     }
     case H:
@@ -113,6 +117,7 @@ void init_dial() //Handle parsing and logic
       }
 
       index++;
+      init_dial();
       break;
     }
     case N:
@@ -153,6 +158,7 @@ void init_dial() //Handle parsing and logic
     case LABEL:
     {
       index++;
+      init_dial();
       break;
     }
     case MOV:
@@ -179,6 +185,7 @@ void init_dial() //Handle parsing and logic
       }
 
       index++;
+      init_dial();
       break;
     }
     case CJUMP:
@@ -238,6 +245,7 @@ void init_dial() //Handle parsing and logic
                 if (strcmp(ListLabels[i].name, fourth_word) == 0)
                 {
                   index = ListLabels[i].value;
+                  init_dial();
                   break;
                 }
               }
@@ -245,6 +253,7 @@ void init_dial() //Handle parsing and logic
             else
             {
               index++;
+              init_dial();
             }
 
             break;
@@ -294,6 +303,7 @@ void init_dial() //Handle parsing and logic
             }
 
             index++;
+            init_dial();
             break;
           }
         }

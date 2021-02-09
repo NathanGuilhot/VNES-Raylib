@@ -34,6 +34,16 @@ typedef struct {
   //Page_destination ?
 } MENU_PAGE;
 
+typedef struct {
+  int volume;
+  int check;
+} OPTION_STRUCT;
+
+OPTION_STRUCT OPTION ={
+  .volume = 100,
+  .check = 0
+};
+
 int volumeTest = 50;  //[0;100]
 int checkTest = 0;    //[0;1]
 
@@ -51,11 +61,11 @@ MENU_PAGE ListMenuPage[]={
   {"Test", false,
     .items = {
       {"Button",  true,CHOICE_ITEM, 0},
-      {"Slider",  true,SLIDER,        0,0,{0,100}},
-      {"CheckBox",true,CHECKBOX,      0,0, {0,1}},
+      {"Slider",  true,SLIDER,        0,&OPTION.volume,{0,100}},
+      {"CheckBox",true,CHECKBOX,      0,&OPTION.check, {0,1}},
       {"Function",true,SCRIPT_RUNNER, 0,0, {0,1}},
     }
-  }  
+  }
 };
 
 bool inMenuChoice = false;
@@ -97,7 +107,9 @@ void DrawUI(int pCursor){
   {
     if (ListMenuPage[i].visible){
       if (i==pause_menu_index){
+        
         DrawRectangle(0,0,screenWidth,screenHeight,(Color){0,0,0,150});
+        DrawText("PAUSE",screenWidth/2-((strlen("PAUSE")-1)*30)/2,30,30,WHITE);
       }
       for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
       {
@@ -135,8 +147,9 @@ void DrawUI(int pCursor){
                     UI_SLIDER_MAIN_HEIGHT,
                     box_color
             );
+            //Curseur
             DrawRectangle(
-                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN + ((*ListMenuPage[i].items[i2].variable)*UI_SLIDER_MAIN_WIDTH)/ListMenuPage[i].items[i2].values[1],
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_SLIDER_CURSOR_HEIGHT/2+UI_SLIDER_MAIN_HEIGHT/2,
                     UI_SLIDER_CURSOR_WIDTH,
                     UI_SLIDER_CURSOR_HEIGHT,
@@ -154,7 +167,7 @@ void DrawUI(int pCursor){
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
                     UI_CHOICE_FONT_SIZE, box_color);
 
-            if (true){
+            if (*ListMenuPage[i].items[i2].variable!=0){
             DrawRectangle(
                     UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
@@ -165,10 +178,10 @@ void DrawUI(int pCursor){
             }
             else{
             //   DrawRectangle(
-            //         UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
-            //         UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_SLIDER_CURSOR_HEIGHT/2+UI_SLIDER_MAIN_HEIGHT/2,
-            //         UI_SLIDER_CURSOR_WIDTH,
-            //         UI_SLIDER_CURSOR_HEIGHT,
+            //         UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
+            //         UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
+            //         UI_CHECKBOX_MAIN_WIDTH,
+            //         UI_CHECKBOX_MAIN_HEIGHT,
             //         box_color
             // );
             }

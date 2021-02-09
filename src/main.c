@@ -241,7 +241,7 @@ void draw_dial()
 void updt_dial()
 {
 
-  init_dial();
+  
 
   for (int i = 0; i < CHARACTER_NUMBER; i++)
   {
@@ -260,8 +260,9 @@ void updt_dial()
 
   if (SCRPT[index].t == A || SCRPT[index].t == N)
   {
-    if (BTNP("A") && !inMenuPause)
+    if (!inMenuPause)
     {
+      if (BTNP("A")){
       if (cursor < strlen(SCRPT[index].c))
       {
         cursor = strlen(SCRPT[index].c);
@@ -272,10 +273,10 @@ void updt_dial()
         {
           index++;
           cursor = 1;
-          init_done = false;
-
-          // disp_text[64];
+          
           memset(disp_text, 0, 64); //Vider le string
+
+          init_dial();
         }
         else
         {
@@ -290,6 +291,7 @@ void updt_dial()
       cursor++;
     }
     strncpy(&disp_text, SCRPT[index].c, cursor);
+    }
   }
 
   //MENU MANAGER
@@ -307,7 +309,8 @@ void updt_dial()
     }
     else
     {
-      nb_choice = 0; //reset, if C: it will be handled in the parser
+      // nb_choice = 0; //reset, if C: it will be handled in the parser
+      init_dial();
     }
   }
 
@@ -359,9 +362,50 @@ void updt_dial()
         }
       }
       choice_sel = 0;
+      init_dial();
+    }
+  }
+
+  if (inMenuPause){
+  // CHOICE_ITEM,
+  // SLIDER,
+  // CHECKBOX,
+  // INPUT,
+  // LIST,
+  // SCRIPT_RUNNER,
+  // MENU_NAV
+
+  static MENU_ITEM item_menu;
+  item_menu = ListMenuPage[pause_menu_index].items[choice_sel];
+
+  switch(item_menu.type){
+    case CHECKBOX:{
+      if (BTNP("A")){
+        *item_menu.variable=!*item_menu.variable;
+      }
+      break;
+    }
+    case SLIDER:{
+      if (BTN("LEFT")){
+        if (*item_menu.variable-1>=item_menu.values[0])
+        {
+          *item_menu.variable-=1;
+        }
+      }
+      else if(BTN("RIGHT"))
+      {
+        if (*item_menu.variable+1<=item_menu.values[1])
+        {
+          *item_menu.variable+=1;
+        }
+      }
+      break;
     }
   }
 }
+};
+
+
 
 void draw_menu()
 {
@@ -372,6 +416,7 @@ void updt_menu()
   if (BTNP("A"))
   {
     game_st = DIAL;
+    init_dial();
   }
 }
 
@@ -403,6 +448,7 @@ int main()
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
+  init_dial();
 
   // Main game loop
   while (!WindowShouldClose()) // Detect window close button or ESC key
