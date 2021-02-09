@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "script_parser.h": "c",
+        "input_manager.h": "c"
     }
 }

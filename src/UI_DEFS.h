@@ -76,6 +76,19 @@ int UI_CHOICE_HEIGHT = 30;
 int UI_CHOICE_FONT_SIZE = 20;
 int UI_CHOICE_FONT_MARGIN_TOP = 5;
 
+int UI_SLIDER_LABEL_MARGIN = 20;
+int UI_SLIDER_MAIN_WIDTH = 175;
+int UI_SLIDER_MAIN_HEIGHT = 10;
+int UI_SLIDER_CURSOR_WIDTH = 10;
+int UI_SLIDER_CURSOR_HEIGHT = 20;
+
+int UI_CHECKBOX_LABEL_MARGIN = 20;
+int UI_CHECKBOX_LABEL_MARGIN_RIGHT = 40;
+int UI_CHECKBOX_MAIN_WIDTH = 30;
+int UI_CHECKBOX_MAIN_HEIGHT = 30;
+
+
+
 int UI_TEXT_SPACING = 10; //Font size/default font size
 
 
@@ -111,16 +124,54 @@ void DrawUI(int pCursor){
               box_color = GREEN;
             }
             DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
-                    UI_CHOICE_FONT_SIZE, DARKGRAY);
+                    UI_CHOICE_FONT_SIZE, box_color);
+            //Main
+            DrawRectangle(
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
+                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2,
+                    UI_SLIDER_MAIN_WIDTH,
+                    UI_SLIDER_MAIN_HEIGHT,
+                    box_color
+            );
+            DrawRectangle(
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
+                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_SLIDER_CURSOR_HEIGHT/2+UI_SLIDER_MAIN_HEIGHT/2,
+                    UI_SLIDER_CURSOR_WIDTH,
+                    UI_SLIDER_CURSOR_HEIGHT,
+                    box_color
+            );
             
             break;
           case CHECKBOX:
+            box_color = LIGHTGRAY;
+            if (pCursor==i2){
+              box_color = GREEN;
+            }
             DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
-                    UI_CHOICE_FONT_SIZE, DARKGRAY);
+                    UI_CHOICE_FONT_SIZE, box_color);
+
+            if (true){
+            DrawRectangle(
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
+                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
+                    UI_CHECKBOX_MAIN_WIDTH,
+                    UI_CHECKBOX_MAIN_HEIGHT,
+                    box_color
+            );
+            }
+            else{
+            //   DrawRectangle(
+            //         UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
+            //         UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_SLIDER_CURSOR_HEIGHT/2+UI_SLIDER_MAIN_HEIGHT/2,
+            //         UI_SLIDER_CURSOR_WIDTH,
+            //         UI_SLIDER_CURSOR_HEIGHT,
+            //         box_color
+            // );
+            }
             
             break;
           case INPUT:
@@ -138,6 +189,11 @@ void DrawUI(int pCursor){
             
             break;
           case SCRIPT_RUNNER:
+            box_color = LIGHTGRAY;
+            if (pCursor==i2){
+              box_color = GREEN;
+            }
+            DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
             DrawText(ListMenuPage[i].items[i2].label,
                     UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
@@ -160,3 +216,18 @@ void DrawUI(int pCursor){
     }
   }
 };
+
+int GetVisibleChoiceNumber(pPage){
+  static int count;
+  count = 0;
+
+  for (int i = 0; i < MAX_ITEMS_MENU_PAGE; i++)
+  {
+    if (ListMenuPage[pPage].items[i].visible){count++;}
+    else break; /*Break, because in no circonstence should we have an invisible choice in the middle
+                (at least with the current implementation)*/
+  }
+  
+
+  return count;
+}

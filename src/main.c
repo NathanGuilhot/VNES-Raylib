@@ -9,7 +9,10 @@
 #include <string.h>
 #include <math.h>
 
+#include "NSTD_custom_lib.h"
 #include "UI_DEFS.h"
+#include "input_manager.h"
+
 
 //----Enums
 
@@ -111,141 +114,6 @@ char *fourth_word;
 // }
 bool init_done = false; //Used to only launch init_dial once
 
-bool a_pressed = false; //A
-bool b_pressed = false; //B
-bool u_pressed = false; //UP
-bool d_pressed = false; //DOWN
-bool l_pressed = false; //LEFT (gauche)
-bool r_pressed = false; //RIGHT (drouate)
-bool start_pressed = false;
-
-bool BTN(char *pKey)
-{ //Maybe replace the string by an enum?
-  if (strcmp(pKey, "A") == 0)
-  {
-    a_pressed = (IsKeyDown(KEY_SPACE));
-    return a_pressed;
-  }
-  else if (strcmp(pKey, "B") == 0)
-  {
-    b_pressed = (IsKeyDown(KEY_ESCAPE));
-    return b_pressed;
-  }
-  else if (strcmp(pKey, "UP") == 0)
-  {
-    u_pressed = (IsKeyDown(KEY_UP));
-    return u_pressed;
-  }
-  else if (strcmp(pKey, "DOWN") == 0)
-  {
-    d_pressed = (IsKeyDown(KEY_DOWN));
-    return d_pressed;
-  }
-  else if (strcmp(pKey, "LEFT") == 0)
-  {
-    l_pressed = (IsKeyDown(KEY_LEFT));
-    return l_pressed;
-  }
-  else if (strcmp(pKey, "RIGHT") == 0)
-  {
-    r_pressed = (IsKeyDown(KEY_RIGHT));
-    return r_pressed;
-  }
-  else if (strcmp(pKey, "START") == 0)
-  {
-    start_pressed = (IsKeyDown(KEY_ENTER));
-    return start_pressed;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-bool BTNP(char *pKey)
-{
-
-  if (strcmp(pKey, "A") == 0)
-  {
-    if (!a_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "B") == 0)
-  {
-    if (!b_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "UP") == 0)
-  {
-    if (!u_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "DOWN") == 0)
-  {
-    if (!d_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "LEFT") == 0)
-  {
-    if (!l_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "RIGHT") == 0)
-  {
-    if (!r_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-  else if (strcmp(pKey, "START") == 0)
-  {
-    if (!start_pressed)
-    {
-      return BTN(pKey);
-    }
-    else
-    {
-      BTN(pKey);
-    }
-  }
-
-  return false;
-}
-
 const bool debug_mode = false;
 
 int i;
@@ -264,22 +132,10 @@ char *index_txt = "indx";
 char nb_choice = 1;
 char *txt_choix = "choix";
 
-#define FR 1 //bolean, 1 = FR 0 = EN
 
-//Visual Novel Content
-#if FR
-#include "script_fr.h"
-#else
-#include "script_en.h"
-#endif
+#define FRENCH 1 //bolean, 1 = FR 0 = EN
+#include "script_parser.h"
 
-typedef struct
-{
-  char *name;
-  int value;
-} Label;
-
-Label ListLabels[LABELS_NUMBERS];
 
 void ParseLabels()
 {
@@ -356,15 +212,6 @@ const char expr[] = {
     //0'v'   1 :)  	2 :|   	3 :(   	4 :D  	5 D:    6 A_A	7 /	8 \	9 é	10 è
 };
 
-int c_atoi(char *str)
-{ //custom atoi function so I don't need the stdlib
-  int res = 0;
-  for (i = 0; str[i] != '\0'; i++)
-    res = res * 10 + str[i] - '0';
-  return res;
-  //Credit : https://www.geeksforgeeks.org/write-your-own-atoi/
-}
-
 #define C_MAX_TEXTSPLIT_COUNT 128
 #define MAX_TEXT_BUFFER_LENGTH 100
 
@@ -387,302 +234,9 @@ void draw_dial()
   }
 
   DrawUI(choice_sel);
-
-  DrawText(":(", 300, 0 + (choice_sel * 20), 20, WHITE);
-  DrawText(":(", 300 - 20, 0, 20, WHITE);
 }
 
-void init_dial() //Handle parsing and logic
-{
-  // if (init_done == false) //en fait ça faisait absolument rien du tout mdr
-  {
-    //Managing les passages spéciaux
-    switch (SCRPT[index].t)
-    {
-    case C:
-    {
-      // clrscr();
-      // game_st = CHOICE;
 
-      ListMenuPage[choice_menu_index].visible = true;
-      inMenuChoice = true;
-      // choice_sel = 0;
-      int choice_index = 0; //Pour l'affichage
-
-      nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
-
-      for (i = 1; i <= nb_choice; i++)
-      {
-        choice_index = ChoiceCollection[choice_collection_index][i];
-        // txt_choix = ListeChoix[choice_index].txt;
-        ListMenuPage[choice_menu_index].items[i - 1].label = ListeChoix[choice_index].txt;
-        ListMenuPage[choice_menu_index].items[i - 1].visible = true;
-        // DrawText(txt_choix, 10, 70 + 15 * i, 10, BLACK);
-        //     // vrambuf_put(NTADR_A(4,15+i+i),txt_choix, strlen(txt_choix)); //ugly repetition
-      }
-
-      // init_draw_choice();
-      choice_collection_index = c_atoi(SCRPT[index].c);
-      choice_sel_index = ChoiceCollection[choice_collection_index][choice_sel + 1];
-      break;
-    }
-    case J:
-    {
-      for (i = 0; i < LABELS_NUMBERS; i++)
-      {
-        if (ListLabels[i].name == SCRPT[index].c)
-        {
-          index = ListLabels[i].value;
-          break;
-        }
-      }
-      break;
-    }
-    case SWPEL:
-    {
-      sprEl = c_atoi(SCRPT[index].c);
-      index++;
-      break;
-    }
-    case SWPER:
-    {
-      sprEr = c_atoi(SCRPT[index].c);
-      index++;
-      break;
-    }
-    case SWPM:
-    {
-
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " ");
-
-      char id_expression[10];
-
-      for (i = 0; i < CHARACTER_NUMBER; i++)
-      {
-        if (CharaList[i].key != NULL)
-        {
-          if (strcmp(first_word, CharaList[i].key) == 0)
-          {
-            strcpy(id_expression, SCRPT[index].c + strlen(first_word) + 1);
-
-            CharaList[i].expression_index = c_atoi(id_expression);
-          }
-        }
-      }
-
-      index++;
-      break;
-    }
-    case H:
-    {
-
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " ");
-
-      for (i = 0; i < CHARACTER_NUMBER; i++)
-      {
-        if (CharaList[i].key != NULL)
-        {
-          if (strcmp(first_word, CharaList[i].key) == 0)
-          {
-            CharaList[i].visible = !CharaList[i].visible;
-          }
-        }
-      }
-
-      index++;
-      break;
-    }
-    case N:
-    {
-      //Parse le texte pour chercher les noms
-      //On veux éviter de faire ça à chaque fois si possible
-
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " ");
-
-      for (i = 0; i < CHARACTER_NUMBER; i++)
-      {
-        if (CharaList[i].key != NULL)
-        {
-          if (strcmp(first_word, CharaList[i].key) == 0)
-          {
-            chara_name = CharaList[i].name;
-            SCRPT[index].c += strlen(first_word) + 1;
-            // init_done = true; //what?
-
-            break;
-          }
-          else
-          {
-            chara_name = "";
-          }
-        }
-      }
-      break;
-    }
-    case F: //FIN
-    {
-      game_st = END;
-      index = 0;
-
-      break;
-    }
-    case LABEL:
-    {
-      index++;
-      break;
-    }
-    case MOV:
-    {
-
-      char mov_to[10];
-
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " ");
-
-      for (i = 0; i < CHARACTER_NUMBER; i++)
-      {
-        if (CharaList[i].key != NULL)
-        {
-          if (strcmp(first_word, CharaList[i].key) == 0)
-          {
-            strcpy(mov_to, SCRPT[index].c + strlen(first_word) + 1);
-
-            CharaList[i].gotox = c_atoi(mov_to);
-
-            break;
-          }
-        }
-      }
-
-      index++;
-      break;
-    }
-    case CJUMP:
-    {
-      //CONDITIONAL JUMP
-      //C = FLAGKEY SIGN VALUE KEYLABEL
-
-      //PARSE C
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " "); //FLAGKEY
-      second_word = strtok(NULL, " ");    //SIGN
-      third_word = strtok(NULL, " ");     //VALUE
-      fourth_word = strtok(NULL, " ");    //KEYLABEL
-
-      //GET THE FLAGKEY
-      for (i = 0; i < FLAGS_NUMBER; i++)
-      {
-        if (FlagList[i].key != NULL)
-        {
-          if (strcmp(first_word, FlagList[i].key) == 0)
-          {
-            static bool flag_condition;
-
-            //EVALUATE CONDITION (DETERMINED BY THE SIGN)
-            if (strcmp(second_word, ">") == 0) //+
-            {
-              flag_condition = (FlagList[i].value > c_atoi(third_word));
-            }
-            else if (strcmp(second_word, "<") == 0) //+
-            {
-              flag_condition = (FlagList[i].value < c_atoi(third_word));
-            }
-            else if (strcmp(second_word, ">=") == 0) //+
-            {
-              flag_condition = (FlagList[i].value >= c_atoi(third_word));
-            }
-            else if (strcmp(second_word, "<=") == 0) //+
-            {
-              flag_condition = (FlagList[i].value <= c_atoi(third_word));
-            }
-            else if (strcmp(second_word, "==") == 0) //+
-            {
-              flag_condition = (FlagList[i].value == c_atoi(third_word));
-            }
-            else if (strcmp(second_word, "!=") == 0) //+
-            {
-              flag_condition = (FlagList[i].value != c_atoi(third_word));
-            }
-
-            //JUMP TO THE LABEL IF TRUE
-            if (flag_condition)
-            {
-              // index = c_atoi(fourth_word);
-              //FIND THE KEYLABEL FIRST
-              for (i = 0; i < LABELS_NUMBERS; i++)
-              {
-                if (strcmp(ListLabels[i].name, fourth_word) == 0)
-                {
-                  index = ListLabels[i].value;
-                  break;
-                }
-              }
-            }
-            else
-            {
-              index++;
-            }
-
-            break;
-          }
-        }
-      }
-
-      break;
-    }
-    case CFLAGS:
-    {
-      //CHANGE FLAG VALUE
-      //C = FLAGKEY (optional +/-) VALUE
-
-      strncpy(buffText, SCRPT[index].c, 20);
-      first_word = strtok(buffText, " ");
-      second_word = strtok(NULL, " ");
-      third_word = strtok(NULL, " ");
-
-      //GET THE FLAGKEY
-      for (i = 0; i < FLAGS_NUMBER; i++)
-      {
-        if (FlagList[i].key != NULL)
-        {
-          if (strcmp(first_word, FlagList[i].key) == 0)
-          {
-            //CHECK IF SECOND ARGUMENT IS + OR -
-            if (strcmp(second_word, "+") == 0) //+
-            {
-              FlagList[i].value += c_atoi(third_word);
-            }
-            else if (strcmp(second_word, "-") == 0) //-
-            {
-              FlagList[i].value -= c_atoi(third_word);
-            }
-            else if (strcmp(second_word, "*") == 0) //*
-            {
-              FlagList[i].value *= c_atoi(third_word);
-            }
-            else if (strcmp(second_word, "/") == 0) // /
-            {
-              FlagList[i].value /= c_atoi(third_word);
-            }
-            else
-            {
-              FlagList[i].value = c_atoi(second_word);
-            }
-
-            index++;
-            break;
-          }
-        }
-      }
-
-      break;
-    }
-    }
-  }
-}
 
 void updt_dial()
 {
@@ -711,7 +265,7 @@ void updt_dial()
       if (cursor < strlen(SCRPT[index].c))
       {
         cursor = strlen(SCRPT[index].c);
-      } //Affiche tout le texte; pas top parce que taille varibale pour le texte
+      } //display the whole text
       else
       {
         if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
@@ -736,7 +290,6 @@ void updt_dial()
       cursor++;
     }
     strncpy(&disp_text, SCRPT[index].c, cursor);
-    // disp_text = SCRPT[index].c;
   }
 
   //MENU MANAGER
@@ -748,7 +301,7 @@ void updt_dial()
 
     if (inMenuPause)
     {
-      nb_choice = MAX_ITEMS_MENU_PAGE; //Ugly but at least it doesn't crash
+      nb_choice = GetVisibleChoiceNumber(pause_menu_index); //Ugly but at least it doesn't crash
       //Check how many visible choice exist
       //Maybe do the same for the choice for consistency sake
     }
