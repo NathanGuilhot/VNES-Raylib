@@ -135,7 +135,7 @@ void init_dial() //Handle parsing and logic
           if (strcmp(first_word, CharaList[i].key) == 0)
           {
             chara_name = CharaList[i].name;
-            SCRPT[index].c += strlen(first_word) + 1;
+            text_to_display = SCRPT[index].c + strlen(first_word) + 1;
             // init_done = true; //what?
 
             break;
@@ -143,6 +143,7 @@ void init_dial() //Handle parsing and logic
           else
           {
             chara_name = "";
+            text_to_display = SCRPT[index].c;
           }
         }
       }

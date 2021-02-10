@@ -20,8 +20,10 @@ typedef struct
   bool visible;
   enum MENU_ITEM_TYPE type;
   int param; //Change type later //Originally planned to be a function to call //Label index if 
-  int *variable;
+  int *variable; //variable to edit
   int values[4];
+  int (*function)(int);
+
 } MENU_ITEM;
 
 #define MAX_ITEMS_MENU_PAGE 10
@@ -38,6 +40,12 @@ typedef struct {
   int volume;
   int check;
 } OPTION_STRUCT;
+
+Sound beep;
+
+void playSomeSound(){
+  PlaySound(beep);
+}
 
 OPTION_STRUCT OPTION ={
   .volume = 100,
@@ -58,20 +66,29 @@ MENU_PAGE ListMenuPage[]={
       {"BTN4",  false,CHOICE_ITEM, 0},
     }
   },
-  {"Test", false,
+  {"PAUSE", false,
     .items = {
       {"Button",  true,CHOICE_ITEM, 0},
-      {"Slider",  true,SLIDER,        0,&OPTION.volume,{0,100}},
-      {"CheckBox",true,CHECKBOX,      0,&OPTION.check, {0,1}},
-      {"Function",true,SCRIPT_RUNNER, 0,0, {0,1}},
+      {"Slider",  true,SLIDER, 0, &OPTION.volume,{0,100}},
+      {"CheckBox",true,CHECKBOX, 0, &OPTION.check, {0,1}},
+      {"Autre menu",true,MENU_NAV, 2},
+      {"Function",true,SCRIPT_RUNNER, .function=playSomeSound},
     }
-  }
+  },
+  {"SUBMENU", false,
+    .items = {
+      {"BTN1",  true,CHOICE_ITEM, 0},
+      {"Slider",  true,SLIDER, 0, &OPTION.volume,{0,100}},
+      {"RETOUR",true,MENU_NAV, pause_menu_index},
+    }
+  },
+
 };
 
 bool inMenuChoice = false;
 bool inMenuPause = false;
 
-int MenuPageNumber = 2;
+int MenuPageNumber = 3;
 
 
 int UI_BOX_POSITION_X = screenWidth/2;
@@ -105,12 +122,16 @@ int UI_TEXT_SPACING = 10; //Font size/default font size
 void DrawUI(int pCursor){
   for (int i = 0; i < MenuPageNumber; i++)
   {
+    if (i==pause_menu_index && inMenuPause){
+    // if (inMenuPause){
+      
+      DrawRectangle(0,0,screenWidth,screenHeight,(Color){0,0,0,150});
+    }
     if (ListMenuPage[i].visible){
-      if (i==pause_menu_index){
-        
-        DrawRectangle(0,0,screenWidth,screenHeight,(Color){0,0,0,150});
-        DrawText("PAUSE",screenWidth/2-((strlen("PAUSE")-1)*30)/2,30,30,WHITE);
+      if (i>0){
+        DrawText(ListMenuPage[i].title,screenWidth/2-((strlen(ListMenuPage[i].title)-1)*30)/2,30,30,WHITE);
       }
+
       for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
       {
         if (ListMenuPage[i].items[i2].visible==true)
@@ -118,6 +139,7 @@ void DrawUI(int pCursor){
           Color box_color;
           switch (ListMenuPage[i].items[i2].type)
           {
+          case MENU_NAV:
           case CHOICE_ITEM:
             box_color = LIGHTGRAY;
             if (pCursor==i2){
@@ -177,13 +199,13 @@ void DrawUI(int pCursor){
             );
             }
             else{
-            //   DrawRectangle(
-            //         UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
-            //         UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
-            //         UI_CHECKBOX_MAIN_WIDTH,
-            //         UI_CHECKBOX_MAIN_HEIGHT,
-            //         box_color
-            // );
+            DrawRectangleLines(
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
+                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
+                    UI_CHECKBOX_MAIN_WIDTH,
+                    UI_CHECKBOX_MAIN_HEIGHT,
+                    box_color
+            );
             }
             
             break;
@@ -207,13 +229,6 @@ void DrawUI(int pCursor){
               box_color = GREEN;
             }
             DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
-            DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
-                    UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
-                    UI_CHOICE_FONT_SIZE, DARKGRAY);
-            
-            break;
-          case MENU_NAV:
             DrawText(ListMenuPage[i].items[i2].label,
                     UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,

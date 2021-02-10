@@ -63,12 +63,22 @@
   - [ ] UI System
   
     - [x] Datastructure
+    
     - [ ] UI Navigation logic
-      - [ ] Draw the UI
+      
+      - [ ] Draw the UI + Logic
+      
+        - [x] Slider
+        - [x] Button
+        - [x] Checkbox
+        - [ ] List
+        - [x] Script Runner
+        - [x] Change page
+    
     - [ ] UI 
+  
     
-    
-    
+  
   - [ ] Draw free image on screen
 
     - [ ] Datastructure
@@ -82,15 +92,15 @@
     - [ ] Toggle visibility
 
     - [ ] Position
-
+  
     - [ ] Tweening
-
+  
     - [ ] Z-Index (??)
-
+  
     - [ ] Animation (????)
-
+  
       
-
+  
   - [ ] Savefile
   
     - [ ] Basic Interface for testing

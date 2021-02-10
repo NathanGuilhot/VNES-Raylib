@@ -13,7 +13,6 @@
 #include "UI_DEFS.h"
 #include "input_manager.h"
 
-
 //----Enums
 
 enum GAME_STATE
@@ -99,6 +98,7 @@ typedef struct
 
 } CHARA;
 
+char *text_to_display;
 char *chara_name = "Character Name";
 char buffText[20]; //Utile pour le parse du text
 char *first_word;
@@ -132,10 +132,8 @@ char *index_txt = "indx";
 char nb_choice = 1;
 char *txt_choix = "choix";
 
-
 #define FRENCH 1 //bolean, 1 = FR 0 = EN
 #include "script_parser.h"
-
 
 void ParseLabels()
 {
@@ -236,13 +234,10 @@ void draw_dial()
   DrawUI(choice_sel);
 }
 
-
-
 void updt_dial()
 {
 
-  
-
+  //"Tweening"
   for (int i = 0; i < CHARACTER_NUMBER; i++)
   {
     if (CharaList[i].x != CharaList[i].gotox)
@@ -262,43 +257,56 @@ void updt_dial()
   {
     if (!inMenuPause)
     {
-      if (BTNP("A")){
-      if (cursor < strlen(SCRPT[index].c))
+      if (BTNP("A"))
       {
-        cursor = strlen(SCRPT[index].c);
-      } //display the whole text
-      else
-      {
-        if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
+        if (cursor < strlen(text_to_display))
         {
-          index++;
-          cursor = 1;
-          
-          memset(disp_text, 0, 64); //Vider le string
-
-          init_dial();
-        }
+          cursor = strlen(text_to_display);
+        } //display the whole text
         else
         {
-          game_st = END;
-          cursor = 0;
+          if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
+          {
+            index++;
+            cursor = 1;
+
+            memset(disp_text, 0, 64); //Vider le string
+
+            init_dial();
+          }
+          else
+          {
+            game_st = END;
+            cursor = 0;
+          }
         }
       }
-    }
 
-    if (cursor < strlen(SCRPT[index].c))
-    {
-      cursor++;
-    }
-    strncpy(&disp_text, SCRPT[index].c, cursor);
+      if (cursor < strlen(text_to_display))
+      {
+        cursor++;
+      }
+      strncpy(&disp_text, text_to_display, cursor);
     }
   }
 
   //MENU MANAGER
   if (BTNP("START"))
   {
+    // playSomeSound();
     choice_sel = 0;
-    ListMenuPage[pause_menu_index].visible = !ListMenuPage[pause_menu_index].visible;
+    if (inMenuPause)
+    {
+      ListMenuPage[pause_menu_index].visible = false;
+      for (int i = pause_menu_index; i < MenuPageNumber; i++)
+      {
+        ListMenuPage[i].visible = false;
+      }
+    }
+    else
+    {
+      ListMenuPage[pause_menu_index].visible = true;
+    }
     inMenuPause = !inMenuPause;
 
     if (inMenuPause)
@@ -366,46 +374,91 @@ void updt_dial()
     }
   }
 
-  if (inMenuPause){
-  // CHOICE_ITEM,
-  // SLIDER,
-  // CHECKBOX,
-  // INPUT,
-  // LIST,
-  // SCRIPT_RUNNER,
-  // MENU_NAV
+  if (inMenuPause)
+  {
+    // CHOICE_ITEM,
+    // SLIDER,
+    // CHECKBOX,
+    // INPUT,
+    // LIST,
+    // SCRIPT_RUNNER,
+    // MENU_NAV
 
-  static MENU_ITEM item_menu;
-  item_menu = ListMenuPage[pause_menu_index].items[choice_sel];
-
-  switch(item_menu.type){
-    case CHECKBOX:{
-      if (BTNP("A")){
-        *item_menu.variable=!*item_menu.variable;
-      }
-      break;
-    }
-    case SLIDER:{
-      if (BTN("LEFT")){
-        if (*item_menu.variable-1>=item_menu.values[0])
-        {
-          *item_menu.variable-=1;
-        }
-      }
-      else if(BTN("RIGHT"))
+    static MENU_ITEM item_menu;
+    for (int i = pause_menu_index; i < MAX_ITEMS_MENU_PAGE; i++)
+    {
+      if (ListMenuPage[i].visible)
       {
-        if (*item_menu.variable+1<=item_menu.values[1])
+        item_menu = ListMenuPage[i].items[choice_sel];
+
+        switch (item_menu.type)
         {
-          *item_menu.variable+=1;
+        case CHECKBOX:
+        {
+          if (BTNP("A"))
+          {
+            *item_menu.variable = !*item_menu.variable;
+          }
+          break;
+        }
+        case SLIDER:
+        {
+          if (BTN("LEFT"))
+          {
+            if (*item_menu.variable - 1 >= item_menu.values[0])
+            {
+              *item_menu.variable -= 1;
+            }
+          }
+          else if (BTN("RIGHT"))
+          {
+            if (*item_menu.variable + 1 <= item_menu.values[1])
+            {
+              *item_menu.variable += 1;
+            }
+          }
+          break;
+        }
+        case SCRIPT_RUNNER:
+          if (BTNP("A"))
+          {
+            item_menu.function(item_menu.variable); //It's super hacky, but I love it
+          }
+          break;
+        case MENU_NAV:
+          if (BTNP("A"))
+          {
+            // item_menu.function(item_menu.variable); //It's super hacky, but I love it
+            ListMenuPage[item_menu.param].visible = true;
+            ListMenuPage[i].visible = false;
+            choice_sel = 0;
+            nb_choice = GetVisibleChoiceNumber(item_menu.param);
+            playSomeSound();
+          }
+          break;
+        case INPUT:
+        {
+          if (BTN("LEFT"))
+          {
+            if (*item_menu.variable - 1 >= item_menu.values[0])
+            {
+              *item_menu.variable -= 1;
+            }
+          }
+          else if (BTN("RIGHT"))
+          {
+            if (*item_menu.variable + 1 <= item_menu.values[1])
+            {
+              *item_menu.variable += 1;
+            }
+          }
+          break;
+        }
         }
       }
-      break;
     }
   }
-}
 };
-
-
 
 void draw_menu()
 {
@@ -442,6 +495,9 @@ int main()
   //--------------------------------------------------------------------------------------
 
   InitWindow(screenWidth, screenHeight, "VNES_PC");
+  InitAudioDevice();
+
+  beep = LoadSound("./assets/audio/sound/beep1.wav");
 
   loadCharacterSprites();
   ParseLabels();
