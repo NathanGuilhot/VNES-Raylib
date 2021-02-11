@@ -1,5 +1,9 @@
 //SAVE SYSTEM
 
+/*Why having 2 exactly identical formats?
+It's honestly just in case I want to store string at some point,
+which are not handled the same way by printf and scanf */
+
 const char* FORMAT_INDEX_IN = "(IND %4d)\n";                 //Index
 const char* FORMAT_FLAGS_IN = "(FLG %2d)\n";              //Key, value
 const char* FORMAT_CHARA_IN = "(CHR %d,%4d,%4d,%d,%2d)\n"; //visible, x, y, zindex, expression_index

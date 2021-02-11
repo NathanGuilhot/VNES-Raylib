@@ -124,13 +124,17 @@ void DrawUI(int pCursor){
   for (int i = 0; i < MenuPageNumber; i++)
   {
     if (i==pause_menu_index && inMenuPause){
-    // if (inMenuPause){
-      
       DrawRectangle(0,0,screenWidth,screenHeight,(Color){0,0,0,150});
     }
     if (ListMenuPage[i].visible){
-      if (i>0){
+      if (i>choice_menu_index){
         DrawText(ListMenuPage[i].title,screenWidth/2-((strlen(ListMenuPage[i].title)-1)*30)/2,30,30,WHITE);
+      }
+      else{
+        if (!inMenuChoice){ //if we are not in a choice, this menu shouldn't be visible
+          ListMenuPage[choice_menu_index].visible = false;
+          break;
+        }
       }
 
       for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)

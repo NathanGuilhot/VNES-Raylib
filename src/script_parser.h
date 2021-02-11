@@ -124,6 +124,7 @@ void init_dial() //Handle parsing and logic
     {
       //Parse le texte pour chercher les noms
       //On veux éviter de faire ça à chaque fois si possible
+      inMenuChoice = false;
 
       strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
