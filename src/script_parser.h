@@ -33,7 +33,7 @@ void init_dial() //Handle parsing and logic
 
       nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
 
-      for (i = 1; i <= nb_choice; i++)
+      for (int i = 1; i <= nb_choice; i++)
       {
         choice_index = ChoiceCollection[choice_collection_index][i];
         
@@ -49,7 +49,7 @@ void init_dial() //Handle parsing and logic
     }
     case J:
     {
-      for (i = 0; i < LABELS_NUMBERS; i++)
+      for (int i = 0; i < LABELS_NUMBERS; i++)
       {
         if (ListLabels[i].name == SCRPT[index].c)
         {
@@ -82,7 +82,7 @@ void init_dial() //Handle parsing and logic
 
       char id_expression[10];
 
-      for (i = 0; i < CHARACTER_NUMBER; i++)
+      for (int i = 0; i < CHARACTER_NUMBER; i++)
       {
         if (CharaList[i].key != NULL)
         {
@@ -105,7 +105,7 @@ void init_dial() //Handle parsing and logic
       strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
-      for (i = 0; i < CHARACTER_NUMBER; i++)
+      for (int i = 0; i < CHARACTER_NUMBER; i++)
       {
         if (CharaList[i].key != NULL)
         {
@@ -128,7 +128,7 @@ void init_dial() //Handle parsing and logic
       strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
-      for (i = 0; i < CHARACTER_NUMBER; i++)
+      for (int i = 0; i < CHARACTER_NUMBER; i++)
       {
         if (CharaList[i].key != NULL)
         {
@@ -170,7 +170,7 @@ void init_dial() //Handle parsing and logic
       strncpy(buffText, SCRPT[index].c, 20);
       first_word = strtok(buffText, " ");
 
-      for (i = 0; i < CHARACTER_NUMBER; i++)
+      for (int i = 0; i < CHARACTER_NUMBER; i++)
       {
         if (CharaList[i].key != NULL)
         {
@@ -202,7 +202,7 @@ void init_dial() //Handle parsing and logic
       fourth_word = strtok(NULL, " ");    //KEYLABEL
 
       //GET THE FLAGKEY
-      for (i = 0; i < FLAGS_NUMBER; i++)
+      for (int i = 0; i < FLAGS_NUMBER; i++)
       {
         if (FlagList[i].key != NULL)
         {
@@ -275,7 +275,7 @@ void init_dial() //Handle parsing and logic
       third_word = strtok(NULL, " ");
 
       //GET THE FLAGKEY
-      for (i = 0; i < FLAGS_NUMBER; i++)
+      for (int i = 0; i < FLAGS_NUMBER; i++)
       {
         if (FlagList[i].key != NULL)
         {

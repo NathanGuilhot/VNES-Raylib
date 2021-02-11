@@ -75,7 +75,7 @@
         - [x] Script Runner
         - [x] Change page
     
-    - [ ] UI 
+    - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable) 
   
     
   

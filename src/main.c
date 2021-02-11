@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <math.h>
 
 #include "NSTD_custom_lib.h"
@@ -116,9 +117,6 @@ bool init_done = false; //Used to only launch init_dial once
 
 const bool debug_mode = false;
 
-int i;
-int i2;
-char oam_id;
 
 //face var
 char sprEl = 0; //gauche
@@ -134,21 +132,22 @@ char *txt_choix = "choix";
 
 #define FRENCH 1 //bolean, 1 = FR 0 = EN
 #include "script_parser.h"
+#include "saveload_system.h"
 
 void ParseLabels()
 {
-  for (i2 = 0; i2 < LABELS_NUMBERS; i2++)
+  for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
   {
     ListLabels[i2].name = "null";
     ListLabels[i2].value = 0;
   }
 
-  for (i = 0; i < sizeof(SCRPT) / sizeof(SCRPT[0]); i++)
+  for (int i = 0; i < sizeof(SCRPT) / sizeof(SCRPT[0]); i++)
   {
     if (SCRPT[i].t == LABEL)
     {
       //L'ajouter à la liste, au premier endroit vide
-      for (i2 = 0; i2 < LABELS_NUMBERS; i2++)
+      for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
       {
         if (ListLabels[i2].name == "null")
         {
@@ -355,7 +354,7 @@ void updt_dial()
     //Press A in choice
     if (BTNP("A"))
     {
-      for (i = 0; i < LABELS_NUMBERS; i++)
+      for (int i = 0; i < LABELS_NUMBERS; i++)
       {
         if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
         {
@@ -498,6 +497,7 @@ int main()
   InitAudioDevice();
 
   beep = LoadSound("./assets/audio/sound/beep1.wav");
+  ListMenuPage[pause_menu_index].items[4].function=SAVEGAME;
 
   loadCharacterSprites();
   ParseLabels();
