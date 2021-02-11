@@ -2,13 +2,15 @@
 //0'v'   1 :)  	2 :|   	3 :(   	4 :D  	5 D:    6 A_A	7 /	8 \	9 é	10 è
 
 #define LABELS_NUMBERS 10
-#define CHARACTER_NUMBER 1
+#define CHARACTER_NUMBER 2
 // #define MAX_EXPRESSION 2
-#define FLAGS_NUMBER 10
+#define FLAGS_NUMBER 1
 
 
 extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
       {.key="A", .name="Ange", .image_name="ange"},
+      {.key="B", .name="Bange", .image_name="ange"},
+
 };
 
 extern FLAGS FlagList[FLAGS_NUMBER] = {
@@ -25,7 +27,7 @@ extern Passage SCRPT[] = {
       {CFLAGS, "LOVE 1"},
       {SWPM,"A 1"},
       {H, "A"},
-      {N, "A Ah, tu es la!"},
+      {N, "A Ah, tu es là!"},
       // {CJUMP, "LOVE == 0 cava"},
       // {CJUMP, "LOVE > 0 cava"},
       {MOV, "A 400"},

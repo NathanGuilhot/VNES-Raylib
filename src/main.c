@@ -488,7 +488,7 @@ void updt_end()
   }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
   // Initialization
   //--------------------------------------------------------------------------------------
@@ -497,7 +497,8 @@ int main()
   InitAudioDevice();
 
   beep = LoadSound("./assets/audio/sound/beep1.wav");
-  ListMenuPage[pause_menu_index].items[4].function=SAVEGAME;
+  ListMenuPage[pause_menu_index].items[4].function=SAVEGAME; //Yes, this is very ugly, but honey I had no choices
+  ListMenuPage[pause_menu_index].items[5].function=LOADGAME;
 
   loadCharacterSprites();
   ParseLabels();

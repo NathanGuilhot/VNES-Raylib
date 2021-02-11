@@ -73,6 +73,7 @@ MENU_PAGE ListMenuPage[]={
       {"CheckBox",true,CHECKBOX, 0, &OPTION.check, {0,1}},
       {"Autre menu",true,MENU_NAV, 2},
       {"SAVE",true,SCRIPT_RUNNER, .function=playSomeSound},
+      {"LOAD",true,SCRIPT_RUNNER, .function=playSomeSound},
     }
   },
   {"SUBMENU", false,
