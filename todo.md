@@ -17,6 +17,7 @@
                  	- [ ] Variable duration
                   - [ ] Real Tweening
                 	- [ ] GotoY support (? Do we really need that ?)
+           - [ ] Fix the gotox bug (seems to be defined somewhere else for some reason ?)
            - [x] Hide/Show
     
   - [x] Flags

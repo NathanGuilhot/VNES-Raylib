@@ -87,6 +87,9 @@ typedef struct
   char *key;
   char *name;
   char *image_name;
+  Color color_name;
+
+  Rectangle borders;
 
   bool visible;
   int x;
@@ -189,9 +192,10 @@ void loadCharacterSprites()
 
     CharaList[i].base_image = LoadTexture(base_filename);
 
-    //todo : get image size
-    CharaList[i].y = GetScreenHeight() - 400;
-    CharaList[i].x = (GetScreenWidth() >> 1);
+    CharaList[i].y = screenHeight - CharaList[i].base_image.height;
+    CharaList[i].x = (screenWidth - CharaList[i].base_image.width)/2;
+    CharaList[i].gotox = CharaList[i].x;
+    CharaList[i].gotoy = CharaList[i].y;
 
     char buff[1];
 
@@ -208,6 +212,11 @@ void loadCharacterSprites()
     }
 
     CharaList[i].expression_index = 0; //default
+
+    if (CharaList[i].color_name.a==0) //If the color is transparent, we asume it has not be defined
+    {
+      CharaList[i].color_name = DARKGRAY;
+    }
   }
 }
 
@@ -249,14 +258,13 @@ void draw_dial()
 
   //DRAW Text & Textbox
 
-  
 
   if (!inMenuChoice)
   {
-    DrawTexture(UI_IMAGE.textbox,163,315,WHITE);
+    DrawTexture(UI_IMAGE.textbox,(screenWidth-UI_IMAGE.textbox.width)/2,315,WHITE);
 
-    DrawText(chara_name, 163+10, 315+10, 20, DARKGRAY);
-    DrawText(disp_text, 163+10, 315+30, 20, DARKGRAY);
+    DrawText(chara_name, 163+10, 315+10, 20, UI_TEXTBOX_NAME_COLOR);
+    DrawText(disp_text, 163+10, 315+30, 20, UI_TEXTBOX_TEXT_COLOR);
     // DrawTextEx(GetFontDefault(),disp_text,(Vector2){163+20,315+40},(float)20,(float)1,DARKGRAY);
   }
 
@@ -271,8 +279,10 @@ void updt_dial()
   {
     if (CharaList[i].x != CharaList[i].gotox)
     {
-      CharaList[i].x += (CharaList[i].gotox - CharaList[i].x) / 10;
+        //This is just broken :(
 
+      // CharaList[i].x += (CharaList[i].gotox - CharaList[i].x) / 10;
+      // CharaList[i].x = CharaList[i].gotox;
       //Todo : have some real tweening going on
 
       //-c * math.cos(t/d * (math.pi/2)) + c + b

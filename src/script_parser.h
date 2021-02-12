@@ -139,12 +139,17 @@ void init_dial() //Handle parsing and logic
             text_to_display = SCRPT[index].c + strlen(first_word) + 1;
             // init_done = true; //what?
 
+            UI_TEXTBOX_NAME_COLOR = CharaList[i].color_name;
+
+
             break;
           }
           else
           {
             chara_name = "";
             text_to_display = SCRPT[index].c;
+
+            UI_TEXTBOX_NAME_COLOR = DARKGRAY;
           }
         }
       }

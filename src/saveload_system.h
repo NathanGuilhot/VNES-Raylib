@@ -35,7 +35,7 @@ bool SAVEGAME(){
    {
     fprintf_s(SaveFileOpen, FORMAT_FLAGS_OUT, FlagList[i].value);
    }
-   for (int i = 0; i < sizeof(CharaList)/sizeof(CharaList[0]); i++)
+   for (int i = 0; i < CHARACTER_NUMBER; i++)
    {
     fprintf_s(SaveFileOpen, FORMAT_CHARA_OUT, CharaList[i].visible, CharaList[i].x, CharaList[i].y, CharaList[i].zindex, CharaList[i].expression_index);
 
@@ -58,7 +58,7 @@ bool LOADGAME(){
         {
             fscanf_s(SaveFileOpen, FORMAT_FLAGS_IN, &FlagList[i].value);
         }
-        for (int i = 0; i < sizeof(CharaList)/sizeof(CharaList[0]); i++)
+        for (int i = 0; i < CHARACTER_NUMBER; i++)
         {
             fscanf_s(SaveFileOpen, FORMAT_CHARA_IN, &CharaList[i].visible, &CharaList[i].x, &CharaList[i].y, &CharaList[i].zindex, &CharaList[i].expression_index);
             CharaList[i].gotox = CharaList[i].x;

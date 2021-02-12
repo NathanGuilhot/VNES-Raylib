@@ -1,5 +1,4 @@
 //-----Visual Novel content !! °˖✧◝(⁰▿⁰)◜✧˖°
-//0'v'   1 :)  	2 :|   	3 :(   	4 :D  	5 D:    6 A_A	7 /	8 \	9 é	10 è
 
 #define LABELS_NUMBERS 10
 #define CHARACTER_NUMBER 2
@@ -8,7 +7,7 @@
 
 
 extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
-      {.key="A", .name="Ange", .image_name="ange"},
+      {.key="A", .name="Ange", .image_name="ange", .color_name=DARKBLUE},
       {.key="B", .name="Bange", .image_name="ange"},
 
 };
