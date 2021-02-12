@@ -313,6 +313,16 @@ void init_dial() //Handle parsing and logic
 
       break;
     }
+    case BG:
+    {
+      for (int i = 0; i < MAX_BACKGROUND; i++)
+      {
+        if (Background.images[i] == SCRPT[index].c) Background.bg_index=i ;
+      }
+      index++;
+      init_dial();
+      
+    }
     }
   }
 }

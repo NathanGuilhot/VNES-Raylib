@@ -33,15 +33,17 @@
     - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
       - [x] BTN()
       - [x] BTNP()
+    - [ ] Move the SCRIPT include at the top
 
     
 
-- [ ] Background manager
-  - [ ] Load image
-  - [ ] Draw the background
-    
-- [ ] Change in script
-  - [ ] Sound manager
+- [x] Background manager
+  - [x] Load image
+  - [x] Draw the background
+  - [x] Change in script
+  - [ ] Nicer transition between backgrounds
+
+- [ ] Sound manager
     - [ ] Load Sound and Music
     - [ ] Play Sound from SCRPT
     - [ ] Play Music from SCRPT (loop, fade (???))
@@ -58,7 +60,10 @@
         - [ ] List
         - [x] Script Runner
         - [x] Change page
-    - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable) 
+    - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
+    - [x] Nicer in-game UI (textbox)
+      - [ ] Better placement for the textbox
+    
   
     
   

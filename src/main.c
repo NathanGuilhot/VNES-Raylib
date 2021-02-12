@@ -36,6 +36,7 @@ enum DIAL_T
   CJUMP,  /*CONDITIONAL JUMP*/
   CFLAGS, /*CHANGE VALUE OF A FLAG*/
   SWPM /*SWAP EXPRESSION*/,
+  BG, /*Change background*/
 
   // WILL NOT BE USED IN THE END :
   SWPEL /*SWAP LEFT EYE*/,
@@ -78,6 +79,7 @@ typedef struct
 } FLAGS;
 
 #define MAX_EXPRESSION 2 //will be defined in script.h later (?)
+#define MAX_BACKGROUND 2
 
 //---- Characters
 typedef struct
@@ -98,6 +100,12 @@ typedef struct
   Texture2D expression[MAX_EXPRESSION];
 
 } CHARA;
+
+typedef struct {
+  char *images[MAX_BACKGROUND];
+  int bg_index;
+  Texture2D texture[MAX_BACKGROUND];
+} BACKGROUND;
 
 char *text_to_display;
 char *chara_name = "Character Name";
@@ -203,22 +211,31 @@ void loadCharacterSprites()
   }
 }
 
-const char expr[] = {
-    //liste des expressions
-    211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221
-    //0'v'   1 :)  	2 :|   	3 :(   	4 :D  	5 D:    6 A_A	7 /	8 \	9 é	10 è
-};
+void loadBackgroundSprites()
+{
+  for (int i; i<MAX_BACKGROUND; i++){
+    char filename[32] = "./assets/img/";
+    strcat(filename, Background.images[i]);
+    strcat(filename, ".png");
+
+    Background.texture[i] = LoadTexture(filename);
+  }
+  
+  Background.bg_index = 0; //default
+}
+
+void DrawBackground()
+{
+  DrawTexture(Background.texture[Background.bg_index],0,0,WHITE);
+}
 
 #define C_MAX_TEXTSPLIT_COUNT 128
 #define MAX_TEXT_BUFFER_LENGTH 100
 
 void draw_dial()
 {
-  if (!inMenuChoice)
-  {
-    DrawText(chara_name, 10, 75, 20, DARKGRAY);
-    DrawText(disp_text, 10, 100, 20, DARKGRAY);
-  }
+  DrawBackground();
+  
 
   //Draw characters on the screen
   for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -228,6 +245,19 @@ void draw_dial()
       DrawTexture(CharaList[i].base_image, CharaList[i].x, CharaList[i].y, WHITE);
       DrawTexture(CharaList[i].expression[CharaList[i].expression_index], CharaList[i].x, CharaList[i].y, WHITE);
     }
+  }
+
+  //DRAW Text & Textbox
+
+  
+
+  if (!inMenuChoice)
+  {
+    DrawTexture(UI_IMAGE.textbox,163,315,WHITE);
+
+    DrawText(chara_name, 163+10, 315+10, 20, DARKGRAY);
+    DrawText(disp_text, 163+10, 315+30, 20, DARKGRAY);
+    // DrawTextEx(GetFontDefault(),disp_text,(Vector2){163+20,315+40},(float)20,(float)1,DARKGRAY);
   }
 
   DrawUI(choice_sel);
@@ -505,6 +535,8 @@ int main(int argc, char *argv[])
   LOADCONFIG();
 
   loadCharacterSprites();
+  loadBackgroundSprites();
+  loadUI_Texture();
   ParseLabels();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second

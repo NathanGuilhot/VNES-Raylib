@@ -18,11 +18,11 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 - Flags and conditional jump (only with unsigned integer)
 - Move, hide and change expression of characters in script
 - Basic Save/Load system
+- Backgrounds *(finally)*
 
 ## ▲Planned
 
 - Complete UI rewrite
-- Background *(yes, we still don't have that)*
 - Draw images freely on screen
 - Music and sound system
 

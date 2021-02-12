@@ -13,6 +13,12 @@ extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work 
 
 };
 
+extern BACKGROUND Background = {
+      .images={ /*Only PNG for now*/
+            "bg_rose","bg_rouge" 
+      }
+};
+
 extern FLAGS FlagList[FLAGS_NUMBER] = {
       {.key="LOVE", .value=0}
 };
@@ -25,6 +31,7 @@ extern Passage SCRPT[] = {
       {MOV, "A 200"},
       {N, "Tu trouves enfin la personne\nque tu cherchais."},
       {CFLAGS, "LOVE 1"},
+      {BG, "bg_rouge"},
       {SWPM,"A 1"},
       {H, "A"},
       {N, "A Ah, tu es là!"},

@@ -52,6 +52,19 @@ OPTION_STRUCT OPTION ={
   .check = 0
 };
 
+typedef struct UI_IMG
+{
+  Texture2D textbox;
+} UI_IMG;
+
+UI_IMG UI_IMAGE;
+
+void loadUI_Texture()
+{
+  UI_IMAGE.textbox = LoadTexture("./assets/img/textbox.png");
+}
+
+
 
 #define choice_menu_index 0
 #define pause_menu_index 1
