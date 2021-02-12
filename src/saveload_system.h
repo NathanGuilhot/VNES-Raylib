@@ -17,13 +17,13 @@ const char* FORMAT_OPTION_OUT = "(OPT %3d,%d)\n";        //volume, check
 
 FILE *SaveFileOpen;
 char* save_file_path = "./save/savefile.txt";
+char* config_file_path = "./save/config.txt";
 
 bool SAVEGAME(){
     /*Data we need to save:
     - index
     - FlagList
     - CharaList (especially: bool visible, int x, int y, int zindex, int expression_index)
-    - struct OPTION
     And... that's it?    
     */
    char* save_data;
@@ -42,7 +42,7 @@ bool SAVEGAME(){
     CharaList[i].gotox = CharaList[i].x;
     CharaList[i].gotoy = CharaList[i].y;
    }
-   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check);
+//    fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check);
 
    fclose(SaveFileOpen);
 }
@@ -64,7 +64,7 @@ bool LOADGAME(){
             CharaList[i].gotox = CharaList[i].x;
             CharaList[i].gotoy = CharaList[i].y;
         }
-        fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check);
+        // fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check);
         
         
         init_dial(); //?
@@ -74,6 +74,30 @@ bool LOADGAME(){
     else{
         playSomeSound();
         
+    }
+
+    fclose(SaveFileOpen);    
+}
+
+bool SAVECONFIG(){
+    /*Save OPTION*/
+   SaveFileOpen = fopen(config_file_path, "w");
+
+   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check);
+
+   fclose(SaveFileOpen);
+}
+
+
+
+bool LOADCONFIG(){
+    SaveFileOpen = fopen(config_file_path, "r+");
+    if (SaveFileOpen!=NULL)
+    { //If file exist
+        fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check);
+    }
+    else{
+        playSomeSound();
     }
 
     fclose(SaveFileOpen);    

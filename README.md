@@ -17,12 +17,12 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
   - Load their images automatically from a given prefix
 - Flags and conditional jump (only with unsigned integer)
 - Move, hide and change expression of characters in script
+- Basic Save/Load system
 
 ## ▲Planned
 
 - Complete UI rewrite
-- Generic Save/Load system
-- Background *(yes we still don't have that)*
+- Background *(yes, we still don't have that)*
 - Draw images freely on screen
 - Music and sound system
 

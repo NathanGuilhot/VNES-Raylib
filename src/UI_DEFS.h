@@ -52,8 +52,6 @@ OPTION_STRUCT OPTION ={
   .check = 0
 };
 
-int volumeTest = 50;  //[0;100]
-int checkTest = 0;    //[0;1]
 
 #define choice_menu_index 0
 #define pause_menu_index 1

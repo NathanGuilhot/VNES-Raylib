@@ -3,24 +3,20 @@
 ## Features in progress
 *(you can see the Raw if you want to understand what is this mess)*
 
-- [ ] Labels
-  - [x] Flexible characters addition
-    
-    	- [x] Datastructure 
+- [x] Labels
+   - [x] Flexible characters addition
+   - [x] Datastructure 
   
  - [ ] Trouver un moyen de le rendre flexible dans le code
         - [x] Implementation 
-        
         - [ ] Define characters in script files
-          
           - [x] Load character image and expressions
-          
            - [x] Change expression in SCRPT
            - [ ] Change position in SCRPT
                - [x] Interpolation
                  	- [ ] Variable duration
                   - [ ] Real Tweening
-                	- [ ] GotoY support
+                	- [ ] GotoY support (? Do we really need that ?)
            - [x] Hide/Show
     
   - [x] Flags
@@ -37,82 +33,58 @@
     - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
       - [x] BTN()
       - [x] BTNP()
-  
-  - [x] Fix how the .md look
 
     
 
-  - [ ] Background manager
-  
-    - [ ] Load image
-    
+- [ ] Background manager
+  - [ ] Load image
   - [ ] Draw the background
     
 - [ ] Change in script
-  
   - [ ] Sound manager
-
     - [ ] Load Sound and Music
-
     - [ ] Play Sound from SCRPT
-
     - [ ] Play Music from SCRPT (loop, fade (???))
 
       
 
   - [ ] UI System
-  
     - [x] Datastructure
-    
-    - [ ] UI Navigation logic
-      
+    - [x] UI Navigation logic (not really robust but that work)
       - [ ] Draw the UI + Logic
-      
         - [x] Slider
         - [x] Button
         - [x] Checkbox
         - [ ] List
         - [x] Script Runner
         - [x] Change page
-    
     - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable) 
   
     
   
   - [ ] Draw free image on screen
-
     - [ ] Datastructure
-
     - [ ] Draw images on screen
-
     - [ ] Define in SCRPT
-
     - [ ] Load image
-
     - [ ] Toggle visibility
-
     - [ ] Position
-  
     - [ ] Tweening
-  
     - [ ] Z-Index (??)
-  
     - [ ] Animation (????)
   
       
   
-  - [ ] Savefile
-  
-    - [ ] Basic Interface for testing
-    
-    - [ ] Save
-    
-    - [ ] Load
+  - [x] Savefile
+    - [x] Save
+    - [x] Load
+    - [x] Having some sort of persisitent data for settings
+    - [ ] Multiple save file : UI ? -> Concatenate the button param/variable into the file path
+    - [ ] Do research about save file on DS and PSP
     
       
   
 - [x] Executer le parser qu'une seule fois
-
      - [x] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
      - [x] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
 
