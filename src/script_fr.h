@@ -22,23 +22,42 @@ extern FLAGS FlagList[FLAGS_NUMBER] = {
       {.key="LOVE", .value=0}
 };
 
+extern Music_list MusicList = {
+      .music_name = {
+            "nichijou1","nichijou2" //TODO: being able to specify the file extension (optionnal argument)
+      }
+};
+
+extern Sound_list SoundList = {
+      .sound_name = {
+            "beep1"
+      }
+};
+
 extern Passage SCRPT[] = {
 {LABEL,"START"},
       // {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},
       // {N, "Il y a peu de monde ici.\nC'est calme."},
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
-      {MOV, "A 200"},
+
+      {MUSIC,"play"},
       {N, "Tu trouves enfin la personne\nque tu cherchais."},
       {CFLAGS, "LOVE 1"},
-      {BG, "bg_rouge"},
       {SWPM,"A 1"},
+      // {MUSIC,"nichijou2"},
+      // {MUSIC,"play"},
       {H, "A"},
+      {SOUND, "beep1"},
       {N, "A Ah, tu es là!"},
+      {MUSIC,"pause"},
       // {CJUMP, "LOVE == 0 cava"},
       // {CJUMP, "LOVE > 0 cava"},
       {MOV, "A 400"},
       {SWPM,"A 0"},
+      {BG, "bg_rouge"},
       {N, "A Ca me fait plaisir de te voir,\ntu vas bien?"},
+      {MOV, "A center"},
+      {MUSIC,"resume"},
       {C,"0"},
 
   //> "Oui ca va! Et toi ?"},

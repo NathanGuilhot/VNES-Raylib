@@ -9,7 +9,7 @@
   
  - [ ] Trouver un moyen de le rendre flexible dans le code
         - [x] Implementation 
-        - [ ] Define characters in script files
+        - [x] Define characters in script files
           - [x] Load character image and expressions
            - [x] Change expression in SCRPT
            - [ ] Change position in SCRPT
@@ -17,7 +17,7 @@
                  	- [ ] Variable duration
                   - [ ] Real Tweening
                 	- [ ] GotoY support (? Do we really need that ?)
-           - [ ] Fix the gotox bug (seems to be defined somewhere else for some reason ?)
+           - [x] Fix the gotox bug (seems to be defined somewhere else for some reason ? (update: it was in the script you dummy))
            - [x] Hide/Show
     
   - [x] Flags
@@ -44,10 +44,11 @@
   - [x] Change in script
   - [ ] Nicer transition between backgrounds
 
-- [ ] Sound manager
-    - [ ] Load Sound and Music
-    - [ ] Play Sound from SCRPT
-    - [ ] Play Music from SCRPT (loop, fade (???))
+- [x] Sound manager
+    - [x] Load Sound and Music
+    - [x] Play Sound from SCRPT
+    - [x] Play Music from SCRPT 
+    - [ ] loop, fade (???)
 
       
 
@@ -61,12 +62,10 @@
         - [ ] List
         - [x] Script Runner
         - [x] Change page
+      - [ ] Mouse control UI (not the end goal, but useful for touch support later)
     - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
     - [x] Nicer in-game UI (textbox)
-      - [ ] Better placement for the textbox
-    
-  
-    
+      - [x] Better placement for the textbox
   
   - [ ] Draw free image on screen
     - [ ] Datastructure
@@ -86,13 +85,14 @@
     - [x] Load
     - [x] Having some sort of persisitent data for settings
     - [ ] Multiple save file : UI ? -> Concatenate the button param/variable into the file path
-    - [ ] Do research about save file on DS and PSP
-    
+    - [ ] Do research about save file on DS and PSP 
       
   
 - [x] Executer le parser qu'une seule fois
      - [x] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
      - [x] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
+
+- [ ] Clean De-Initialization code
 
 
 -----

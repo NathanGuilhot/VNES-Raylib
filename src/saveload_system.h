@@ -7,12 +7,16 @@ which are not handled the same way by printf and scanf */
 const char* FORMAT_INDEX_IN = "(IND %4d)\n";                 //Index
 const char* FORMAT_FLAGS_IN = "(FLG %2d)\n";              //Key, value
 const char* FORMAT_CHARA_IN = "(CHR %d,%4d,%4d,%d,%2d)\n"; //visible, x, y, zindex, expression_index
+const char* FORMAT_BG_IN = "(BGR %2d)\n"; //index
 const char* FORMAT_OPTION_IN = "(OPT %3d,%d)\n";        //volume, check
+const char* FORMAT_MUSIC_IN = "(MUS %2d,%d)\n";        //index, isplaying
 
 const char* FORMAT_INDEX_OUT = "(IND %4d)\n";               //Index
 const char* FORMAT_FLAGS_OUT = "(FLG %2d)\n";              //Key, value
 const char* FORMAT_CHARA_OUT = "(CHR %d,%4d,%4d,%d,%1d)\n"; //visible, x, y, zindex, expression_index
+const char* FORMAT_BG_OUT = "(BGR %2d)\n"; //index
 const char* FORMAT_OPTION_OUT = "(OPT %3d,%d)\n";        //volume, check
+const char* FORMAT_MUSIC_OUT = "(MUS %2d,%d)\n";        //index, isplaying
 
 
 FILE *SaveFileOpen;
@@ -31,7 +35,7 @@ bool SAVEGAME(){
    SaveFileOpen = fopen(save_file_path, "w");
     //    fprintf(SaveFileOpen, "Bonjour !\n");
    fprintf_s(SaveFileOpen, FORMAT_INDEX_OUT,index);
-   for (int i = 0; i < sizeof(FlagList)/sizeof(FlagList[0]); i++)
+   for (int i = 0; i < FLAGS_NUMBER; i++)
    {
     fprintf_s(SaveFileOpen, FORMAT_FLAGS_OUT, FlagList[i].value);
    }
@@ -42,7 +46,8 @@ bool SAVEGAME(){
     CharaList[i].gotox = CharaList[i].x;
     CharaList[i].gotoy = CharaList[i].y;
    }
-//    fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check);
+   fprintf_s(SaveFileOpen, FORMAT_BG_OUT, Background.bg_index);
+   fprintf_s(SaveFileOpen, FORMAT_MUSIC_OUT, MusicList.music_playing, MusicList.isplaying);
 
    fclose(SaveFileOpen);
 }
@@ -50,11 +55,13 @@ bool SAVEGAME(){
 
 
 bool LOADGAME(){
+    StopMusicStream(MusicList.music_list[MusicList.music_playing]); //Stop the music, we'll restart it later
+
     SaveFileOpen = fopen(save_file_path, "r+");
     if (SaveFileOpen!=NULL)
     { //If file exist
         fscanf_s(SaveFileOpen,FORMAT_INDEX_IN, &index);
-        for (int i = 0; i < sizeof(FlagList)/sizeof(FlagList[0]); i++)
+        for (int i = 0; i < FLAGS_NUMBER; i++)
         {
             fscanf_s(SaveFileOpen, FORMAT_FLAGS_IN, &FlagList[i].value);
         }
@@ -64,9 +71,15 @@ bool LOADGAME(){
             CharaList[i].gotox = CharaList[i].x;
             CharaList[i].gotoy = CharaList[i].y;
         }
-        // fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check);
+        fscanf_s(SaveFileOpen, FORMAT_BG_IN, &Background.bg_index);
+        fscanf_s(SaveFileOpen,FORMAT_MUSIC_IN, &MusicList.music_playing, &MusicList.isplaying);
         
-        
+        if (MusicList.isplaying)
+        {
+            PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
+        }
+
+
         init_dial(); //?
         // disp_text=""
         strcpy(disp_text,"");

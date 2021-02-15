@@ -19,12 +19,14 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 - Move, hide and change expression of characters in script
 - Basic Save/Load system
 - Backgrounds *(finally)*
+- Music and sound system *(hell yeah)*
 
 ## ▲Planned
 
 - Complete UI rewrite
 - Draw images freely on screen
-- Music and sound system
+- Better Music effect (fadein, out, transitions)
+- Tweening
 
 [You can see my actual TODO-list here](todo.md)
 

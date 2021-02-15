@@ -184,7 +184,14 @@ void init_dial() //Handle parsing and logic
           {
             strcpy(mov_to, SCRPT[index].c + strlen(first_word) + 1);
 
-            CharaList[i].gotox = c_atoi(mov_to);
+            if (strcmp(mov_to, "center") == 0) //TODO : handle more special cases like this (third, side, offscreen...)
+            {
+              CharaList[i].gotox = (screenWidth - CharaList[i].base_image.width)/2;
+            }
+            else
+            {
+              CharaList[i].gotox = c_atoi(mov_to);
+            }
 
             break;
           }
@@ -326,7 +333,66 @@ void init_dial() //Handle parsing and logic
       }
       index++;
       init_dial();
+
+      break;
       
+    }
+    case MUSIC:
+    {
+      if (SCRPT[index].c=="stop")
+      {
+        StopMusicStream(MusicList.music_list[MusicList.music_playing]);
+        MusicList.isplaying = false;
+      }
+      else if (SCRPT[index].c=="play")
+      {
+        PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
+        MusicList.isplaying = true;
+      }
+      else if (SCRPT[index].c=="pause")
+      {
+        PauseMusicStream(MusicList.music_list[MusicList.music_playing]);
+        MusicList.isplaying = false;
+
+      }
+      else if (SCRPT[index].c=="resume")
+      {
+        ResumeMusicStream(MusicList.music_list[MusicList.music_playing]);
+        MusicList.isplaying = true;
+      }
+      else
+      {
+        for (int i = 0; i < MAX_MUSIC; i++)
+        {
+          if (MusicList.music_name[i] == SCRPT[index].c){
+            StopMusicStream(MusicList.music_list[MusicList.music_playing]);
+            MusicList.music_playing=i ;
+            // PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
+          }
+        }
+      }
+
+      index++;
+      init_dial();
+      break;
+      
+    }
+    case SOUND:
+    {
+      for (int i = 0; i < MAX_SOUND; i++)
+      {
+        if (SoundList.sound_name[i] == SCRPT[index].c){
+          SoundList.sound_playing = i; // Do we really need that variable ?
+          PlaySound(SoundList.sound_list[i]);
+          // StopMusicStream(MusicList.music_list[MusicList.music_playing]);
+          // MusicList.music_playing=i ;
+          // PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
+        }
+      }
+      // PlaySound()
+      index++;
+      init_dial();
+      break;
     }
     }
   }

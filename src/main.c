@@ -37,6 +37,8 @@ enum DIAL_T
   CFLAGS, /*CHANGE VALUE OF A FLAG*/
   SWPM /*SWAP EXPRESSION*/,
   BG, /*Change background*/
+  MUSIC,
+  SOUND,
 
   // WILL NOT BE USED IN THE END :
   SWPEL /*SWAP LEFT EYE*/,
@@ -80,6 +82,9 @@ typedef struct
 
 #define MAX_EXPRESSION 2 //will be defined in script.h later (?)
 #define MAX_BACKGROUND 2
+#define MAX_MUSIC 2
+#define MAX_SOUND 2
+
 
 //---- Characters
 typedef struct
@@ -104,11 +109,24 @@ typedef struct
 
 } CHARA;
 
-typedef struct {
+typedef struct BACKGROUND{
   char *images[MAX_BACKGROUND];
   int bg_index;
   Texture2D texture[MAX_BACKGROUND];
 } BACKGROUND;
+
+typedef struct Music_list{
+  Music music_list[MAX_MUSIC];
+  char *music_name[MAX_MUSIC];
+  int music_playing;
+  bool isplaying;
+} Music_list;
+
+typedef struct Sound_list{
+  Sound sound_list[MAX_SOUND];
+  char *sound_name[MAX_SOUND];
+  int sound_playing;
+} Sound_list;
 
 char *text_to_display;
 char *chara_name = "Character Name";
@@ -193,7 +211,7 @@ void loadCharacterSprites()
     CharaList[i].base_image = LoadTexture(base_filename);
 
     CharaList[i].y = screenHeight - CharaList[i].base_image.height;
-    CharaList[i].x = (screenWidth - CharaList[i].base_image.width)/2;
+    CharaList[i].x = (screenWidth - CharaList[i].base_image.width)/2; //Center of the screen
     CharaList[i].gotox = CharaList[i].x;
     CharaList[i].gotoy = CharaList[i].y;
 
@@ -222,7 +240,7 @@ void loadCharacterSprites()
 
 void loadBackgroundSprites()
 {
-  for (int i; i<MAX_BACKGROUND; i++){
+  for (int i=0; i<MAX_BACKGROUND; i++){
     char filename[32] = "./assets/img/";
     strcat(filename, Background.images[i]);
     strcat(filename, ".png");
@@ -231,6 +249,49 @@ void loadBackgroundSprites()
   }
   
   Background.bg_index = 0; //default
+}
+
+void loadAudio(){
+  //Load Music
+  //LoadMusicStream(path)
+
+  
+  
+  for (int i=0; i<MAX_MUSIC; i++)
+  {
+    if (MusicList.music_name[i])
+    {
+      char filename[64] = "./assets/audio/music/";
+      // strcat(filename, "./assets/audio/music/");
+      strcat(filename, MusicList.music_name[i]);
+      strcat(filename, ".mp3");
+
+      MusicList.music_list[i] = LoadMusicStream(filename);
+    }
+  }
+
+  MusicList.music_playing = 0;
+  
+
+  // //Load Sounds
+  // //LoadSound(path)
+  
+  for (int i=0; i<MAX_SOUND; i++)
+  {
+    if (SoundList.sound_name[i])
+    {
+      char filename[64] = "./assets/audio/sound/";
+      // strcat(filename, "./assets/audio/sound/");
+      strcat(filename, SoundList.sound_name[i]);
+      strcat(filename,".wav");
+
+      SoundList.sound_list[i] = LoadSound(filename);
+    }
+  }
+
+  MusicList.music_playing = 0;
+
+
 }
 
 void DrawBackground()
@@ -279,10 +340,8 @@ void updt_dial()
   {
     if (CharaList[i].x != CharaList[i].gotox)
     {
-        //This is just broken :(
+      CharaList[i].x += (CharaList[i].gotox - CharaList[i].x) / 10;
 
-      // CharaList[i].x += (CharaList[i].gotox - CharaList[i].x) / 10;
-      // CharaList[i].x = CharaList[i].gotox;
       //Todo : have some real tweening going on
 
       //-c * math.cos(t/d * (math.pi/2)) + c + b
@@ -538,6 +597,8 @@ int main(int argc, char *argv[])
   InitWindow(screenWidth, screenHeight, "VNES_PC");
   InitAudioDevice();
 
+  Music music_test;
+  // music_test = LoadMusicStream("./assets/audio/music/nichijou1.mp3");
   beep = LoadSound("./assets/audio/sound/beep1.wav");
   ListMenuPage[pause_menu_index].items[4].function=SAVEGAME; //Yes, this is very ugly, but honey I had no choices
   ListMenuPage[pause_menu_index].items[5].function=LOADGAME;
@@ -547,6 +608,10 @@ int main(int argc, char *argv[])
   loadCharacterSprites();
   loadBackgroundSprites();
   loadUI_Texture();
+  loadAudio();
+
+  // PlayMusicStream(MusicList.music_list[0]);
+
   ParseLabels();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
@@ -557,6 +622,7 @@ int main(int argc, char *argv[])
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
     // Update
+    
 
     switch (game_st)
     {
@@ -571,6 +637,12 @@ int main(int argc, char *argv[])
     {
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
       updt_dial();
+      // UpdateMusicStream(MusicList.music_list[0]);
+      SetMusicVolume(MusicList.music_list[0], (float)OPTION.volume/2/100);
+
+      if (OPTION.check){
+        UpdateMusicStream(MusicList.music_list[MusicList.music_playing]);
+      }
 
       break;
     }
@@ -630,6 +702,7 @@ int main(int argc, char *argv[])
   // De-Initialization
   //--------------------------------------------------------------------------------------
   CloseWindow(); // Close window and OpenGL context
+  CloseAudioDevice(); 
   //--------------------------------------------------------------------------------------
 
   return 0;
