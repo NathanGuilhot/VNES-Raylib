@@ -334,6 +334,8 @@ void draw_dial()
 
 void updt_dial()
 {
+  static float timer;
+  timer += GetFrameTime();
 
   //"Tweening"
   for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -367,6 +369,7 @@ void updt_dial()
           {
             index++;
             cursor = 1;
+            timer=0;
 
             memset(disp_text, 0, 64); //Vider le string
 
@@ -382,7 +385,16 @@ void updt_dial()
 
       if (cursor < strlen(text_to_display))
       {
-        cursor++;
+        if (OPTION.cps==0)
+        {
+          cursor = strlen(text_to_display);
+        }
+        else if (timer>1/OPTION.cps)
+        {
+          cursor += max(1,(int)(timer*OPTION.cps));
+          if (cursor >= strlen(text_to_display)) {cursor = strlen(text_to_display);}
+          timer=0;
+        }
       }
       strncpy(&disp_text, text_to_display, cursor);
     }
@@ -400,6 +412,8 @@ void updt_dial()
       {
         ListMenuPage[i].visible = false;
       }
+
+      timer=0;
 
       SAVECONFIG();
     }

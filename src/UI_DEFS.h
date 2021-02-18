@@ -39,6 +39,7 @@ typedef struct {
 typedef struct {
   int volume;
   int check;
+  int cps; //
 } OPTION_STRUCT;
 
 Sound beep;
@@ -49,7 +50,8 @@ void playSomeSound(){
 
 OPTION_STRUCT OPTION ={
   .volume = 100,
-  .check = 0
+  .check = 0,
+  .cps = 1
 };
 
 typedef struct UI_IMG
@@ -80,7 +82,9 @@ MENU_PAGE ListMenuPage[]={
   {"PAUSE", false,
     .items = {
       {"Button",  true,CHOICE_ITEM, 0},
-      {"Slider",  true,SLIDER, 0, &OPTION.volume,{0,100}},
+      {"Volume",  true,SLIDER, 0, &OPTION.volume,{0,100}},
+      {"CPS",  true,SLIDER, 0, &OPTION.cps,{0,60}},
+
       {"CheckBox",true,CHECKBOX, 0, &OPTION.check, {0,1}},
       {"Autre menu",true,MENU_NAV, 2},
       {"SAVE",true,SCRIPT_RUNNER, .function=playSomeSound},

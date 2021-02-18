@@ -8,14 +8,14 @@ const char* FORMAT_INDEX_IN = "(IND %4d)\n";                 //Index
 const char* FORMAT_FLAGS_IN = "(FLG %2d)\n";              //Key, value
 const char* FORMAT_CHARA_IN = "(CHR %d,%4d,%4d,%d,%2d)\n"; //visible, x, y, zindex, expression_index
 const char* FORMAT_BG_IN = "(BGR %2d)\n"; //index
-const char* FORMAT_OPTION_IN = "(OPT %3d,%d)\n";        //volume, check
+const char* FORMAT_OPTION_IN = "(OPT %3d,%d,%2d)\n";        //volume, check
 const char* FORMAT_MUSIC_IN = "(MUS %2d,%d)\n";        //index, isplaying
 
 const char* FORMAT_INDEX_OUT = "(IND %4d)\n";               //Index
 const char* FORMAT_FLAGS_OUT = "(FLG %2d)\n";              //Key, value
 const char* FORMAT_CHARA_OUT = "(CHR %d,%4d,%4d,%d,%1d)\n"; //visible, x, y, zindex, expression_index
 const char* FORMAT_BG_OUT = "(BGR %2d)\n"; //index
-const char* FORMAT_OPTION_OUT = "(OPT %3d,%d)\n";        //volume, check
+const char* FORMAT_OPTION_OUT = "(OPT %3d,%d,%2d)\n";        //volume, check, CPS
 const char* FORMAT_MUSIC_OUT = "(MUS %2d,%d)\n";        //index, isplaying
 
 
@@ -96,7 +96,7 @@ bool SAVECONFIG(){
     /*Save OPTION*/
    SaveFileOpen = fopen(config_file_path, "w");
 
-   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check);
+   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check, &OPTION.cps);
 
    fclose(SaveFileOpen);
 }
@@ -107,7 +107,7 @@ bool LOADCONFIG(){
     SaveFileOpen = fopen(config_file_path, "r+");
     if (SaveFileOpen!=NULL)
     { //If file exist
-        fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check);
+        fscanf_s(SaveFileOpen, FORMAT_OPTION_IN, &OPTION.volume, &OPTION.check, &OPTION.cps);
     }
     else{
         playSomeSound();

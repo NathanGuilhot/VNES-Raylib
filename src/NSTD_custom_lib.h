@@ -8,3 +8,9 @@ int c_atoi(char *str)
   return res;
   //Credit : https://www.geeksforgeeks.org/write-your-own-atoi/
 }
+
+int max(int pVal1, int pVal2)
+{
+  if (pVal1>=pVal2){return pVal1;}
+  else {return pVal2;}
+}

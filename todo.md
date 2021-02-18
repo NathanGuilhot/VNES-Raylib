@@ -4,93 +4,84 @@
 *(you can see the Raw if you want to understand what is this mess)*
 
 - [x] Labels
-   - [x] Flexible characters addition
-   - [x] Datastructure 
   
- - [ ] Trouver un moyen de le rendre flexible dans le code
-        - [x] Implementation 
-        - [x] Define characters in script files
-          - [x] Load character image and expressions
-           - [x] Change expression in SCRPT
-           - [ ] Change position in SCRPT
-               - [x] Interpolation
-                 	- [ ] Variable duration
-                  - [ ] Real Tweening
-                	- [ ] GotoY support (? Do we really need that ?)
-           - [x] Fix the gotox bug (seems to be defined somewhere else for some reason ? (update: it was in the script you dummy))
-           - [x] Hide/Show
-    
-  - [x] Flags
-    - [x] Data Structure
-    - [x] Implementation
-    - [x] Conditional Jump
-    - [x] Chercher comment faire un split en C
-      -> char strtok (char* str, const char* delim); 
-    
-  - [ ] Serious reformatting
-    - [ ] Split into multiple files
-    - [x] Src folder for the code
-    - [ ] delete unused variables and comments
-    - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
-      - [x] BTN()
-      - [x] BTNP()
-    - [ ] Move the SCRIPT include at the top
+- [ ] Trouver un moyen de le rendre flexible dans le code
+      - [x] Implementation 
+      - [x] Define characters in script files
+        - [x] Load character image and expressions
+          - [x] Change expression in SCRPT
+          - [ ] Change position in SCRPT
+              - [x] Interpolation
+                - [ ] Variable duration
+                - [ ] Real Tweening
+                - [ ] GotoY support (? Do we really need that ?)
+          - [x] Fix the gotox bug (seems to be defined somewhere else for some reason ? (update: it was in the script you dummy))
+          - [x] Hide/Show
+  
+- [x] Flags
+  
+- [ ] Serious reformatting
+  - [ ] Split into multiple files
+  - [x] Src folder for the code
+  - [ ] delete unused variables and comments
+  - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
+    - [x] BTN()
+    - [x] BTNP()
+  - [ ] Move the SCRIPT include at the top
+  - [ ] function pointer instead of FSM for update/draw loop
 
-    
 
 - [x] Background manager
-  - [x] Load image
-  - [x] Draw the background
-  - [x] Change in script
   - [ ] Nicer transition between backgrounds
 
 - [x] Sound manager
-    - [x] Load Sound and Music
-    - [x] Play Sound from SCRPT
-    - [x] Play Music from SCRPT 
     - [ ] loop, fade (???)
 
+- [ ] Localization system
+  - Different file, or generated one ?
+
+Polish text:
+  - [ ] CTC
+  - [x] Variable typewritter speed (slider in setting)
       
 
-  - [ ] UI System
-    - [x] Datastructure
-    - [x] UI Navigation logic (not really robust but that work)
-      - [ ] Draw the UI + Logic
-        - [x] Slider
-        - [x] Button
-        - [x] Checkbox
-        - [ ] List
-        - [x] Script Runner
-        - [x] Change page
-      - [ ] Mouse control UI (not the end goal, but useful for touch support later)
-    - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
-    - [x] Nicer in-game UI (textbox)
-      - [x] Better placement for the textbox
-  
-  - [ ] Draw free image on screen
-    - [ ] Datastructure
-    - [ ] Draw images on screen
-    - [ ] Define in SCRPT
-    - [ ] Load image
-    - [ ] Toggle visibility
-    - [ ] Position
-    - [ ] Tweening
-    - [ ] Z-Index (??)
-    - [ ] Animation (????)
-  
-      
-  
-  - [x] Savefile
-    - [x] Save
-    - [x] Load
-    - [x] Having some sort of persisitent data for settings
-    - [ ] Multiple save file : UI ? -> Concatenate the button param/variable into the file path
-    - [ ] Do research about save file on DS and PSP 
+- [ ] UI System
+  - [x] Datastructure
+  - [x] UI Navigation logic (not really robust but that work)
+    - [ ] Draw the UI + Logic
+      - [x] Slider
+      - [x] Button
+      - [x] Checkbox
+      - [ ] List
+      - [x] Script Runner
+      - [x] Change page
+    - [ ] (!) Mouse control UI (not the end goal, but useful for touch support later)
+  - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
+  - [x] Nicer in-game UI (textbox)
+    - [x] Better placement for the textbox
+
+- [ ] Draw free image on screen
+  - [ ] Datastructure
+  - [ ] Draw images on screen
+  - [ ] Define in SCRPT
+  - [ ] Load image
+  - [ ] Toggle visibility
+  - [ ] Position
+  - [ ] Tweening
+  - [ ] Z-Index (??)
+  - [ ] Animation (????)
+
+    
+
+- [x] Savefile
+  - [x] Save
+  - [x] Load
+  - [x] Having some sort of persisitent data for settings
+  - [ ] Multiple save file : UI ? -> Concatenate the button param/variable into the file path
+  - [ ] Do research about save file on DS and PSP 
       
   
 - [x] Executer le parser qu'une seule fois
-     - [x] Isoler le code du parser dans un header file (pour pouvoir récupérer les variables globales)
-     - [x] Isoler le code qui doit être updaté (typewritter effect, that kind of stuff)
 
 - [ ] Clean De-Initialization code
 
