@@ -96,7 +96,7 @@ bool SAVECONFIG(){
     /*Save OPTION*/
    SaveFileOpen = fopen(config_file_path, "w");
 
-   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check, &OPTION.cps);
+   fprintf_s(SaveFileOpen, FORMAT_OPTION_OUT, OPTION.volume, OPTION.check, OPTION.cps);
 
    fclose(SaveFileOpen);
 }

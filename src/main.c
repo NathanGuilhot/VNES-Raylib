@@ -111,8 +111,12 @@ typedef struct
 
 typedef struct BACKGROUND{
   char *images[MAX_BACKGROUND];
-  int bg_index;
   Texture2D texture[MAX_BACKGROUND];
+  int bg_index;
+  int bg_next;
+  bool in_transition;
+  float dissolve_duration;
+  unsigned char opacity;
 } BACKGROUND;
 
 typedef struct Music_list{
@@ -249,6 +253,10 @@ void loadBackgroundSprites()
   }
   
   Background.bg_index = 0; //default
+  Background.bg_next = 1;
+  Background.opacity = 250;
+  Background.dissolve_duration = 0.5;
+
 }
 
 void loadAudio(){
@@ -296,7 +304,24 @@ void loadAudio(){
 
 void DrawBackground()
 {
-  DrawTexture(Background.texture[Background.bg_index],0,0,WHITE);
+  if (Background.in_transition)
+  {
+    if (Background.opacity>0)
+    {
+      Background.opacity -= min(Background.opacity, (int)(255/Background.dissolve_duration)*GetFrameTime()); //C'est linéaire mais mieux que rien
+
+    }
+    else {
+      // playSomeSound();
+      Background.in_transition = false;
+      Background.bg_index = Background.bg_next; //Swap !
+      Background.opacity = 255;
+    }
+  }
+
+
+  DrawTexture(Background.texture[Background.bg_next],0,0,WHITE);
+  DrawTexture(Background.texture[Background.bg_index],0,0,(Color){255,255,255,Background.opacity});
 }
 
 #define C_MAX_TEXTSPLIT_COUNT 128
@@ -474,6 +499,7 @@ void updt_dial()
         if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
         {
           index = ListLabels[i].value;
+          timer=0;
 
           inMenuChoice = false;
           ListMenuPage[choice_menu_index].visible = false;

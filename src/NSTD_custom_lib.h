@@ -14,3 +14,14 @@ int max(int pVal1, int pVal2)
   if (pVal1>=pVal2){return pVal1;}
   else {return pVal2;}
 }
+
+int min(int pVal1, int pVal2)
+{
+  if (pVal1<=pVal2){return pVal1;}
+  else {return pVal2;}
+}
+
+// int clamp(int pVal, int pMarge1, int pMarge2) //We'll see that later
+// {
+//   return max(pVal, min())
+// }

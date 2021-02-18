@@ -4,6 +4,9 @@
 *(you can see the Raw if you want to understand what is this mess)*
 
 - [x] Labels
+
+- [ ] Remove the Choice collection
+  - [ ] each choice is now in a hashtable (because we can)
   
 - [ ] Trouver un moyen de le rendre flexible dans le code
       - [x] Implementation 
@@ -32,7 +35,7 @@
 
 
 - [x] Background manager
-  - [ ] Nicer transition between backgrounds
+  - [x] Nicer transition between backgrounds
 
 - [x] Sound manager
     - [ ] loop, fade (???)
