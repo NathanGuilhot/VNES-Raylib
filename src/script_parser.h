@@ -31,20 +31,68 @@ void init_dial() //Handle parsing and logic
       // choice_sel = 0;
       int choice_index = 0; //Pour l'affichage
 
-      nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
+      first_word = strtok(buffText, " ");
+      second_word = strtok(NULL, " ");
+      third_word = strtok(NULL, " ");
+      fourth_word = strtok(NULL, " ");
+      //This method require to have a space at the end of strlen(SCRPT[index].c
+      //TODO: Find a way to fix this so it's more intuitive to write
 
-      for (int i = 1; i <= nb_choice; i++)
-      {
-        choice_index = ChoiceCollection[choice_collection_index][i];
-        
-        ListMenuPage[choice_menu_index].items[i - 1].label = ListeChoix[choice_index].txt;
-        ListMenuPage[choice_menu_index].items[i - 1].visible = true;
-        
+      char* word[4];
+      word[0]=first_word;
+      word[1]=second_word;
+      word[2]=third_word;
+      word[3]=fourth_word;
+
+      
+
+      nb_choice = 1;
+      
+      if (second_word!=NULL){
+        nb_choice = 2;
+        if (third_word!=NULL){
+          nb_choice = 3;
+          if (fourth_word!=NULL){ nb_choice = 4;}
+        }
       }
 
-      // init_draw_choice();
-      choice_collection_index = c_atoi(SCRPT[index].c);
-      choice_sel_index = ChoiceCollection[choice_collection_index][choice_sel + 1];
+      //Close your eyes kids, this is not pretty
+      for (int i_choice_btn = 0; i_choice_btn<nb_choice; i_choice_btn++)
+      {
+        for (int i_listchoix = 0; i_listchoix < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i_listchoix++) //First word
+        {
+          if (word[i_choice_btn]==NULL){break;}
+          if (strcmp(ListeChoix[i_listchoix].key, word[i_choice_btn]) == 0) //If we have a matching choice (between script and ListeChoix)
+          { 
+            for (int i_label = 0; i_label < LABELS_NUMBERS; i_label++)
+            {
+              if (strcmp(ListeChoix[i_listchoix].jmp, ListLabels[i_label].name) == 0){
+                ListMenuPage[choice_menu_index].items[i_choice_btn].label = ListeChoix[i_listchoix].txt;
+                ListMenuPage[choice_menu_index].items[i_choice_btn].visible = true;
+                ListMenuPage[choice_menu_index].items[i_choice_btn].param = ListLabels[i_label].value;
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+
+      // nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
+
+      // for (int i = 1; i <= nb_choice; i++)
+      // {
+      //   choice_index = ChoiceCollection[choice_collection_index][i];
+        
+      //   ListMenuPage[choice_menu_index].items[i - 1].label = ListeChoix[choice_index].txt;
+      //   ListMenuPage[choice_menu_index].items[i - 1].visible = true;
+        
+      // }
+
+      // // init_draw_choice();
+      // choice_collection_index = c_atoi(SCRPT[index].c);
+      // choice_sel_index = ChoiceCollection[choice_collection_index][choice_sel + 1];
       break;
     }
     case J:
@@ -77,7 +125,7 @@ void init_dial() //Handle parsing and logic
     case SWPM:
     {
 
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " ");
 
       char id_expression[10];
@@ -102,7 +150,7 @@ void init_dial() //Handle parsing and logic
     case H:
     {
 
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " ");
 
       for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -126,7 +174,7 @@ void init_dial() //Handle parsing and logic
       //On veux éviter de faire ça à chaque fois si possible
       inMenuChoice = false;
 
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " ");
 
       for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -173,7 +221,7 @@ void init_dial() //Handle parsing and logic
 
       char mov_to[10];
 
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " ");
 
       for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -208,7 +256,7 @@ void init_dial() //Handle parsing and logic
       //C = FLAGKEY SIGN VALUE KEYLABEL
 
       //PARSE C
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " "); //FLAGKEY
       second_word = strtok(NULL, " ");    //SIGN
       third_word = strtok(NULL, " ");     //VALUE
@@ -282,7 +330,7 @@ void init_dial() //Handle parsing and logic
       //CHANGE FLAG VALUE
       //C = FLAGKEY (optional +/-) VALUE
 
-      strncpy(buffText, SCRPT[index].c, 20);
+      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
       first_word = strtok(buffText, " ");
       second_word = strtok(NULL, " ");
       third_word = strtok(NULL, " ");

@@ -58,7 +58,7 @@ extern Passage SCRPT[] = {
       {N, "A Ca me fait plaisir de te voir,\ntu vas bien?"},
       {MOV, "A center"},
       {MUSIC,"resume"},
-      {C,"0"},
+      {C,"deep_conversation excuse_retard reproches1 deep_conversation "},
 
   //> "Oui ca va! Et toi ?"},
 {LABEL,"cava"},
@@ -1239,12 +1239,14 @@ extern Passage SCRPT[] = {
 };
 
 extern const Choice ListeChoix[]= {
-  {"Oui ca va! Et toi?","cava"},
-  {"Desole du retard","retard"},
-  {"C'etait dur de te trouver","durtrouver"},
+  {"deep_conversation","Oui ca va! Et toi?","cava"},
+  {"excuse_retard","Desole du retard","retard"},
+  {"reproches1","C'etait dur de te trouver","durtrouver"},
   
-  {"Oui, c'est tres joli!","cava"},
-  {"Bof, c'est la mer quoi.","retard"},
+  {"oui_mer","Oui, c'est tres joli!","cava"},
+  {"non_mer","Bof, c'est la mer quoi.","retard"},
+
+
   
 //   {"J'en vois le bout!",97},
 //   {"J'ai du mal a avancer...",113},
@@ -1321,38 +1323,38 @@ extern const Choice ListeChoix[]= {
   
 };
 
-extern const char ChoiceCollection[][5] = {
-  //{nb_choix,nchoix,...};
-  {3,0,1,2},
-  {2,3,4},
-  {3,5,6,9},
-    {2,7,8},
-  {2,10,11},
+// extern const char ChoiceCollection[][5] = {
+//   //{nb_choix,nchoix,...};
+//   {3,0,1,2},
+//   {2,3,4},
+//   {3,5,6,9},
+//     {2,7,8},
+//   {2,10,11},
   
-  {3,12,13,14},
-  {3,15,16,17},
+//   {3,12,13,14},
+//   {3,15,16,17},
   
-  {2,18,19},
-  	{1,20},
+//   {2,18,19},
+//   	{1,20},
   
-  {4,21,22,23,24}, //vanille, chocolat...
-  	{2,25,26},
- 		{3,27,28,29}, //branche glace-less
-  {3,30,31,32},
+//   {4,21,22,23,24}, //vanille, chocolat...
+//   	{2,25,26},
+//  		{3,27,28,29}, //branche glace-less
+//   {3,30,31,32},
   
-  {4,33,34,35,36},
+//   {4,33,34,35,36},
   
-  {3,37,38,39},
+//   {3,37,38,39},
   
-  {3,40,41,42},
+//   {3,40,41,42},
   
-  {1,43,43}, //
+//   {1,43,43}, //
   
-  {3,46,45,47}, 
-    {1,48},
-  {3,49,50,51},//où tu veux voyager
+//   {3,46,45,47}, 
+//     {1,48},
+//   {3,49,50,51},//où tu veux voyager
   
-  {1,52}, //et si on achetait une glace?
-  {2,53,54}, //je suis d'accord/je penses que c'est des films
-  {1,55}, //La dernière ?
-};
+//   {1,52}, //et si on achetait une glace?
+//   {2,53,54}, //je suis d'accord/je penses que c'est des films
+//   {1,55}, //La dernière ?
+// };

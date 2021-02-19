@@ -57,6 +57,7 @@ struct Passage
 typedef struct Choice Choice;
 struct Choice
 {
+  char *key;
   char *txt; //Texte du choix
   char *jmp; //Indice du label de destination
 };
@@ -134,7 +135,7 @@ typedef struct Sound_list{
 
 char *text_to_display;
 char *chara_name = "Character Name";
-char buffText[20]; //Utile pour le parse du text
+char buffText[64]; //Utile pour le parse du text
 char *first_word;
 char *second_word;
 char *third_word;
@@ -470,22 +471,16 @@ void updt_dial()
       if (choice_sel < nb_choice - 1)
       {
         choice_sel++;
-        if (!inMenuPause)
-        {
-          choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
-        }
       }
+      else{choice_sel=0;}
     }
     if (BTNP("UP"))
     {
       if (choice_sel > 0)
       {
         choice_sel--;
-        if (!inMenuPause)
-        {
-          choice_sel_index = ChoiceCollection[c_atoi(SCRPT[index].c)][choice_sel + 1];
-        }
       }
+      else{choice_sel=nb_choice;}
     }
   }
 
@@ -494,11 +489,11 @@ void updt_dial()
     //Press A in choice
     if (BTNP("A"))
     {
-      for (int i = 0; i < LABELS_NUMBERS; i++)
-      {
-        if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
-        {
-          index = ListLabels[i].value;
+      // for (int i = 0; i < LABELS_NUMBERS; i++)
+      // {
+      //   if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
+      //   {
+          index = ListMenuPage[choice_menu_index].items[choice_sel].param;
           timer=0;
 
           inMenuChoice = false;
@@ -507,8 +502,8 @@ void updt_dial()
           {
             ListMenuPage[choice_menu_index].items[i2].visible = false;
           }
-        }
-      }
+      //   }
+      // }
       choice_sel = 0;
       init_dial();
     }
