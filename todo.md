@@ -5,9 +5,8 @@
 
 - [x] Labels
 
-- [ ] Remove the Choice collection
-  - [ ] each choice is now in a hashtable (because we can)
-  
+- [x] Remove the Choice collection
+
 - [ ] Trouver un moyen de le rendre flexible dans le code
       - [x] Implementation 
       - [x] Define characters in script files
@@ -35,7 +34,8 @@
 
 
 - [x] Background manager
-  - [x] Nicer transition between backgrounds
+  - [x] Nicer transition between backgrounds 
+  - [ ] Change transition speed in SCRPT
 
 - [x] Sound manager
     - [ ] loop, fade (???)
@@ -86,7 +86,7 @@ Polish text:
   
 - [x] Executer le parser qu'une seule fois
 
-- [ ] Clean De-Initialization code
+- [x] Clean De-Initialization code
 
 
 -----

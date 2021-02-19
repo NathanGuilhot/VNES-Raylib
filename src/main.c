@@ -736,6 +736,33 @@ int main(int argc, char *argv[])
 
   // De-Initialization
   //--------------------------------------------------------------------------------------
+
+  //Textures
+  for (int i = 0; i < CHARACTER_NUMBER; i++)
+  {
+    UnloadTexture(CharaList[i].base_image);
+    for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
+    {
+      UnloadTexture(CharaList[i].expression[i2]);
+    }
+  }
+
+  for (int i = 0; i < MAX_BACKGROUND; i++)
+  {
+    UnloadTexture(Background.texture[i]);
+  }
+
+  //Sound/Musics
+  for (int i = 0; i < MAX_MUSIC; i++)
+  {
+    UnloadMusicStream(MusicList.music_list[i]);
+  }
+
+  for (int i = 0; i < MAX_SOUND; i++)
+  {
+    UnloadSound(SoundList.sound_list[i]);
+  }
+
   CloseWindow(); // Close window and OpenGL context
   CloseAudioDevice(); 
   //--------------------------------------------------------------------------------------
