@@ -2,8 +2,13 @@
 
 #define LABELS_NUMBERS 10
 #define CHARACTER_NUMBER 2
-// #define MAX_EXPRESSION 2
 #define FLAGS_NUMBER 1
+#define MAX_EXPRESSION 2
+#define MAX_BACKGROUND 2
+#define MAX_MUSIC 2
+#define MAX_SOUND 2
+
+#include "SCRPT_DEFS.h"
 
 
 extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?

@@ -63,6 +63,7 @@ void init_dial() //Handle parsing and logic
         for (int i_listchoix = 0; i_listchoix < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i_listchoix++) //First word
         {
           if (word[i_choice_btn]==NULL){break;}
+          
           if (strcmp(ListeChoix[i_listchoix].key, word[i_choice_btn]) == 0) //If we have a matching choice (between script and ListeChoix)
           { 
             for (int i_label = 0; i_label < LABELS_NUMBERS; i_label++)
@@ -78,21 +79,6 @@ void init_dial() //Handle parsing and logic
         }
       }
       
-
-      // nb_choice = ChoiceCollection[c_atoi(SCRPT[index].c)][0];
-
-      // for (int i = 1; i <= nb_choice; i++)
-      // {
-      //   choice_index = ChoiceCollection[choice_collection_index][i];
-        
-      //   ListMenuPage[choice_menu_index].items[i - 1].label = ListeChoix[choice_index].txt;
-      //   ListMenuPage[choice_menu_index].items[i - 1].visible = true;
-        
-      // }
-
-      // // init_draw_choice();
-      // choice_collection_index = c_atoi(SCRPT[index].c);
-      // choice_sel_index = ChoiceCollection[choice_collection_index][choice_sel + 1];
       break;
     }
     case J:
@@ -394,23 +380,23 @@ void init_dial() //Handle parsing and logic
     {
       if (SCRPT[index].c=="stop")
       {
-        StopMusicStream(MusicList.music_list[MusicList.music_playing]);
+        VN_StopMusicStream(MusicList.music_list[MusicList.music_playing]);
         MusicList.isplaying = false;
       }
       else if (SCRPT[index].c=="play")
       {
-        PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
+        VN_PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
         MusicList.isplaying = true;
       }
       else if (SCRPT[index].c=="pause")
       {
-        PauseMusicStream(MusicList.music_list[MusicList.music_playing]);
+        VN_PauseMusicStream(MusicList.music_list[MusicList.music_playing]);
         MusicList.isplaying = false;
 
       }
       else if (SCRPT[index].c=="resume")
       {
-        ResumeMusicStream(MusicList.music_list[MusicList.music_playing]);
+        VN_ResumeMusicStream(MusicList.music_list[MusicList.music_playing]);
         MusicList.isplaying = true;
       }
       else
@@ -418,7 +404,7 @@ void init_dial() //Handle parsing and logic
         for (int i = 0; i < MAX_MUSIC; i++)
         {
           if (MusicList.music_name[i] == SCRPT[index].c){
-            StopMusicStream(MusicList.music_list[MusicList.music_playing]);
+            VN_StopMusicStream(MusicList.music_list[MusicList.music_playing]);
             MusicList.music_playing=i ;
             // PlayMusicStream(MusicList.music_list[MusicList.music_playing]);
           }
@@ -436,7 +422,7 @@ void init_dial() //Handle parsing and logic
       {
         if (SoundList.sound_name[i] == SCRPT[index].c){
           SoundList.sound_playing = i; // Do we really need that variable ?
-          PlaySound(SoundList.sound_list[i]);
+          VN_PlaySound(SoundList.sound_list[i]);
           // StopMusicStream(MusicList.music_list[MusicList.music_playing]);
           // MusicList.music_playing=i ;
           // PlayMusicStream(MusicList.music_list[MusicList.music_playing]);

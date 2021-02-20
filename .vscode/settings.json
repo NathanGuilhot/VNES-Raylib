@@ -3,6 +3,7 @@
         "typeinfo": "cpp",
         "script_parser.h": "c",
         "input_manager.h": "c",
-        "menudefinition.h": "c"
+        "menudefinition.h": "c",
+        "saveload_system.h": "c"
     }
 }

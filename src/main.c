@@ -12,7 +12,16 @@
 
 #include "NSTD_custom_lib.h"
 #include "UI_DEFS.h"
-#include "input_manager.h"
+
+#include "system/input_system.h"
+#include "system/graphics_system.h"
+#include "system/audio_system.h"
+//#include "font_system.h" //(?? Or just manage that in the graphics system I guess)
+
+#define FRENCH 1 //bolean, 1 = FR 0 = EN
+#include "script_parser.h"
+#include "system/saveload_system.h"
+
 
 //----Enums
 
@@ -24,44 +33,6 @@ enum GAME_STATE
 };
 enum GAME_STATE game_st = DIAL;
 
-enum DIAL_T
-{
-  N /*NARRATOR*/,
-  C /*CHOICE*/,
-  F /*FIN*/,
-  J /*JUMP TO LABEL*/,
-  H /*HIDE/SHOW*/,
-  LABEL,
-  MOV,    /*Move sprite*/
-  CJUMP,  /*CONDITIONAL JUMP*/
-  CFLAGS, /*CHANGE VALUE OF A FLAG*/
-  SWPM /*SWAP EXPRESSION*/,
-  BG, /*Change background*/
-  MUSIC,
-  SOUND,
-
-  // WILL NOT BE USED IN THE END :
-  SWPEL /*SWAP LEFT EYE*/,
-  SWPER /*SWAP RIGHT EYE*/,
-  A /*ANGE*/,
-};
-
-//----Struct definition
-typedef struct Passage Passage;
-struct Passage
-{
-  enum DIAL_T t; //Type de passage
-  char *c;       //Content, en general le texte affiché
-};
-
-typedef struct Choice Choice;
-struct Choice
-{
-  char *key;
-  char *txt; //Texte du choix
-  char *jmp; //Indice du label de destination
-};
-
 //-----Variables utiles
 
 unsigned int index = 0; //index dans le label en cours //328 max sans visage+choice
@@ -72,66 +43,6 @@ int choice_sel = 0;
 int choice_sel_index = 0;
 int choice_collection_index = 0;
 
-bool starting;
-
-//---- Flags
-typedef struct
-{
-  char *key;
-  int value;
-} FLAGS;
-
-#define MAX_EXPRESSION 2 //will be defined in script.h later (?)
-#define MAX_BACKGROUND 2
-#define MAX_MUSIC 2
-#define MAX_SOUND 2
-
-
-//---- Characters
-typedef struct
-{
-  char *key;
-  char *name;
-  char *image_name;
-  Color color_name;
-
-  Rectangle borders;
-
-  bool visible;
-  int x;
-  int y;
-  int gotox;
-  int gotoy; //for interpolation
-  int zindex;
-
-  int expression_index;
-  Texture2D base_image;
-  Texture2D expression[MAX_EXPRESSION];
-
-} CHARA;
-
-typedef struct BACKGROUND{
-  char *images[MAX_BACKGROUND];
-  Texture2D texture[MAX_BACKGROUND];
-  int bg_index;
-  int bg_next;
-  bool in_transition;
-  float dissolve_duration;
-  unsigned char opacity;
-} BACKGROUND;
-
-typedef struct Music_list{
-  Music music_list[MAX_MUSIC];
-  char *music_name[MAX_MUSIC];
-  int music_playing;
-  bool isplaying;
-} Music_list;
-
-typedef struct Sound_list{
-  Sound sound_list[MAX_SOUND];
-  char *sound_name[MAX_SOUND];
-  int sound_playing;
-} Sound_list;
 
 char *text_to_display;
 char *chara_name = "Character Name";
@@ -164,9 +75,7 @@ char *index_txt = "indx";
 char nb_choice = 1;
 char *txt_choix = "choix";
 
-#define FRENCH 1 //bolean, 1 = FR 0 = EN
-#include "script_parser.h"
-#include "saveload_system.h"
+
 
 void ParseLabels()
 {
@@ -213,7 +122,7 @@ void loadCharacterSprites()
     strcpy(expression_filename, filename);
     // strcat(expression_filename, "1.png");
 
-    CharaList[i].base_image = LoadTexture(base_filename);
+    CharaList[i].base_image = VN_LoadTexture(base_filename);
 
     CharaList[i].y = screenHeight - CharaList[i].base_image.height;
     CharaList[i].x = (screenWidth - CharaList[i].base_image.width)/2; //Center of the screen
@@ -231,7 +140,7 @@ void loadCharacterSprites()
       strcat(file_expression, buff);
       strcat(file_expression, ".png");
       // printf(file_expression);
-      CharaList[i].expression[i2] = LoadTexture(file_expression);
+      CharaList[i].expression[i2] = VN_LoadTexture(file_expression);
     }
 
     CharaList[i].expression_index = 0; //default
@@ -250,7 +159,7 @@ void loadBackgroundSprites()
     strcat(filename, Background.images[i]);
     strcat(filename, ".png");
 
-    Background.texture[i] = LoadTexture(filename);
+    Background.texture[i] = VN_LoadTexture(filename);
   }
   
   Background.bg_index = 0; //default
@@ -262,7 +171,7 @@ void loadBackgroundSprites()
 
 void loadAudio(){
   //Load Music
-  //LoadMusicStream(path)
+  //VN_LoadMusicStream(path)
 
   
   
@@ -275,7 +184,7 @@ void loadAudio(){
       strcat(filename, MusicList.music_name[i]);
       strcat(filename, ".mp3");
 
-      MusicList.music_list[i] = LoadMusicStream(filename);
+      MusicList.music_list[i] = VN_LoadMusicStream(filename);
     }
   }
 
@@ -283,7 +192,7 @@ void loadAudio(){
   
 
   // //Load Sounds
-  // //LoadSound(path)
+  // //VN_LoadSound(path)
   
   for (int i=0; i<MAX_SOUND; i++)
   {
@@ -294,7 +203,7 @@ void loadAudio(){
       strcat(filename, SoundList.sound_name[i]);
       strcat(filename,".wav");
 
-      SoundList.sound_list[i] = LoadSound(filename);
+      SoundList.sound_list[i] = VN_LoadSound(filename);
     }
   }
 
@@ -321,8 +230,8 @@ void DrawBackground()
   }
 
 
-  DrawTexture(Background.texture[Background.bg_next],0,0,WHITE);
-  DrawTexture(Background.texture[Background.bg_index],0,0,(Color){255,255,255,Background.opacity});
+  VN_DrawTexture(Background.texture[Background.bg_next],0,0,WHITE);
+  VN_DrawTexture(Background.texture[Background.bg_index],0,0,(Color){255,255,255,Background.opacity});
 }
 
 #define C_MAX_TEXTSPLIT_COUNT 128
@@ -338,8 +247,8 @@ void draw_dial()
   {
     if (CharaList[i].visible)
     { //will change later
-      DrawTexture(CharaList[i].base_image, CharaList[i].x, CharaList[i].y, WHITE);
-      DrawTexture(CharaList[i].expression[CharaList[i].expression_index], CharaList[i].x, CharaList[i].y, WHITE);
+      VN_DrawTexture(CharaList[i].base_image, CharaList[i].x, CharaList[i].y, WHITE);
+      VN_DrawTexture(CharaList[i].expression[CharaList[i].expression_index], CharaList[i].x, CharaList[i].y, WHITE);
     }
   }
 
@@ -348,10 +257,10 @@ void draw_dial()
 
   if (!inMenuChoice)
   {
-    DrawTexture(UI_IMAGE.textbox,(screenWidth-UI_IMAGE.textbox.width)/2,315,WHITE);
+    VN_DrawTexture(UI_IMAGE.textbox,(screenWidth-UI_IMAGE.textbox.width)/2,315,WHITE);
 
-    DrawText(chara_name, 163+10, 315+10, 20, UI_TEXTBOX_NAME_COLOR);
-    DrawText(disp_text, 163+10, 315+30, 20, UI_TEXTBOX_TEXT_COLOR);
+    VN_DrawText(chara_name, 163+10, 315+10, 20, UI_TEXTBOX_NAME_COLOR);
+    VN_DrawText(disp_text, 163+10, 315+30, 20, UI_TEXTBOX_TEXT_COLOR);
     // DrawTextEx(GetFontDefault(),disp_text,(Vector2){163+20,315+40},(float)20,(float)1,DARKGRAY);
   }
 
@@ -630,11 +539,11 @@ int main(int argc, char *argv[])
   //--------------------------------------------------------------------------------------
 
   InitWindow(screenWidth, screenHeight, "VNES_PC");
-  InitAudioDevice();
+  VN_InitAudioDevice();
 
   Music music_test;
-  // music_test = LoadMusicStream("./assets/audio/music/nichijou1.mp3");
-  beep = LoadSound("./assets/audio/sound/beep1.wav");
+  // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
+  beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
   ListMenuPage[pause_menu_index].items[4].function=SAVEGAME; //Yes, this is very ugly, but honey I had no choices
   ListMenuPage[pause_menu_index].items[5].function=LOADGAME;
 
@@ -673,10 +582,10 @@ int main(int argc, char *argv[])
       // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
       updt_dial();
       // UpdateMusicStream(MusicList.music_list[0]);
-      SetMusicVolume(MusicList.music_list[0], (float)OPTION.volume/2/100);
+      VN_SetMusicVolume(MusicList.music_list[0], (float)OPTION.volume/2/100);
 
-      if (OPTION.check){
-        UpdateMusicStream(MusicList.music_list[MusicList.music_playing]);
+      if (!OPTION.check){
+        VN_UpdateMusicStream(MusicList.music_list[MusicList.music_playing]);
       }
 
       break;
@@ -723,11 +632,11 @@ int main(int argc, char *argv[])
 
     // DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
 
-    DrawFPS(10, 10);
+    VN_DrawFPS(10, 10);
 
     if (a_pressed)
     {
-      DrawText("A", 200, 10, 20, DARKGRAY);
+      VN_DrawText("A", 200, 10, 20, DARKGRAY);
     }
 
     EndDrawing();
@@ -740,27 +649,27 @@ int main(int argc, char *argv[])
   //Textures
   for (int i = 0; i < CHARACTER_NUMBER; i++)
   {
-    UnloadTexture(CharaList[i].base_image);
+    VN_UnloadTexture(CharaList[i].base_image);
     for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
     {
-      UnloadTexture(CharaList[i].expression[i2]);
+      VN_UnloadTexture(CharaList[i].expression[i2]);
     }
   }
 
   for (int i = 0; i < MAX_BACKGROUND; i++)
   {
-    UnloadTexture(Background.texture[i]);
+    VN_UnloadTexture(Background.texture[i]);
   }
 
   //Sound/Musics
   for (int i = 0; i < MAX_MUSIC; i++)
   {
-    UnloadMusicStream(MusicList.music_list[i]);
+    VN_UnloadMusicStream(MusicList.music_list[i]);
   }
 
   for (int i = 0; i < MAX_SOUND; i++)
   {
-    UnloadSound(SoundList.sound_list[i]);
+    VN_UnloadSound(SoundList.sound_list[i]);
   }
 
   CloseWindow(); // Close window and OpenGL context
