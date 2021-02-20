@@ -83,7 +83,7 @@ MENU_PAGE ListMenuPage[]={
     .items = {
       {"Button",  true,CHOICE_ITEM, 0},
       {"Volume",  true,SLIDER, 0, &OPTION.volume,{0,100}},
-      {"CPS",  true,SLIDER, 0, &OPTION.cps,{0,60}},
+      {"CPS",  true,SLIDER, 0, &OPTION.cps,{0,120}},
 
       {"CheckBox",true,CHECKBOX, 0, &OPTION.check, {0,1}},
       {"Autre menu",true,MENU_NAV, 2},

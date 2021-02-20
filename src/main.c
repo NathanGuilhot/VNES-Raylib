@@ -415,9 +415,9 @@ void updt_dial()
         {
           cursor = strlen(text_to_display);
         }
-        else if (timer>1/OPTION.cps)
+        else if (timer*OPTION.cps>=1)
         {
-          cursor += max(1,(int)(timer*OPTION.cps));
+          cursor += (int)(timer*OPTION.cps);
           if (cursor >= strlen(text_to_display)) {cursor = strlen(text_to_display);}
           timer=0;
         }
