@@ -25,11 +25,11 @@
 - [ ] Serious reformatting
   - [ ] Split into multiple files
   - [x] Src folder for the code
-  - [ ] delete unused variables and comments
+  - [x] delete unused variables and comments
   - [x] Replace n_pressed and inputs check by a function // will be used on other engine; can be easily modified for each platform
     - [x] BTN()
     - [x] BTNP()
-  - [ ] Move the SCRIPT include at the top
+  - [x] Move the SCRIPT include at the top (almost there)
   - [ ] function pointer instead of FSM for update/draw loop
 
 

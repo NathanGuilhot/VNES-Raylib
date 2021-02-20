@@ -48,6 +48,8 @@ void init_dial() //Handle parsing and logic
       
 
       nb_choice = 1;
+
+      int choice_displayed = 0;
       
       if (second_word!=NULL){
         nb_choice = 2;
@@ -72,11 +74,19 @@ void init_dial() //Handle parsing and logic
                 ListMenuPage[choice_menu_index].items[i_choice_btn].label = ListeChoix[i_listchoix].txt;
                 ListMenuPage[choice_menu_index].items[i_choice_btn].visible = true;
                 ListMenuPage[choice_menu_index].items[i_choice_btn].param = ListLabels[i_label].value;
+                choice_displayed++;
                 break;
               }
             }
           }
         }
+      }
+
+      if (choice_displayed==0){ //If we don't found any corresponding choices
+        // index++;
+        // init_dial();
+        // inMenuChoice = false;
+        playSomeSound();
       }
       
       break;
@@ -96,14 +106,14 @@ void init_dial() //Handle parsing and logic
     }
     case SWPEL:
     {
-      sprEl = c_atoi(SCRPT[index].c);
+      // sprEl = c_atoi(SCRPT[index].c);
       index++;
       init_dial();
       break;
     }
     case SWPER:
     {
-      sprEr = c_atoi(SCRPT[index].c);
+      // sprEr = c_atoi(SCRPT[index].c);
       index++;
       init_dial();
       break;

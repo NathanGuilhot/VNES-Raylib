@@ -18,10 +18,6 @@
 #include "system/audio_system.h"
 //#include "font_system.h" //(?? Or just manage that in the graphics system I guess)
 
-#define FRENCH 1 //bolean, 1 = FR 0 = EN
-#include "script_parser.h"
-#include "system/saveload_system.h"
-
 
 //----Enums
 
@@ -35,47 +31,25 @@ enum GAME_STATE game_st = DIAL;
 
 //-----Variables utiles
 
-unsigned int index = 0; //index dans le label en cours //328 max sans visage+choice
+unsigned int index = 0; //index
 int cursor = 1;
-char disp_text[64];
+char disp_text[64]; //Current text being displayed
+char *text_to_display; //Text to be displayed
 
-int choice_sel = 0;
-int choice_sel_index = 0;
-int choice_collection_index = 0;
+int choice_sel;
+int nb_choice;
 
-
-char *text_to_display;
 char *chara_name = "Character Name";
-char buffText[64]; //Utile pour le parse du text
-char *first_word;
+char buffText[64];
+char *first_word; //TODO:Replace by all of them by a char* array Word[]
 char *second_word;
 char *third_word;
 char *fourth_word;
 
-// void AddChara(char* pKey, char* pName){
-// 	  CharaList[chara_index].key = pKey;
-// 	  CharaList[chara_index].name = pName;
 
-// 	chara_index++;
-// }
-bool init_done = false; //Used to only launch init_dial once
-
-const bool debug_mode = false;
-
-
-//face var
-char sprEl = 0; //gauche
-char sprEr = 0; //Drouate
-char sprM = 1;  //Bouche
-
-int scrnBrightness = 0;
-bool dispAnge = false;
-
-char *index_txt = "indx";
-char nb_choice = 1;
-char *txt_choix = "choix";
-
-
+#define FRENCH 1 //bolean, 1 = FR 0 = EN
+#include "script_parser.h"
+#include "system/saveload_system.h"
 
 void ParseLabels()
 {
@@ -234,9 +208,6 @@ void DrawBackground()
   VN_DrawTexture(Background.texture[Background.bg_index],0,0,(Color){255,255,255,Background.opacity});
 }
 
-#define C_MAX_TEXTSPLIT_COUNT 128
-#define MAX_TEXT_BUFFER_LENGTH 100
-
 void draw_dial()
 {
   DrawBackground();
@@ -265,6 +236,8 @@ void draw_dial()
   }
 
   DrawUI(choice_sel);
+  char buffer1[20];
+  VN_DrawText(itoa(index,buffer1,10),10,100,20,BLACK);
 }
 
 void updt_dial()
@@ -280,11 +253,6 @@ void updt_dial()
       CharaList[i].x += (CharaList[i].gotox - CharaList[i].x) / 10;
 
       //Todo : have some real tweening going on
-
-      //-c * math.cos(t/d * (math.pi/2)) + c + b
-      //-CharaList[i].gotox * math.cos(10/3 * (math.pi/2)) + CharaList[i].x + 100
-
-      // CharaList[i].x = -CharaList[i].gotox * cos(10/3 * (3.14f/2)) + CharaList[i].x + 100;
     }
   }
 
@@ -398,21 +366,16 @@ void updt_dial()
     //Press A in choice
     if (BTNP("A"))
     {
-      // for (int i = 0; i < LABELS_NUMBERS; i++)
-      // {
-      //   if (ListLabels[i].name == ListeChoix[choice_sel_index].jmp)
-      //   {
-          index = ListMenuPage[choice_menu_index].items[choice_sel].param;
-          timer=0;
+      index = ListMenuPage[choice_menu_index].items[choice_sel].param;
+      timer=0;
 
-          inMenuChoice = false;
-          ListMenuPage[choice_menu_index].visible = false;
-          for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
-          {
-            ListMenuPage[choice_menu_index].items[i2].visible = false;
-          }
-      //   }
-      // }
+      inMenuChoice = false;
+      ListMenuPage[choice_menu_index].visible = false;
+      for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+      {
+        ListMenuPage[choice_menu_index].items[i2].visible = false;
+      }
+
       choice_sel = 0;
       init_dial();
     }
@@ -572,16 +535,14 @@ int main(int argc, char *argv[])
     {
     case MAIN_MENU:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
       updt_menu();
 
       break;
     }
     case DIAL:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
       updt_dial();
-      // UpdateMusicStream(MusicList.music_list[0]);
+      
       VN_SetMusicVolume(MusicList.music_list[0], (float)OPTION.volume/2/100);
 
       if (!OPTION.check){
@@ -592,7 +553,7 @@ int main(int argc, char *argv[])
     }
     case END:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
+      
       updt_end();
 
       break;
@@ -607,30 +568,22 @@ int main(int argc, char *argv[])
     {
     case MAIN_MENU:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Game",4);}
-
       draw_menu();
       break;
     }
     case DIAL:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"Dialogue",8);vrambuf_put(NTADR_A(2,3),index_txt,3);}
-
       draw_dial();
 
       break;
     }
     case END:
     {
-      // if (debug_mode){vrambuf_put(NTADR_A(2,2),"END",3);}
-
       draw_end();
 
       break;
     }
     }
-
-    // DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
 
     VN_DrawFPS(10, 10);
 

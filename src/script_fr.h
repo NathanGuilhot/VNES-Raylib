@@ -71,8 +71,6 @@ extern Passage SCRPT[] = {
       {N, "A Moi aussi je vais bien,\ntres bien meme!"},
       {SWPM,"A 0"},
       {N, "A J'avais un peu peur qu'on\narrive pas a se retrouver,"},
-      {SWPEL,"0"},
-      {SWPER,"0"},
       {N, "A mais finalement il n'y avait\npas a s'inquieter!"},
       {J,"Mer1"},
 
