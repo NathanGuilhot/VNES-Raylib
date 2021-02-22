@@ -23,6 +23,16 @@
 //     unsigned char a;
 // } Color;
 
+// // Font type, includes texture and charSet array data
+// typedef struct Font {
+//     int baseSize;           // Base size (default chars height)
+//     int charsCount;         // Number of characters
+//     int charsPadding;       // Padding around the chars
+//     Texture2D texture;      // Characters texture atlas
+//     Rectangle *recs;        // Characters rectangles in texture
+//     CharInfo *chars;        // Characters info data
+// } Font;
+
 
 
 //----- Load
@@ -32,20 +42,26 @@ Texture2D VN_LoadTexture(const char *fileName){
     return LoadTexture(fileName);  
 }
 
+Font VN_LoadFont(const char *filename){
+    return LoadFontEx(filename, 32,NULL,250);
+}
+
 //----- Unload
 
 void VN_UnloadTexture(Texture2D texture){
     UnloadTexture(texture); 
 }
 
-
+void VN_UnloadFont(Font font){
+    UnloadFont(font);
+}
 
 //----- Draw
 
 
 //VN_DrawText()
 void VN_DrawText(const char *text, int posX, int posY, int fontSize, Color color){
-    DrawText(text, posX, posY,fontSize, color);       // Draw text (using default font)
+    DrawTextEx(Text_font, text, (Vector2){posX, posY},fontSize, 1,color);       // TODO: Check why utf-8 doesn't work
 }
 
 //VN_DrawRectangle()
@@ -66,6 +82,10 @@ void VN_DrawTexture(Texture2D texture, int posX, int posY, Color tint){
 //----- Misc
 void VN_DrawFPS(int x, int y){
     DrawFPS(x,y);
+}
+
+int VN_MeasureText(const char *text, int fontSize){
+    return MeasureText(text, fontSize);
 }
 
 //Color def

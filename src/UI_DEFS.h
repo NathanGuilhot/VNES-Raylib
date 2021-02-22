@@ -2,6 +2,8 @@
 #define screenWidth 800
 #define screenHeight 450
 
+Font Text_font;
+
 enum MENU_ITEM_TYPE
 {
   CHOICE_ITEM,
@@ -71,7 +73,7 @@ void loadUI_Texture()
 #define choice_menu_index 0
 #define pause_menu_index 1
 MENU_PAGE ListMenuPage[]={
-  {"CHOIX", false,
+  {"CHOICE", false,
     .items = {
       {"BTN1",  false,CHOICE_ITEM, 0},
       {"BTN2",  false,CHOICE_ITEM, 0},
@@ -146,7 +148,7 @@ void DrawUI(int pCursor){
     }
     if (ListMenuPage[i].visible){
       if (i>choice_menu_index){
-        VN_DrawText(ListMenuPage[i].title,screenWidth/2-((strlen(ListMenuPage[i].title)-1)*30)/2,30,30,WHITE);
+        VN_DrawText(ListMenuPage[i].title,screenWidth/2-VN_MeasureText(ListMenuPage[i].title, 30)/2,30,30,WHITE);
       }
       else{
         if (!inMenuChoice){ //if we are not in a choice, this menu shouldn't be visible
@@ -171,7 +173,7 @@ void DrawUI(int pCursor){
 
             VN_DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
             VN_DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
                     UI_CHOICE_FONT_SIZE, DARKGRAY);
             break;
@@ -186,7 +188,7 @@ void DrawUI(int pCursor){
                     UI_CHOICE_FONT_SIZE, box_color);
             //Main
             VN_DrawRectangle(
-                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)+UI_SLIDER_LABEL_MARGIN,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2,
                     UI_SLIDER_MAIN_WIDTH,
                     UI_SLIDER_MAIN_HEIGHT,
@@ -194,7 +196,7 @@ void DrawUI(int pCursor){
             );
             //Curseur
             VN_DrawRectangle(
-                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_SLIDER_LABEL_MARGIN + ((*ListMenuPage[i].items[i2].variable)*UI_SLIDER_MAIN_WIDTH)/ListMenuPage[i].items[i2].values[1],
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_SLIDER_LABEL_MARGIN + VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)+UI_SLIDER_LABEL_MARGIN + ((*ListMenuPage[i].items[i2].variable)*UI_SLIDER_MAIN_WIDTH)/ListMenuPage[i].items[i2].values[1],
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_SLIDER_CURSOR_HEIGHT/2+UI_SLIDER_MAIN_HEIGHT/2,
                     UI_SLIDER_CURSOR_WIDTH,
                     UI_SLIDER_CURSOR_HEIGHT,
@@ -214,7 +216,7 @@ void DrawUI(int pCursor){
 
             if (*ListMenuPage[i].items[i2].variable!=0){
             VN_DrawRectangle(
-                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
                     UI_CHECKBOX_MAIN_WIDTH,
                     UI_CHECKBOX_MAIN_HEIGHT,
@@ -223,7 +225,7 @@ void DrawUI(int pCursor){
             }
             else{
             VN_DrawRectangleLines(
-                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + (strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
+                    UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2+UI_CHECKBOX_LABEL_MARGIN + VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)+UI_CHECKBOX_LABEL_MARGIN_RIGHT,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP*2-UI_CHECKBOX_MAIN_HEIGHT/2,
                     UI_CHECKBOX_MAIN_WIDTH,
                     UI_CHECKBOX_MAIN_HEIGHT,
@@ -234,14 +236,14 @@ void DrawUI(int pCursor){
             break;
           case INPUT:
             VN_DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
                     UI_CHOICE_FONT_SIZE, DARKGRAY);
             
             break;
           case LIST:
             VN_DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
                     UI_CHOICE_FONT_SIZE, DARKGRAY);
             
@@ -253,7 +255,7 @@ void DrawUI(int pCursor){
             }
             VN_DrawRectangle(UI_BOX_POSITION_X-UI_CHOICE_WIDTH/2,UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+((i2)*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN)),UI_CHOICE_WIDTH,UI_CHOICE_HEIGHT, box_color);
             VN_DrawText(ListMenuPage[i].items[i2].label,
-                    UI_BOX_POSITION_X-(strlen(ListMenuPage[i].items[i2].label)*(UI_CHOICE_FONT_SIZE-UI_TEXT_SPACING))/2,
+                    UI_BOX_POSITION_X-VN_MeasureText(ListMenuPage[i].items[i2].label,UI_CHOICE_FONT_SIZE)/2,
                     UI_BOX_POSITION_Y-UI_CHOICE_HEIGHT/2+(i2*(UI_CHOICE_HEIGHT+UI_ITEMS_MARGIN))+UI_CHOICE_FONT_MARGIN_TOP,
                     UI_CHOICE_FONT_SIZE, DARKGRAY);
             

@@ -82,7 +82,7 @@ void init_dial() //Handle parsing and logic
         }
       }
 
-      if (choice_displayed==0){ //If we don't found any corresponding choices
+      if (choice_displayed==0){ //If we didn't found any corresponding choices
         // index++;
         // init_dial();
         // inMenuChoice = false;
@@ -104,20 +104,20 @@ void init_dial() //Handle parsing and logic
       }
       break;
     }
-    case SWPEL:
-    {
-      // sprEl = c_atoi(SCRPT[index].c);
-      index++;
-      init_dial();
-      break;
-    }
-    case SWPER:
-    {
-      // sprEr = c_atoi(SCRPT[index].c);
-      index++;
-      init_dial();
-      break;
-    }
+    // case SWPEL:
+    // {
+    //   // sprEl = c_atoi(SCRPT[index].c);
+    //   index++;
+    //   init_dial();
+    //   break;
+    // }
+    // case SWPER:
+    // {
+    //   // sprEr = c_atoi(SCRPT[index].c);
+    //   index++;
+    //   init_dial();
+    //   break;
+    // }
     case SWPM:
     {
 
@@ -206,12 +206,12 @@ void init_dial() //Handle parsing and logic
 
       break;
     }
-    case LABEL:
-    {
-      index++;
-      init_dial();
-      break;
-    }
+    // case LABEL:
+    // {
+    //   index++;
+    //   init_dial();
+    //   break;
+    // }
     case MOV:
     {
 
@@ -439,6 +439,12 @@ void init_dial() //Handle parsing and logic
         }
       }
       // PlaySound()
+      index++;
+      init_dial();
+      break;
+    }
+    default:
+    {
       index++;
       init_dial();
       break;

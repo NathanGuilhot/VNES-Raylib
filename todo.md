@@ -3,6 +3,17 @@
 ## Features in progress
 *(you can see the Raw if you want to understand what is this mess)*
 
+
+- [ ] Make a mainmenu screen
+  - [ ] Define image menu in script
+- [ ] Make a simple Game Over (so we have something to show)
+
+- [x] Load custom ttf font (or other format ?)
+  It's done but looks kinda ugly right now
+  - [ ] Fix not displayed Unicode characters
+  - [x] Check what font format should you use for homebrew
+      : TTF or images
+
 - [x] Labels
 
 - [x] Remove the Choice collection
@@ -44,7 +55,7 @@
   - Different file, or generated one ?
 
 Polish text:
-  - [ ] CTC
+  - [ ] CTC (that would be stupidly simple to do, honnestly)
   - [x] Variable typewritter speed (slider in setting)
       
 
@@ -59,6 +70,7 @@ Polish text:
       - [x] Script Runner
       - [x] Change page
     - [ ] (!) Mouse control UI (not the end goal, but useful for touch support later)
+    - [ ] Center text (better measure text ?)
   - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
   - [x] Nicer in-game UI (textbox)
     - [x] Better placement for the textbox

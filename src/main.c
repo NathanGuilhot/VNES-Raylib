@@ -31,7 +31,7 @@ enum GAME_STATE game_st = DIAL;
 
 //-----Variables utiles
 
-unsigned int index = 0; //index
+unsigned int index = 0; //index //We absolutlty need to change the name before porting
 int cursor = 1;
 char disp_text[64]; //Current text being displayed
 char *text_to_display; //Text to be displayed
@@ -271,8 +271,8 @@ void updt_dial()
           if (index < sizeof(SCRPT) / sizeof(SCRPT[0]) - 1)
           {
             index++;
-            cursor = 1;
-            timer=0;
+            cursor = 0;
+            timer = 0;
 
             memset(disp_text, 0, 64); //Vider le string
 
@@ -510,6 +510,8 @@ int main(int argc, char *argv[])
   ListMenuPage[pause_menu_index].items[4].function=SAVEGAME; //Yes, this is very ugly, but honey I had no choices
   ListMenuPage[pause_menu_index].items[5].function=LOADGAME;
 
+  Text_font = LoadFont("./assets/font/Ubuntu.ttf");
+
   LOADCONFIG();
 
   loadCharacterSprites();
@@ -624,6 +626,8 @@ int main(int argc, char *argv[])
   {
     VN_UnloadSound(SoundList.sound_list[i]);
   }
+
+  VN_UnloadFont(Text_font);
 
   CloseWindow(); // Close window and OpenGL context
   CloseAudioDevice(); 
