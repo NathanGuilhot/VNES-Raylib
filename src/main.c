@@ -507,10 +507,7 @@ int main(int argc, char *argv[])
   Music music_test;
   // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
   beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
-  ListMenuPage[pause_menu_index].items[4].function=SAVEGAME; //Yes, this is very ugly, but honey I had no choices
-  ListMenuPage[pause_menu_index].items[5].function=LOADGAME;
-
-  Text_font = LoadFont("./assets/font/Ubuntu.ttf");
+  Text_font = VN_LoadFont("./assets/font/Ubuntu.ttf");
 
   LOADCONFIG();
 

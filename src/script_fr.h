@@ -63,7 +63,7 @@ extern Passage SCRPT[] = {
       {N, "A Ça me fait plaisir de te voir,\ntu vas bien ?"},
       {MOV, "A center"},
       {MUSIC,"resume"},
-      {C,"deep_conversation excuse_retard reproches1 deep_conversation "},
+      {C,"deep_conversation excuse_retard reproches1 back_start "},
 
   //> "Oui ca va! Et toi ?"},
 {LABEL,"cava"},
@@ -1242,6 +1242,9 @@ extern Passage SCRPT[] = {
 };
 
 extern const Choice ListeChoix[]= {
+  {"back_start","Retour au début","START"},
+
+
   {"deep_conversation","Oui ca va! Et toi?","cava"},
   {"excuse_retard","Desole du retard","retard"},
   {"reproches1","C'etait dur de te trouver","durtrouver"},

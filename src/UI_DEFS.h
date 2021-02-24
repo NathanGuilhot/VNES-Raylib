@@ -68,7 +68,8 @@ void loadUI_Texture()
   UI_IMAGE.textbox = LoadTexture("./assets/img/textbox.png");
 }
 
-
+bool SAVEGAME();
+bool LOADGAME();
 
 #define choice_menu_index 0
 #define pause_menu_index 1
@@ -89,8 +90,8 @@ MENU_PAGE ListMenuPage[]={
       {"CPS",  true,SLIDER, 0, &OPTION.cps,{0,120}},
 
       {"Autre menu",true,MENU_NAV, 2},
-      {"SAVE",true,SCRIPT_RUNNER, .function=playSomeSound},
-      {"LOAD",true,SCRIPT_RUNNER, .function=playSomeSound},
+      {"SAVE",true,SCRIPT_RUNNER, .function=SAVEGAME},
+      {"LOAD",true,SCRIPT_RUNNER, .function=LOADGAME},
     }
   },
   {"SUBMENU", false,

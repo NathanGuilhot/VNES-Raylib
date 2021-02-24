@@ -50,6 +50,7 @@ bool SAVEGAME(){
    fprintf_s(SaveFileOpen, FORMAT_MUSIC_OUT, MusicList.music_playing, MusicList.isplaying);
 
    fclose(SaveFileOpen);
+   return true;
 }
 
 
@@ -86,10 +87,12 @@ bool LOADGAME(){
     }
     else{
         playSomeSound();
+        return false;
         
     }
 
     fclose(SaveFileOpen);    
+    return true;
 }
 
 bool SAVECONFIG(){

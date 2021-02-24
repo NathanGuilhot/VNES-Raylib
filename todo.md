@@ -10,7 +10,7 @@
 
 - [x] Load custom ttf font (or other format ?)
   It's done but looks kinda ugly right now
-  - [ ] Fix not displayed Unicode characters
+  - [x] Fix not displayed Unicode characters
   - [x] Check what font format should you use for homebrew
       : TTF or images
 
@@ -18,7 +18,7 @@
 
 - [x] Remove the Choice collection
 
-- [ ] Trouver un moyen de le rendre flexible dans le code
+- [ ] Trouver un moyen de rendre le code flexible
       - [x] Implementation 
       - [x] Define characters in script files
         - [x] Load character image and expressions

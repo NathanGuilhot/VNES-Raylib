@@ -85,7 +85,8 @@ void VN_DrawFPS(int x, int y){
 }
 
 int VN_MeasureText(const char *text, int fontSize){
-    return MeasureText(text, fontSize);
+    float spacing = 1;
+    return MeasureTextEx(Text_font, text, (float)fontSize, spacing).x;
 }
 
 //Color def
