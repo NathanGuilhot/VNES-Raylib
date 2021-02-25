@@ -2,8 +2,6 @@
 #define screenWidth 800
 #define screenHeight 450
 
-Font Text_font;
-
 enum MENU_ITEM_TYPE
 {
   CHOICE_ITEM,
@@ -58,21 +56,52 @@ OPTION_STRUCT OPTION ={
 
 typedef struct UI_IMG
 {
+  char* mainmenu_logo_file;
+  char* textbox_file;
+  char* ctc_file;
   Texture2D textbox;
+  Texture2D mainmenu_logo;
+  Texture2D ctc;
+
+  Color ctc_color;
 } UI_IMG;
 
 UI_IMG UI_IMAGE;
 
 void loadUI_Texture()
 {
-  UI_IMAGE.textbox = LoadTexture("./assets/img/textbox.png");
+  char filename[32] = "./assets/img/";
+  strcat(filename, UI_IMAGE.textbox_file);
+  strcat(filename, ".png");
+
+  UI_IMAGE.textbox = VN_LoadTexture("./assets/img/textbox.png");
+  // UI_IMAGE.mainmenu_logo_name = "mainmenu_logo";
+
+  strcpy(filename, "./assets/img/");
+  strcat(filename, UI_IMAGE.mainmenu_logo_file);
+  strcat(filename, ".png");
+
+  UI_IMAGE.mainmenu_logo = VN_LoadTexture(filename);
+
+  UI_IMAGE.ctc_file = "ctc";
+
+  strcpy(filename, "./assets/img/");
+  strcat(filename, UI_IMAGE.ctc_file);
+  strcat(filename, ".png");
+
+  UI_IMAGE.ctc = VN_LoadTexture(filename);
+  // UI_IMAGE.ctc = VN_LoadTexture("./assets/img/ctc.png");
+  UI_IMAGE.ctc_color = WHITE;
+  
 }
 
 bool SAVEGAME();
 bool LOADGAME();
+void NEWGAME();
 
 #define choice_menu_index 0
 #define pause_menu_index 1
+#define main_menu_index 3
 MENU_PAGE ListMenuPage[]={
   {"CHOICE", false,
     .items = {
@@ -99,6 +128,12 @@ MENU_PAGE ListMenuPage[]={
       {"BTN1",  true,CHOICE_ITEM, 0},
       {"Slider",  true,SLIDER, 0, &OPTION.volume,{0,100}},
       {"RETOUR",true,MENU_NAV, pause_menu_index},
+    }
+  },
+  {" ", false,
+    .items = {
+      {"NEW GAME",  true,SCRIPT_RUNNER, .function=NEWGAME},
+      {"LOAD GAME",true,SCRIPT_RUNNER, .function=LOADGAME}
     }
   },
 

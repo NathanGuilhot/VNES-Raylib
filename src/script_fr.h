@@ -39,6 +39,12 @@ extern Sound_list SoundList = {
       }
 };
 
+
+UI_IMG UI_IMAGE={
+      .mainmenu_logo_file = "mainmenu_logo",
+      .textbox_file = "textbox",
+};
+
 extern Passage SCRPT[] = {
 {LABEL,"START"},
       // {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},

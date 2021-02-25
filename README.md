@@ -8,7 +8,7 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 
 ---
 
-## ▲Features
+## ▲FEATURES
 
 - Typewriter effect
 - Branching
@@ -21,7 +21,7 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 - Backgrounds *(finally)*
 - Music and sound system *(hell yeah)*
 
-## ▲Planned
+## ▲PLAИИED
 
 - Complete UI rewrite
 - Draw images freely on screen
@@ -29,6 +29,13 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 - Tweening
 
 [You can see my actual TODO-list here](todo.md)
+
+---
+
+## ▲SCREEИSHOTS
+
+![Screenshot from VNES](Screenshot1.png)
+![Screenshot from VNES](Screenshot2.png)
 
 ---
 

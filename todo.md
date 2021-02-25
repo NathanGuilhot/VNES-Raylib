@@ -4,13 +4,15 @@
 *(you can see the Raw if you want to understand what is this mess)*
 
 
-- [ ] Make a mainmenu screen
-  - [ ] Define image menu in script
+- [x] Make a mainmenu screen
+  - [x] Define image menu in script
+  - [ ] More option on the main menu (Load game, New game, Option...)
 - [ ] Make a simple Game Over (so we have something to show)
 
 - [x] Load custom ttf font (or other format ?)
   It's done but looks kinda ugly right now
   - [x] Fix not displayed Unicode characters
+  - [ ] Fix the blurry text
   - [x] Check what font format should you use for homebrew
       : TTF or images
 
@@ -71,7 +73,8 @@ Polish text:
       - [x] Change page
     - [ ] (!) Mouse control UI (not the end goal, but useful for touch support later)
     - [ ] Center text (better measure text ?)
-  - [ ] Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) 
+  - [ ] ~~Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) ~~
+  - [ ] Isolate the menu update logic in a separate function (so we can use it elsewhere)
   - [x] Nicer in-game UI (textbox)
     - [x] Better placement for the textbox
 

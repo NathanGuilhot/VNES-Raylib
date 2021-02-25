@@ -33,7 +33,7 @@
 //     CharInfo *chars;        // Characters info data
 // } Font;
 
-
+Font Text_font; //default font
 
 //----- Load
 

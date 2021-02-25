@@ -11,23 +11,25 @@
 #include <math.h>
 
 #include "NSTD_custom_lib.h"
-#include "UI_DEFS.h"
 
 #include "system/input_system.h"
 #include "system/graphics_system.h"
 #include "system/audio_system.h"
 //#include "font_system.h" //(?? Or just manage that in the graphics system I guess)
 
+#include "UI_DEFS.h"
+
 
 //----Enums
 
 enum GAME_STATE
 {
+  SPLASH_SCREEN,
   MAIN_MENU,
   DIAL,
   END
 };
-enum GAME_STATE game_st = DIAL;
+enum GAME_STATE game_st = MAIN_MENU;
 
 //-----Variables utiles
 
@@ -51,6 +53,12 @@ char *fourth_word;
 #include "script_parser.h"
 #include "system/saveload_system.h"
 
+void NEWGAME(){
+  index = 0;
+  game_st = DIAL;
+  init_dial();
+}
+
 void ParseLabels()
 {
   for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
@@ -66,7 +74,7 @@ void ParseLabels()
       //L'ajouter à la liste, au premier endroit vide
       for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
       {
-        if (ListLabels[i2].name == "null")
+        if (!strcmp(ListLabels[i2].name,"null"))
         {
           ListLabels[i2].name = SCRPT[i].c;
           ListLabels[i2].value = i;
@@ -230,9 +238,16 @@ void draw_dial()
   {
     VN_DrawTexture(UI_IMAGE.textbox,(screenWidth-UI_IMAGE.textbox.width)/2,315,WHITE);
 
-    VN_DrawText(chara_name, 163+10, 315+10, 20, UI_TEXTBOX_NAME_COLOR);
+    VN_DrawText(chara_name, 163+10, 315+5, 25, UI_TEXTBOX_NAME_COLOR);
     VN_DrawText(disp_text, 163+10, 315+30, 20, UI_TEXTBOX_TEXT_COLOR);
     // DrawTextEx(GetFontDefault(),disp_text,(Vector2){163+20,315+40},(float)20,(float)1,DARKGRAY);
+
+    if (cursor >= strlen(text_to_display))
+    {
+      UI_IMAGE.ctc_color = UI_TEXTBOX_NAME_COLOR;
+      VN_DrawTexture(UI_IMAGE.ctc, (screenWidth+UI_IMAGE.textbox.width)/2 - UI_IMAGE.ctc.width - 20,390,UI_IMAGE.ctc_color);
+    }
+
   }
 
   DrawUI(choice_sel);
@@ -243,7 +258,9 @@ void draw_dial()
 void updt_dial()
 {
   static float timer;
+  float delta_time;
   timer += GetFrameTime();
+  delta_time = GetFrameTime();
 
   //"Tweening"
   for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -469,14 +486,36 @@ void updt_dial()
 
 void draw_menu()
 {
+  static float time;
+  time += GetFrameTime();
+
+  int logoX;
+  int logoY;
+
+  logoX = screenWidth/2-UI_IMAGE.mainmenu_logo.width/2;
+  logoY = screenHeight/2-UI_IMAGE.mainmenu_logo.height/2;
+  
+  VN_DrawTexture(UI_IMAGE.mainmenu_logo,logoX,logoY+sin(time)*10, WHITE);
+  
+
+  VN_DrawText("PRESS A TO START", screenWidth/2 - VN_MeasureText("PRESS A TO START",30)/2,400,30,(Color){0,0,0,(sin(time*2)+1)*255/2});
+
+  DrawUI(choice_sel);
 }
 
 void updt_menu()
 {
   if (BTNP("A"))
   {
-    game_st = DIAL;
-    init_dial();
+    // if (ListMenuPage[main_menu_index].visible==false)
+    // {
+    //   playSomeSound();
+    //   ListMenuPage[main_menu_index].visible = true;
+    // }
+    // if (LOADGAME()){
+      
+    // }
+    NEWGAME();
   }
 }
 
