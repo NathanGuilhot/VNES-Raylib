@@ -15,6 +15,10 @@
   - [ ] Fix the blurry text
   - [x] Check what font format should you use for homebrew
       : TTF or images
+- [ ] Custom DrawText function
+- [ ] Custom Line spacing
+- [ ] "Rich" text effects
+Color? Bold, italic? Crossed? Animated?
 
 - [x] Labels
 
@@ -57,7 +61,7 @@
   - Different file, or generated one ?
 
 Polish text:
-  - [ ] CTC (that would be stupidly simple to do, honnestly)
+  - [x] CTC (that would be stupidly simple to do, honnestly)
   - [x] Variable typewritter speed (slider in setting)
       
 
