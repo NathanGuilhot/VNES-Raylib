@@ -52,8 +52,9 @@ extern Passage SCRPT[] = {
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
 
       {MUSIC,"play"},
+      {N, "~Whoooaaa~, this *effect* looks **so cool** !"},
       {N, "Tu trouves enfin **la pers*onne\nque tu** cherch*ais."},
-      {CFLAGS, "LOVE 1 "}, //If we don't have a space at the end, it doesn't work. We need to fix that
+      {CFLAGS, "LOVE 1"},
       {SWPM,"A 1"},
       // {MUSIC,"nichijou2"},
       // {MUSIC,"play"},

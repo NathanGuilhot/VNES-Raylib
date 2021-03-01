@@ -84,6 +84,8 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
     //Style flags
     bool flag_bold = false;
     bool flag_italic = false;
+    bool flag_wave = false;
+    bool flag_crossed = false;
 
     for (int i = 0; i < length;)
     {
@@ -108,7 +110,10 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
                 flag_bold = !flag_bold;
                 codepointByteCount += 1;
             }
-            else flag_italic = !flag_italic;
+            else
+            {
+                flag_italic = !flag_italic;
+            }
 
             //Font Weight switching
             if (flag_bold && flag_italic) font = Text_font_bolditalic;
@@ -116,11 +121,26 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
             else if (flag_italic) font = Text_font_italic;
             else font = Text_font;
         }
+        else if (codepoint == '~')
+        {
+            if (GetNextCodepoint(&text[i+1], &codepointByteCount) == '~') // -> ~~
+            {
+                flag_crossed = !flag_crossed;
+                codepointByteCount += 1;
+            }
+            else
+            {
+                flag_wave = !flag_wave;
+            }
+            // flag_wave = !flag_wave;
+
+        }
         else
         {
             if ((codepoint != ' ') && (codepoint != '\t'))
             {
-                DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX, position.y + textOffsetY }, fontSize, color);
+                if (!flag_wave) DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX, position.y + textOffsetY }, fontSize, color);
+                else DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX + sin(time*4-i)*1, position.y + textOffsetY + sin(time*4-i)*2 }, fontSize, color);
             }
 
             if (font.chars[index].advanceX == 0) textOffsetX += ((float)font.recs[index].width*scaleFactor + spacing);

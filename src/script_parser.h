@@ -357,7 +357,7 @@ void init_dial() //Handle parsing and logic
             }
             else
             {
-              FlagList[i].value = c_atoi(second_word);
+              FlagList[i].value = atoi(second_word); //It seem that c_atoi had problem with the input. Investigation may be useful
             }
 
             index++;

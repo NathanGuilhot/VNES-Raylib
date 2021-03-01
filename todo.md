@@ -1,8 +1,6 @@
-# VNES - Tracking progress
+# VNES - Progress tracking
 
-## Features in progress
-*(you can see the Raw if you want to understand what is this mess)*
-
+## Features in progress (kinda)
 
 - [x] Make a mainmenu screen
   - [x] Define image menu in script
@@ -15,21 +13,20 @@
   - [ ] Fix the blurry text
   - [x] Check what font format should you use for homebrew
       : TTF or images
-- [ ] Custom DrawText function
-- [ ] Custom Line spacing
-- [ ] "Rich" text effects
-Color? Bold, italic? Crossed? Animated?
 
 - [ ] Find a solution so we don't have to put a space at the end of a command in the SCRPT
   - [ ] Do some research on the behaviour of strtok when it hit the end of a string
 
+- [x] Custom DrawText function
+- [x] Custom Line spacing
 - [ ] Text formating
   - [x] **Bold**
   - [x] *Italic*
   - [x] ***Bold + Italic***
   - [ ] ~~crossed~~
   - [ ] __Underline__
-  - [ ] More ? (wave text, animation, colors... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
+  - [x] ~Wave~
+  - [ ] More ? (animation, colors, basic emojis... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
     - [ ] Have a better parser system
 
 - [x] Labels
