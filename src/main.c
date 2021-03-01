@@ -250,7 +250,7 @@ void draw_dial()
     if (cursor >= strlen(text_to_display))
     {
       UI_IMAGE.ctc_color = UI_TEXTBOX_NAME_COLOR;
-      VN_DrawTexture(UI_IMAGE.ctc, (screenWidth+UI_IMAGE.textbox.width)/2 - UI_IMAGE.ctc.width - 20,390,UI_IMAGE.ctc_color);
+      VN_DrawTexture(UI_IMAGE.ctc, (screenWidth+UI_IMAGE.textbox.width)/2 - UI_IMAGE.ctc.width - 20,390 + sin(time*3)*3,UI_IMAGE.ctc_color);
     }
 
   }
@@ -553,7 +553,7 @@ int main(int argc, char *argv[])
   // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
   beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
 
-  Text_font = VN_LoadFont("./assets/font/Ubuntu.ttf");
+  Text_font = VN_LoadFont("./assets/font/Ubuntu-Regular.ttf");
   Text_font_bold = VN_LoadFont("./assets/font/Ubuntu-Bold.ttf");
   Text_font_italic = VN_LoadFont("./assets/font/Ubuntu-Italic.ttf");
   Text_font_bolditalic = VN_LoadFont("./assets/font/Ubuntu-BoldItalic.ttf");

@@ -86,6 +86,24 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
     bool flag_italic = false;
     bool flag_wave = false;
     bool flag_crossed = false;
+    bool flag_underline = false;
+
+    float wave_x_range_default = 1;
+    float wave_y_range_default = 2;
+    int wave_x_speed_default = 4;
+    int wave_y_speed_default = 4;
+    float wave_x_offset_default = 0.5;
+    float wave_y_offset_default = 0.5;
+
+    float wave_x_range = wave_x_range_default;
+    float wave_y_range = wave_y_range_default;
+    int wave_x_speed = wave_x_speed_default;
+    int wave_y_speed = wave_y_speed_default;
+    float wave_x_offset = wave_x_offset_default;
+    float wave_y_offset = wave_y_offset_default;
+
+    Color default_color = color;
+    
 
     for (int i = 0; i < length;)
     {
@@ -121,7 +139,7 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
             else if (flag_italic) font = Text_font_italic;
             else font = Text_font;
         }
-        else if (codepoint == '~')
+        else if (codepoint == '~') // Maybe use a different symbol for wave effect (or use a escape character ?)
         {
             if (GetNextCodepoint(&text[i+1], &codepointByteCount) == '~') // -> ~~
             {
@@ -132,15 +150,51 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
             {
                 flag_wave = !flag_wave;
             }
-            // flag_wave = !flag_wave;
-
+        }
+        else if (codepoint == '_' && GetNextCodepoint(&text[i+1], &codepointByteCount) == '_')
+        {
+            // if (GetNextCodepoint(&text[i+1], &codepointByteCount) == '_') // -> ~~
+            // {
+                flag_underline = !flag_underline;
+                codepointByteCount += 1;
+            // }
+            // else
+            // {
+            //     flag_wave = !flag_wave;
+            // }
         }
         else
         {
             if ((codepoint != ' ') && (codepoint != '\t'))
             {
-                if (!flag_wave) DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX, position.y + textOffsetY }, fontSize, color);
-                else DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX + sin(time*4-i)*1, position.y + textOffsetY + sin(time*4-i)*2 }, fontSize, color);
+                float position_x;
+                float position_y;
+                position_x = position.x + textOffsetX;
+                position_y = position.y + textOffsetY;
+
+                if (flag_wave)
+                {
+                    position_x += sin(time*wave_x_speed-i*wave_x_offset)*wave_x_range;
+                    position_y += sin(time*wave_y_speed-i*wave_y_offset)*wave_y_range;
+                }
+
+                DrawTextCodepoint(font, codepoint, (Vector2){ position_x, position_y }, fontSize, color);
+
+                //TODO: Draw these lines over spaces when needed
+                if (flag_crossed)
+                {
+                    DrawLine(position_x, position_y+fontSize/2,
+                            position_x + ((float)font.chars[index].advanceX*scaleFactor + spacing), position_y+fontSize/2,
+                            color);
+                }
+
+                if (flag_underline)
+                {
+                    DrawLine(position_x, position_y+fontSize,
+                            position_x + ((float)font.chars[index].advanceX*scaleFactor + spacing), position_y+fontSize,
+                            color);
+                }
+
             }
 
             if (font.chars[index].advanceX == 0) textOffsetX += ((float)font.recs[index].width*scaleFactor + spacing);
