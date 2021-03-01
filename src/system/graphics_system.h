@@ -34,6 +34,9 @@
 // } Font;
 
 Font Text_font; //default font
+Font Text_font_bold;
+Font Text_font_italic;
+Font Text_font_bolditalic;
 
 //----- Load
 
@@ -60,8 +63,72 @@ void VN_UnloadFont(Font font){
 
 
 //VN_DrawText()
-void VN_DrawText(const char *text, int posX, int posY, int fontSize, Color color){
-    DrawTextEx(Text_font, text, (Vector2){posX, posY},fontSize, 1,color);       // TODO: Check why utf-8 doesn't work
+void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color color){
+    // DrawTextEx(Text_font, text, (Vector2){posX, posY},fontSize, 1,color);
+
+    Font font = Text_font;
+    Vector2 position = (Vector2){posX,posY};
+    float spacing = 1;
+    float line_spacing = 1.1;
+
+    //Code stolen from raylib DrawTextEX(), I really love your code raysan <3
+
+    int length = TextLength(text);      // Total length in bytes of the text, scanned by codepoints in loop
+
+    int textOffsetY = 0;            // Offset between lines (on line break '\n')
+    float textOffsetX = 0.0f;       // Offset X to next character to draw
+
+    
+    float scaleFactor = fontSize/font.baseSize;     // Character quad scaling factor
+
+    //Style flags
+    bool flag_bold = false;
+    bool flag_italic = false;
+
+    for (int i = 0; i < length;)
+    {
+        // Get next codepoint from byte string and glyph index in font
+        int codepointByteCount = 0;
+        int codepoint = GetNextCodepoint(&text[i], &codepointByteCount);
+        int index = GetGlyphIndex(font, codepoint);
+
+        // NOTE: Normally we exit the decoding sequence as soon as a bad byte is found (and return 0x3f)
+        // but we need to draw all of the bad bytes using the '?' symbol moving one byte
+        if (codepoint == 0x3f) codepointByteCount = 1;
+
+        if (codepoint == '\n')
+        {
+            textOffsetY += (int)((font.baseSize * line_spacing)*scaleFactor);
+            textOffsetX = 0.0f;
+        }
+        else if (codepoint == '*')
+        {
+            if (GetNextCodepoint(&text[i+1], &codepointByteCount) == '*') // -> **
+            {
+                flag_bold = !flag_bold;
+                codepointByteCount += 1;
+            }
+            else flag_italic = !flag_italic;
+
+            //Font Weight switching
+            if (flag_bold && flag_italic) font = Text_font_bolditalic;
+            else if (flag_bold)font = Text_font_bold;
+            else if (flag_italic) font = Text_font_italic;
+            else font = Text_font;
+        }
+        else
+        {
+            if ((codepoint != ' ') && (codepoint != '\t'))
+            {
+                DrawTextCodepoint(font, codepoint, (Vector2){ position.x + textOffsetX, position.y + textOffsetY }, fontSize, color);
+            }
+
+            if (font.chars[index].advanceX == 0) textOffsetX += ((float)font.recs[index].width*scaleFactor + spacing);
+            else textOffsetX += ((float)font.chars[index].advanceX*scaleFactor + spacing);
+        }
+
+        i += codepointByteCount;   // Move text bytes counter to next codepoint
+    }
 }
 
 //VN_DrawRectangle()
@@ -82,7 +149,10 @@ void VN_DrawTexture(Texture2D texture, int posX, int posY, Color tint){
 //----- Misc
 void VN_DrawFPS(int x, int y){
     DrawFPS(x,y);
+    DrawText(TextFormat("%2i FPS", GetFPS()), x, y, 20, BLACK);
 }
+
+//I would like to have VN_TextFormat(), this function seems pretty handy
 
 int VN_MeasureText(const char *text, int fontSize){
     float spacing = 1;

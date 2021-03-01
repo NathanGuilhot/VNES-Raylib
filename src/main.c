@@ -12,12 +12,17 @@
 
 #include "NSTD_custom_lib.h"
 
+float time;
+float dt; 
+
 #include "system/input_system.h"
 #include "system/graphics_system.h"
 #include "system/audio_system.h"
 //#include "font_system.h" //(?? Or just manage that in the graphics system I guess)
 
 #include "UI_DEFS.h"
+
+bool debug_mod = true;
 
 
 //----Enums
@@ -200,7 +205,7 @@ void DrawBackground()
   {
     if (Background.opacity>0)
     {
-      Background.opacity -= min(Background.opacity, (int)(255/Background.dissolve_duration)*GetFrameTime()); //C'est linéaire mais mieux que rien
+      Background.opacity -= min(Background.opacity, (int)(255/Background.dissolve_duration)*dt); //C'est linéaire mais mieux que rien
 
     }
     else {
@@ -251,16 +256,20 @@ void draw_dial()
   }
 
   DrawUI(choice_sel);
-  char buffer1[20];
-  VN_DrawText(itoa(index,buffer1,10),10,100,20,BLACK);
+  if (debug_mod == true){
+    VN_DrawText(TextFormat("*Index* : %d\n*FLAGS* :", index),10,40,20,BLACK);
+    for (int i = 0; i < FLAGS_NUMBER; i++)
+    {
+      VN_DrawText(TextFormat("%s : %d\n", FlagList[i].key, FlagList[i].value),10,80+(i*50),20,LIGHTGRAY);
+    }
+    
+  }
 }
 
 void updt_dial()
 {
-  static float timer;
-  float delta_time;
-  timer += GetFrameTime();
-  delta_time = GetFrameTime();
+  static float timer_typing;
+  timer_typing += GetFrameTime();
 
   //"Tweening"
   for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -289,7 +298,7 @@ void updt_dial()
           {
             index++;
             cursor = 0;
-            timer = 0;
+            timer_typing = 0;
 
             memset(disp_text, 0, 64); //Vider le string
 
@@ -309,11 +318,11 @@ void updt_dial()
         {
           cursor = strlen(text_to_display);
         }
-        else if (timer*OPTION.cps>=1)
+        else if (timer_typing*OPTION.cps>=1)
         {
-          cursor += (int)(timer*OPTION.cps);
+          cursor += (int)(timer_typing*OPTION.cps);
           if (cursor >= strlen(text_to_display)) {cursor = strlen(text_to_display);}
-          timer=0;
+          timer_typing=0;
         }
       }
       strncpy(&disp_text, text_to_display, cursor);
@@ -333,7 +342,7 @@ void updt_dial()
         ListMenuPage[i].visible = false;
       }
 
-      timer=0;
+      timer_typing=0;
 
       SAVECONFIG();
     }
@@ -384,7 +393,7 @@ void updt_dial()
     if (BTNP("A"))
     {
       index = ListMenuPage[choice_menu_index].items[choice_sel].param;
-      timer=0;
+      timer_typing=0;
 
       inMenuChoice = false;
       ListMenuPage[choice_menu_index].visible = false;
@@ -486,9 +495,6 @@ void updt_dial()
 
 void draw_menu()
 {
-  static float time;
-  time += GetFrameTime();
-
   int logoX;
   int logoY;
 
@@ -546,7 +552,11 @@ int main(int argc, char *argv[])
   Music music_test;
   // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
   beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
+
   Text_font = VN_LoadFont("./assets/font/Ubuntu.ttf");
+  Text_font_bold = VN_LoadFont("./assets/font/Ubuntu-Bold.ttf");
+  Text_font_italic = VN_LoadFont("./assets/font/Ubuntu-Italic.ttf");
+  Text_font_bolditalic = VN_LoadFont("./assets/font/Ubuntu-BoldItalic.ttf");
 
   LOADCONFIG();
 
@@ -567,6 +577,8 @@ int main(int argc, char *argv[])
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
     // Update
+    dt = GetFrameTime();
+    time += dt;
     
 
     switch (game_st)
@@ -623,7 +635,10 @@ int main(int argc, char *argv[])
     }
     }
 
-    VN_DrawFPS(10, 10);
+    if (debug_mod == true)
+    {
+      VN_DrawFPS(10, 10);
+    }
 
     if (a_pressed)
     {
@@ -664,6 +679,9 @@ int main(int argc, char *argv[])
   }
 
   VN_UnloadFont(Text_font);
+  VN_UnloadFont(Text_font_bold);
+  VN_UnloadFont(Text_font_italic);
+  VN_UnloadFont(Text_font_bolditalic);
 
   CloseWindow(); // Close window and OpenGL context
   CloseAudioDevice(); 

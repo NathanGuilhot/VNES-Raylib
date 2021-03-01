@@ -16,6 +16,18 @@
   - [x] Check what font format should you use for homebrew
       : TTF or images
 
+- [ ] Find a solution so we don't have to put a space at the end of a command in the SCRPT
+  - [ ] Do some research on the behaviour of strtok when it hit the end of a string
+
+- [ ] Text formating
+  - [x] **Bold**
+  - [x] *Italic*
+  - [x] ***Bold + Italic***
+  - [ ] ~~crossed~~
+  - [ ] __Underline__
+  - [ ] More ? (wave text, animation, colors... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
+    - [ ] Have a better parser system
+
 - [x] Labels
 
 - [x] Remove the Choice collection
