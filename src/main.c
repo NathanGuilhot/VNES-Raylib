@@ -13,7 +13,8 @@
 #include "NSTD_custom_lib.h"
 
 float time;
-float dt; 
+float dt;
+int cursor = 1;
 
 #include "system/input_system.h"
 #include "system/graphics_system.h"
@@ -39,7 +40,8 @@ enum GAME_STATE game_st = MAIN_MENU;
 //-----Variables utiles
 
 unsigned int index = 0; //index //We absolutlty need to change the name before porting
-int cursor = 1;
+float timer_typing; //Used (this is global to be used in UpdateMenu(), It might change later)
+
 char disp_text[64]; //Current text being displayed
 char *text_to_display; //Text to be displayed
 
@@ -64,139 +66,135 @@ void NEWGAME(){
   init_dial();
 }
 
-void ParseLabels()
+#include "init_game_data.h"
+
+void UpdateMenu()
 {
-  for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
+  if (BTNP("DOWN"))
   {
-    ListLabels[i2].name = "null";
-    ListLabels[i2].value = 0;
+    if (choice_sel < nb_choice - 1)
+    {
+      choice_sel++;
+    }
+    else{choice_sel=0;}
+  }
+  if (BTNP("UP"))
+  {
+    if (choice_sel > 0)
+    {
+      choice_sel--;
+    }
+    else{choice_sel=nb_choice-1;}
   }
 
-  for (int i = 0; i < sizeof(SCRPT) / sizeof(SCRPT[0]); i++)
+  //TODO: Mouve Mouse in input-system
+  // Vector2 MousePosition;
+  // MousePosition = GetMousePosition();
+
+
+  static MENU_ITEM item_menu;
+  for (int i = 0; i < MAX_ITEMS_MENU_PAGE; i++)
   {
-    if (SCRPT[i].t == LABEL)
+    if (ListMenuPage[i].visible)
     {
-      //L'ajouter à la liste, au premier endroit vide
-      for (int i2 = 0; i2 < LABELS_NUMBERS; i2++)
+      item_menu = ListMenuPage[i].items[choice_sel];
+
+      switch (item_menu.type)
       {
-        if (!strcmp(ListLabels[i2].name,"null"))
+      case CHECKBOX:
+      {
+        if (BTNP("A"))
         {
-          ListLabels[i2].name = SCRPT[i].c;
-          ListLabels[i2].value = i;
-          break;
+          *item_menu.variable = !*item_menu.variable;
         }
+        break;
       }
-    }
+      case SLIDER:
+      {
+        if (BTN("LEFT"))
+        {
+          if (*item_menu.variable - 1 >= item_menu.values[0])
+          {
+            *item_menu.variable -= 1;
+          }
+        }
+        else if (BTN("RIGHT"))
+        {
+          if (*item_menu.variable + 1 <= item_menu.values[1])
+          {
+            *item_menu.variable += 1;
+          }
+        }
+        break;
+      }
+      case SCRIPT_RUNNER:
+      {
+        if (BTNP("A"))
+        {
+          item_menu.function(item_menu.variable); //It's super hacky, but I love it
+        }
+        break;
+      }
+      case MENU_NAV:
+      {
+        if (BTNP("A"))
+        {
+          // item_menu.function(item_menu.variable); //It's super hacky, but I love it
+          ListMenuPage[item_menu.param].visible = true;
+          ListMenuPage[i].visible = false;
+          choice_sel = 0;
+          nb_choice = GetVisibleChoiceNumber(item_menu.param);
+          playSomeSound();
+        }
+        break;
+      }
+      case INPUT:
+      {
+        if (BTN("LEFT"))
+        {
+          if (*item_menu.variable - 1 >= item_menu.values[0])
+          {
+            *item_menu.variable -= 1;
+          }
+        }
+        else if (BTN("RIGHT"))
+        {
+          if (*item_menu.variable + 1 <= item_menu.values[1])
+          {
+            *item_menu.variable += 1;
+          }
+        }
+        break;
+      }
+      case CHOICE_ITEM:
+      {
+        // playSomeSound();
+        if (BTNP("A"))
+        {
+          index = item_menu.param;
+          timer_typing=0;
+
+          if (inMenuChoice)
+          {
+            inMenuChoice = false;
+            ListMenuPage[choice_menu_index].visible = false;
+            for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+            {
+              ListMenuPage[choice_menu_index].items[i2].visible = false;
+            }
+          }
+
+          choice_sel = 0;
+          // cursor = 0;
+          memset(disp_text,0,sizeof(text_to_display));
+
+          init_dial();
+        }
+        break;
+      }
+      }
+    }      
   }
-}
-
-void loadCharacterSprites()
-{
-  for (int i = 0; i < CHARACTER_NUMBER; i++)
-  {
-    //CharaList[i].image_name
-
-    //Load base sprite
-    char filename[32] = "./assets/img/";
-    strcat(filename, CharaList[i].image_name);
-    strcat(filename, " ");
-
-    char base_filename[32];
-    strcpy(base_filename, filename);
-    strcat(base_filename, "base.png");
-
-    char expression_filename[32];
-    strcpy(expression_filename, filename);
-    // strcat(expression_filename, "1.png");
-
-    CharaList[i].base_image = VN_LoadTexture(base_filename);
-
-    CharaList[i].y = screenHeight - CharaList[i].base_image.height;
-    CharaList[i].x = (screenWidth - CharaList[i].base_image.width)/2; //Center of the screen
-    CharaList[i].gotox = CharaList[i].x;
-    CharaList[i].gotoy = CharaList[i].y;
-
-    char buff[1];
-
-    //Load expressions
-    for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
-    {
-      itoa(i2 + 1, buff, 10);
-      char file_expression[32];
-      strcpy(file_expression, expression_filename);
-      strcat(file_expression, buff);
-      strcat(file_expression, ".png");
-      // printf(file_expression);
-      CharaList[i].expression[i2] = VN_LoadTexture(file_expression);
-    }
-
-    CharaList[i].expression_index = 0; //default
-
-    if (CharaList[i].color_name.a==0) //If the color is transparent, we asume it has not be defined
-    {
-      CharaList[i].color_name = DARKGRAY;
-    }
-  }
-}
-
-void loadBackgroundSprites()
-{
-  for (int i=0; i<MAX_BACKGROUND; i++){
-    char filename[32] = "./assets/img/";
-    strcat(filename, Background.images[i]);
-    strcat(filename, ".png");
-
-    Background.texture[i] = VN_LoadTexture(filename);
-  }
-  
-  Background.bg_index = 0; //default
-  Background.bg_next = 1;
-  Background.opacity = 250;
-  Background.dissolve_duration = 0.5;
-
-}
-
-void loadAudio(){
-  //Load Music
-  //VN_LoadMusicStream(path)
-
-  
-  
-  for (int i=0; i<MAX_MUSIC; i++)
-  {
-    if (MusicList.music_name[i])
-    {
-      char filename[64] = "./assets/audio/music/";
-      // strcat(filename, "./assets/audio/music/");
-      strcat(filename, MusicList.music_name[i]);
-      strcat(filename, ".mp3");
-
-      MusicList.music_list[i] = VN_LoadMusicStream(filename);
-    }
-  }
-
-  MusicList.music_playing = 0;
-  
-
-  // //Load Sounds
-  // //VN_LoadSound(path)
-  
-  for (int i=0; i<MAX_SOUND; i++)
-  {
-    if (SoundList.sound_name[i])
-    {
-      char filename[64] = "./assets/audio/sound/";
-      // strcat(filename, "./assets/audio/sound/");
-      strcat(filename, SoundList.sound_name[i]);
-      strcat(filename,".wav");
-
-      SoundList.sound_list[i] = VN_LoadSound(filename);
-    }
-  }
-
-  MusicList.music_playing = 0;
-
-
 }
 
 void DrawBackground()
@@ -252,7 +250,6 @@ void draw_dial()
       UI_IMAGE.ctc_color = UI_TEXTBOX_NAME_COLOR;
       VN_DrawTexture(UI_IMAGE.ctc, (screenWidth+UI_IMAGE.textbox.width)/2 - UI_IMAGE.ctc.width - 20,390 + sin(time*3)*3,UI_IMAGE.ctc_color);
     }
-
   }
 
   DrawUI(choice_sel);
@@ -268,7 +265,6 @@ void draw_dial()
 
 void updt_dial()
 {
-  static float timer_typing;
   timer_typing += GetFrameTime();
 
   //"Tweening"
@@ -334,7 +330,9 @@ void updt_dial()
   {
     // playSomeSound();
     choice_sel = 0;
-    if (inMenuPause)
+    inMenuPause = !inMenuPause;
+
+    if (!inMenuPause) //If we quit the pause menu
     {
       ListMenuPage[pause_menu_index].visible = false;
       for (int i = pause_menu_index; i < MenuPageNumber; i++)
@@ -345,152 +343,59 @@ void updt_dial()
       timer_typing=0;
 
       SAVECONFIG();
+
+      init_dial();
+      // if (inMenuChoice)
+      // {
+      //   nb_choice = GetVisibleChoiceNumber(pause_menu_index);
+      //   ListMenuPage[choice_menu_index].visible = true;
+      // }
+
+      
     }
     else
     {
       ListMenuPage[pause_menu_index].visible = true;
-    }
-    inMenuPause = !inMenuPause;
+      nb_choice = GetVisibleChoiceNumber(pause_menu_index);
 
-    if (inMenuPause)
-    {
-      nb_choice = GetVisibleChoiceNumber(pause_menu_index); //Ugly but at least it doesn't crash
-      //Check how many visible choice exist
-      //Maybe do the same for the choice for consistency sake
+      if (inMenuChoice)
+      {
+        // nb_choice = GetVisibleChoiceNumber(pause_menu_index);
+        
+        ListMenuPage[choice_menu_index].visible = false;
+      }
     }
-    else
-    {
-      // nb_choice = 0; //reset, if C: it will be handled in the parser
-      init_dial();
-    }
+
   }
 
   if (inMenuChoice || inMenuPause)
   {
     //Handle Input when in menu
     //Up & Down
-    if (BTNP("DOWN"))
-    {
-      if (choice_sel < nb_choice - 1)
-      {
-        choice_sel++;
-      }
-      else{choice_sel=0;}
-    }
-    if (BTNP("UP"))
-    {
-      if (choice_sel > 0)
-      {
-        choice_sel--;
-      }
-      else{choice_sel=nb_choice;}
-    }
+    UpdateMenu();
+
   }
 
-  if (inMenuChoice && !inMenuPause)
-  {
-    //Press A in choice
-    if (BTNP("A"))
-    {
-      index = ListMenuPage[choice_menu_index].items[choice_sel].param;
-      timer_typing=0;
+  // if (inMenuChoice && !inMenuPause)
+  // {
+  //   //Press A in choice
+  //   if (BTNP("A"))
+  //   {
+  //     index = ListMenuPage[choice_menu_index].items[choice_sel].param;
+  //     timer_typing=0;
 
-      inMenuChoice = false;
-      ListMenuPage[choice_menu_index].visible = false;
-      for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
-      {
-        ListMenuPage[choice_menu_index].items[i2].visible = false;
-      }
+  //     inMenuChoice = false;
+  //     ListMenuPage[choice_menu_index].visible = false;
+  //     for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
+  //     {
+  //       ListMenuPage[choice_menu_index].items[i2].visible = false;
+  //     }
 
-      choice_sel = 0;
-      init_dial();
-    }
-  }
+  //     choice_sel = 0;
+  //     init_dial();
+  //   }
+  // }
 
-  if (inMenuPause)
-  {
-    // CHOICE_ITEM,
-    // SLIDER,
-    // CHECKBOX,
-    // INPUT,
-    // LIST,
-    // SCRIPT_RUNNER,
-    // MENU_NAV
-
-    static MENU_ITEM item_menu;
-    for (int i = pause_menu_index; i < MAX_ITEMS_MENU_PAGE; i++)
-    {
-      if (ListMenuPage[i].visible)
-      {
-        item_menu = ListMenuPage[i].items[choice_sel];
-
-        switch (item_menu.type)
-        {
-        case CHECKBOX:
-        {
-          if (BTNP("A"))
-          {
-            *item_menu.variable = !*item_menu.variable;
-          }
-          break;
-        }
-        case SLIDER:
-        {
-          if (BTN("LEFT"))
-          {
-            if (*item_menu.variable - 1 >= item_menu.values[0])
-            {
-              *item_menu.variable -= 1;
-            }
-          }
-          else if (BTN("RIGHT"))
-          {
-            if (*item_menu.variable + 1 <= item_menu.values[1])
-            {
-              *item_menu.variable += 1;
-            }
-          }
-          break;
-        }
-        case SCRIPT_RUNNER:
-          if (BTNP("A"))
-          {
-            item_menu.function(item_menu.variable); //It's super hacky, but I love it
-          }
-          break;
-        case MENU_NAV:
-          if (BTNP("A"))
-          {
-            // item_menu.function(item_menu.variable); //It's super hacky, but I love it
-            ListMenuPage[item_menu.param].visible = true;
-            ListMenuPage[i].visible = false;
-            choice_sel = 0;
-            nb_choice = GetVisibleChoiceNumber(item_menu.param);
-            playSomeSound();
-          }
-          break;
-        case INPUT:
-        {
-          if (BTN("LEFT"))
-          {
-            if (*item_menu.variable - 1 >= item_menu.values[0])
-            {
-              *item_menu.variable -= 1;
-            }
-          }
-          else if (BTN("RIGHT"))
-          {
-            if (*item_menu.variable + 1 <= item_menu.values[1])
-            {
-              *item_menu.variable += 1;
-            }
-          }
-          break;
-        }
-        }
-      }
-    }
-  }
 };
 
 void draw_menu()
@@ -546,28 +451,7 @@ int main(int argc, char *argv[])
   // Initialization
   //--------------------------------------------------------------------------------------
 
-  InitWindow(screenWidth, screenHeight, "VNES_PC");
-  VN_InitAudioDevice();
-
-  Music music_test;
-  // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
-  beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
-
-  Text_font = VN_LoadFont("./assets/font/Ubuntu-Regular.ttf");
-  Text_font_bold = VN_LoadFont("./assets/font/Ubuntu-Bold.ttf");
-  Text_font_italic = VN_LoadFont("./assets/font/Ubuntu-Italic.ttf");
-  Text_font_bolditalic = VN_LoadFont("./assets/font/Ubuntu-BoldItalic.ttf");
-
-  LOADCONFIG();
-
-  loadCharacterSprites();
-  loadBackgroundSprites();
-  loadUI_Texture();
-  loadAudio();
-
-  // PlayMusicStream(MusicList.music_list[0]);
-
-  ParseLabels();
+  InitGame();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------

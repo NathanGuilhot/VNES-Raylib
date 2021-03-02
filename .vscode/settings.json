@@ -4,6 +4,7 @@
         "script_parser.h": "c",
         "input_manager.h": "c",
         "menudefinition.h": "c",
-        "saveload_system.h": "c"
+        "saveload_system.h": "c",
+        "graphics_system.h": "c"
     }
 }

@@ -29,6 +29,7 @@
   - [x] ~Wave~
   - [ ] More ? (animation, colors, basic emojis... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
     - [ ] Have a better parser system
+- [ ] Avoid cursor stutter when parsing formating
 
 - [x] Labels
 
@@ -70,11 +71,6 @@
 - [ ] Localization system
   - Different file, or generated one ?
 
-Polish text:
-  - [x] CTC (that would be stupidly simple to do, honnestly)
-  - [x] Variable typewritter speed (slider in setting)
-      
-
 - [ ] UI System
   - [x] Datastructure
   - [x] UI Navigation logic (not really robust but that work)
@@ -88,7 +84,7 @@ Polish text:
     - [ ] (!) Mouse control UI (not the end goal, but useful for touch support later)
     - [ ] Center text (better measure text ?)
   - [ ] ~~Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) ~~
-  - [ ] Isolate the menu update logic in a separate function (so we can use it elsewhere)
+  - [x] Isolate the menu update logic in a separate function (so we can use it elsewhere)
   - [x] Nicer in-game UI (textbox)
     - [x] Better placement for the textbox
 
@@ -111,11 +107,7 @@ Polish text:
   - [x] Having some sort of persisitent data for settings
   - [ ] Multiple save file : UI ? -> Concatenate the button param/variable into the file path
   - [ ] Do research about save file on DS and PSP 
-      
-  
-- [x] Executer le parser qu'une seule fois
 
-- [x] Clean De-Initialization code
 
 
 -----

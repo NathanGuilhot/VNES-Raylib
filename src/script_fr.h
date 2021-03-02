@@ -52,6 +52,7 @@ extern Passage SCRPT[] = {
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
 
       {MUSIC,"play"},
+      {N, "Here is a [wave]BBCODE[/wave] test !"},
       {N, "~Whoooaaa~, this *effect* looks __**so cool**__ !"},
       {N, "Tu trouves enfin **la pers*onne\nque tu** cherch*ais."},
       {CFLAGS, "LOVE 1"},

@@ -38,6 +38,13 @@ Font Text_font_bold;
 Font Text_font_italic;
 Font Text_font_bolditalic;
 
+typedef enum BBCODE_COMMAND
+{
+    WAVE_ON,
+    WAVE_OFF,
+} BBCODE_COMMAND;
+// typedef enum BBCODE_COMMAND BBCODE_COMMAND;
+
 //----- Load
 
 //VN_LoadTexture()
@@ -61,6 +68,25 @@ void VN_UnloadFont(Font font){
 
 //----- Draw
 
+//TODO: Change the return value to a struct (so we can pass parameters along side the command)
+BBCODE_COMMAND BBCODE_PARSER(const char *bbcode)
+{
+    // playSomeSound();
+    // DrawText(bbcode,300,200,20,BLACK);
+    
+    //Do a parse strtok to check the first word
+    // strtok(bbcode_copy, " ");
+
+    if (strcmp(bbcode,"wave")==0)
+    {
+        return WAVE_ON;
+    }
+    else if (strcmp(bbcode,"/wave")==0)
+    {
+        return WAVE_OFF;
+    }
+
+}
 
 //VN_DrawText()
 void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color color){
@@ -151,17 +177,47 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
                 flag_wave = !flag_wave;
             }
         }
-        else if (codepoint == '_' && GetNextCodepoint(&text[i+1], &codepointByteCount) == '_')
+        else if (codepoint == '_' && GetNextCodepoint(&text[i+1], &codepointByteCount) == '_') // -> __
         {
-            // if (GetNextCodepoint(&text[i+1], &codepointByteCount) == '_') // -> ~~
-            // {
-                flag_underline = !flag_underline;
-                codepointByteCount += 1;
-            // }
-            // else
-            // {
-            //     flag_wave = !flag_wave;
-            // }
+            flag_underline = !flag_underline;
+            codepointByteCount += 1;
+
+        }
+        else if (codepoint == '[') 
+        {
+            //BBCODE PARSER
+            char bbcode_cmd[64];
+            // bbcode_cmd = text + i +1;//strcpy(bbcode_cmd, text);
+            strcpy(bbcode_cmd, text + i +1);
+            // bbcode_cmd += i;
+
+            int i_bis;
+            i_bis = i;
+            for (i_bis; i<length; i_bis++){
+                if (GetNextCodepoint(&text[i_bis], &codepointByteCount) == ']'){
+                    //We closed the BBCODE
+                    bbcode_cmd[i_bis - i-1] = '\0';
+
+                    BBCODE_COMMAND bbcode_return;
+                    bbcode_return = BBCODE_PARSER(bbcode_cmd);
+
+                    switch (bbcode_return)
+                    {
+                    case WAVE_ON:
+                        flag_wave = true;
+                        break;
+                    
+                    case WAVE_OFF:
+                        flag_wave = false;
+
+                        break;
+                    }
+
+                    break;
+                }
+            }
+            codepointByteCount += i_bis - i;
+            
         }
         else
         {
@@ -202,6 +258,7 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
         }
 
         i += codepointByteCount;   // Move text bytes counter to next codepoint
+        
     }
 }
 
