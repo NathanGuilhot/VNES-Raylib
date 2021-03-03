@@ -71,6 +71,7 @@ void init_dial() //Handle parsing and logic
             for (int i_label = 0; i_label < LABELS_NUMBERS; i_label++)
             {
               if (strcmp(ListeChoix[i_listchoix].jmp, ListLabels[i_label].name) == 0){
+                //I would like to add some debug info here
                 ListMenuPage[choice_menu_index].items[i_choice_btn].label = ListeChoix[i_listchoix].txt;
                 ListMenuPage[choice_menu_index].items[i_choice_btn].visible = true;
                 ListMenuPage[choice_menu_index].items[i_choice_btn].param = ListLabels[i_label].value;

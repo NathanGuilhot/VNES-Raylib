@@ -29,7 +29,7 @@
   - [x] ~Wave~
   - [ ] More ? (animation, colors, basic emojis... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
     - [ ] Have a better parser system
-- [ ] Avoid cursor stutter when parsing formating
+- [x] Avoid cursor stutter when parsing the text
 
 - [x] Labels
 
@@ -82,6 +82,7 @@
       - [x] Script Runner
       - [x] Change page
     - [ ] (!) Mouse control UI (not the end goal, but useful for touch support later)
+          //How to avoid duplication between logic and render ? A function to get the position/boundaries ?
     - [ ] Center text (better measure text ?)
   - [ ] ~~Move the definition of MenuPage content to the end of the script (so we can pass any function and variable (?)) ~~
   - [x] Isolate the menu update logic in a separate function (so we can use it elsewhere)

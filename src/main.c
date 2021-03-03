@@ -35,18 +35,19 @@ enum GAME_STATE
   DIAL,
   END
 };
-enum GAME_STATE game_st = MAIN_MENU;
+enum GAME_STATE game_st = DIAL;
 
 //-----Variables utiles
 
 unsigned int index = 0; //index //We absolutlty need to change the name before porting
 float timer_typing; //Used (this is global to be used in UpdateMenu(), It might change later)
 
-char disp_text[64]; //Current text being displayed
-char *text_to_display; //Text to be displayed
+char disp_text[144]; //Current text being displayed
+
 
 int choice_sel;
 int nb_choice;
+char *text_to_display; //Text to be displayed
 
 char *chara_name = "Character Name";
 char buffText[64];
@@ -255,10 +256,13 @@ void draw_dial()
   DrawUI(choice_sel);
   if (debug_mod == true){
     VN_DrawText(TextFormat("*Index* : %d\n*FLAGS* :", index),10,40,20,BLACK);
-    for (int i = 0; i < FLAGS_NUMBER; i++)
+    int i;
+    for (i = 0; i < FLAGS_NUMBER; i++)
     {
-      VN_DrawText(TextFormat("%s : %d\n", FlagList[i].key, FlagList[i].value),10,80+(i*50),20,LIGHTGRAY);
+      VN_DrawText(TextFormat("%s : %d\n", FlagList[i].key, FlagList[i].value),10,80+(i*20),20,LIGHTGRAY);
     }
+
+    VN_DrawText(TextFormat("~Cursor~ : %d", cursor),10,80+((i+1)*20),20,LIGHTGRAY);
     
   }
 }
@@ -296,7 +300,7 @@ void updt_dial()
             cursor = 0;
             timer_typing = 0;
 
-            memset(disp_text, 0, 64); //Vider le string
+            memset(disp_text,0,sizeof(disp_text)); //Vider le string
 
             init_dial();
           }
@@ -316,9 +320,47 @@ void updt_dial()
         }
         else if (timer_typing*OPTION.cps>=1)
         {
+          //That would be fun to slowdown the timer if there is a ?!.,;: ...
+          //Setting timer_typing to a negative value doesn't work tho, I've try
+
+          //We will sometime jump the cursor in the middle of a multi-byte characters, that's a problem
+          //TODO: Fix this, plz
           cursor += (int)(timer_typing*OPTION.cps);
           if (cursor >= strlen(text_to_display)) {cursor = strlen(text_to_display);}
           timer_typing=0;
+
+          //Parse the text to check if we have md or BBCODE
+          //This is a ugly duplication from the VN_DrawText function but I want to keep things somewhat organized
+
+          char current_char = text_to_display[cursor];
+
+          // if (cursor!=strlen(text_to_display)) //Do we really need that ?
+          {
+          if (current_char == '[')
+          {
+            //TODO: Test if it crash when a bracket isn't closed
+            int i_displacement;
+            for (i_displacement = cursor; i_displacement < strlen(text_to_display); i_displacement++)
+            {
+              if (text_to_display[i_displacement]==']') break;
+            }
+            cursor = i_displacement+1;
+          }
+          else if ((current_char == '*'))
+          {
+            if (text_to_display[cursor+1]=='*') cursor += 2;
+            else cursor+=1;
+          }
+          else if (current_char == '_' && text_to_display[cursor+1]=='_')
+          {
+            cursor += 2;
+          }
+          else if ((current_char == '~'))
+          {
+            if (text_to_display[cursor+1]=='~') cursor += 2;
+            else cursor+=1;
+          }
+          }
         }
       }
       strncpy(&disp_text, text_to_display, cursor);
@@ -345,12 +387,6 @@ void updt_dial()
       SAVECONFIG();
 
       init_dial();
-      // if (inMenuChoice)
-      // {
-      //   nb_choice = GetVisibleChoiceNumber(pause_menu_index);
-      //   ListMenuPage[choice_menu_index].visible = true;
-      // }
-
       
     }
     else
@@ -370,31 +406,9 @@ void updt_dial()
 
   if (inMenuChoice || inMenuPause)
   {
-    //Handle Input when in menu
-    //Up & Down
+    //Handle Input
     UpdateMenu();
-
   }
-
-  // if (inMenuChoice && !inMenuPause)
-  // {
-  //   //Press A in choice
-  //   if (BTNP("A"))
-  //   {
-  //     index = ListMenuPage[choice_menu_index].items[choice_sel].param;
-  //     timer_typing=0;
-
-  //     inMenuChoice = false;
-  //     ListMenuPage[choice_menu_index].visible = false;
-  //     for (int i2 = 0; i2 < MAX_ITEMS_MENU_PAGE; i2++)
-  //     {
-  //       ListMenuPage[choice_menu_index].items[i2].visible = false;
-  //     }
-
-  //     choice_sel = 0;
-  //     init_dial();
-  //   }
-  // }
 
 };
 
@@ -408,8 +422,8 @@ void draw_menu()
   
   VN_DrawTexture(UI_IMAGE.mainmenu_logo,logoX,logoY+sin(time)*10, WHITE);
   
-
-  VN_DrawText("PRESS A TO START", screenWidth/2 - VN_MeasureText("PRESS A TO START",30)/2,400,30,(Color){0,0,0,(sin(time*2)+1)*255/2});
+  char *IntroMenuText = "PRESS A TO START";
+  VN_DrawText(IntroMenuText, screenWidth/2 - VN_MeasureText(IntroMenuText,30)/2,400,30,(Color){0,0,0,(sin(time*2)+1)*255/2});
 
   DrawUI(choice_sel);
 }
