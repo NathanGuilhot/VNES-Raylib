@@ -35,7 +35,7 @@ enum GAME_STATE
   DIAL,
   END
 };
-enum GAME_STATE game_st = DIAL;
+enum GAME_STATE game_st = MAIN_MENU;
 
 //-----Variables utiles
 
@@ -65,6 +65,8 @@ char *fourth_word;
 
 
 void NEWGAME(){
+  playSomeSound();
+  ListMenuPage[main_menu_index].visible=false;
   index = 0;
   game_st = DIAL;
   init_dial();
@@ -425,25 +427,29 @@ void draw_menu()
   VN_DrawTexture(UI_IMAGE.mainmenu_logo,logoX,logoY+sin(time)*10, WHITE);
   
   char *IntroMenuText = "PRESS A TO START";
-  VN_DrawText(IntroMenuText, screenWidth/2 - VN_MeasureText(IntroMenuText,30)/2,400,30,(Color){0,0,0,(sin(time*2)+1)*255/2});
+  if (ListMenuPage[main_menu_index].visible==false)
+  {
+    VN_DrawText(IntroMenuText, screenWidth/2 - VN_MeasureText(IntroMenuText,30)/2,400,30,(Color){0,0,0,(sin(time*2)+1)*255/2});
+  }
 
   DrawUI(choice_sel);
 }
 
 void updt_menu()
 {
-  if (BTNP("A"))
+  if (ListMenuPage[main_menu_index].visible==false)
   {
-    // if (ListMenuPage[main_menu_index].visible==false)
-    // {
-    //   playSomeSound();
-    //   ListMenuPage[main_menu_index].visible = true;
-    // }
-    // if (LOADGAME()){
-      
-    // }
-    NEWGAME();
+    if (BTNP("A"))
+    {
+        ListMenuPage[main_menu_index].visible=true;
+    }
+  // NEWGAME();
   }
+  else{
+    nb_choice=2;
+    UpdateMenu();
+  }
+  
 }
 
 void draw_end()

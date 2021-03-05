@@ -4,6 +4,7 @@
 
 //SCRPT :
 char* translation_script[] = {
+//START-------
 	/*[2] "Here is a [wave]BBCODE[/wave] test !"*/
 	"",
 	/*[3] "Here is a [wave]BBCODE[/wave] test !
@@ -19,6 +20,7 @@ que tu** cherch*ais."*/
 	/*[15] "A Ça me fait plaisir de te voir,
 tu vas bien ?"*/
 	"",
+//cava-------
 	/*[21] "A Moi aussi je vais bien,
 très bien meme!"*/
 	"",
@@ -28,12 +30,14 @@ arrive pas a se retrouver,"*/
 	/*[24] "A mais finalement il n'y avait
 pas a s'inquieter!"*/
 	"",
+//retard-------
 	/*[30] "A Ne t'excuse pas, tu es là
 c'est l'essentiel!"*/
 	"",
 	/*[34] "A Et j'ai pu profiter du
 paysage en attendant!"*/
 	"",
+//durtrouver-------
 	/*[40] "A Haha, mes indications etaient
 si vagues que ca?"*/
 	"",
@@ -45,6 +49,7 @@ pas trop mal."*/
 	"",
 	/*[50] "A Au moins ici on est au calme!"*/
 	"",
+//Mer1-------
 	/*[54] "Son attention se porte alors
 sur la mer."*/
 	"",
@@ -161,6 +166,18 @@ tu ne trouves pas?"*/
 	/*[1063] "Connexion perdue..."*/
 	"",
 	/*[1064] "Ange s'est deconnecte"*/
+	"",
+};
+
+//CHOICES :
+char* translation_choice[] = {
+	/*[2] "Desole du retard" -> retard*/
+	"",
+	/*[3] "C'etait dur de te trouver" -> durtrouver*/
+	"",
+	/*[4] "Oui, c'est tres joli!" -> cava*/
+	"",
+	/*[5] "Bof, c'est la mer quoi." -> retard*/
 	"",
 };
 

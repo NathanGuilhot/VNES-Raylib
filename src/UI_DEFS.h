@@ -179,7 +179,7 @@ int UI_TEXT_SPACING = 10; //Font size/default font size
 void DrawUI(int pCursor){
   for (int i = 0; i < MenuPageNumber; i++)
   {
-    if (i==pause_menu_index && inMenuPause){
+    if ((i==pause_menu_index && inMenuPause)||(i==main_menu_index && ListMenuPage[main_menu_index].visible==true)){
       VN_DrawRectangle(0,0,screenWidth,screenHeight,(Color){0,0,0,150});
     }
     if (ListMenuPage[i].visible){

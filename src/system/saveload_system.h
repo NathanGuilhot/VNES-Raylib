@@ -57,6 +57,10 @@ bool SAVEGAME(){
 
 bool LOADGAME(){
     StopMusicStream(MusicList.music_list[MusicList.music_playing]); //Stop the music, we'll restart it later
+    if (game_st!=DIAL){ //Used when we are in the menu
+        game_st=DIAL;
+        ListMenuPage[main_menu_index].visible=false;
+    }
 
     SaveFileOpen = fopen(save_file_path, "r+");
     if (SaveFileOpen!=NULL)
