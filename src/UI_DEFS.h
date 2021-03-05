@@ -142,7 +142,7 @@ MENU_PAGE ListMenuPage[]={
 bool inMenuChoice = false;
 bool inMenuPause = false;
 
-int MenuPageNumber = 3;
+int MenuPageNumber = 4;
 
 
 int UI_BOX_POSITION_X = screenWidth/2;

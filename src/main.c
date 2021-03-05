@@ -60,6 +60,9 @@ char *fourth_word;
 #define FRENCH 1 //bolean, 1 = FR 0 = EN
 #include "script_parser.h"
 #include "system/saveload_system.h"
+#include "translation.h"
+#include "init_game_data.h"
+
 
 void NEWGAME(){
   index = 0;
@@ -67,7 +70,6 @@ void NEWGAME(){
   init_dial();
 }
 
-#include "init_game_data.h"
 
 void UpdateMenu()
 {
@@ -460,12 +462,15 @@ void updt_end()
   }
 }
 
+
 int main(int argc, char *argv[])
 {
   // Initialization
   //--------------------------------------------------------------------------------------
 
   InitGame();
+
+  ExportTranslation();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
