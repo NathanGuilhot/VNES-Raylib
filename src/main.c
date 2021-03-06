@@ -57,7 +57,9 @@ char *third_word;
 char *fourth_word;
 
 
-#define FRENCH 1 //bolean, 1 = FR 0 = EN
+//Visual Novel Content
+#include "script_main.h"
+
 #include "script_parser.h"
 #include "system/saveload_system.h"
 #include "translation.h"
@@ -267,6 +269,7 @@ void draw_dial()
     }
 
     VN_DrawText(TextFormat("~Cursor~ : %d", cursor),10,80+((i+1)*20),20,LIGHTGRAY);
+    VN_DrawText(TextFormat("Lang : %s", current_language),10,80+((i+2)*20),20,LIGHTGRAY);
     
   }
 }
@@ -475,6 +478,7 @@ int main(int argc, char *argv[])
   //--------------------------------------------------------------------------------------
 
   InitGame();
+  SaveBackupTanslation();
 
   ExportTranslation();
 
@@ -591,6 +595,11 @@ int main(int argc, char *argv[])
   VN_UnloadFont(Text_font_bold);
   VN_UnloadFont(Text_font_italic);
   VN_UnloadFont(Text_font_bolditalic);
+
+  //Free translation backup
+  // for (int i=0; i < sizeof(TranslationBackup.trans_script)/sizeof(TranslationBackup.trans_script[0]); i++) {
+  //   free(TranslationBackup.trans_script[i]);
+  // }
 
   CloseWindow(); // Close window and OpenGL context
   CloseAudioDevice(); 

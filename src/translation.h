@@ -1,5 +1,34 @@
 //Translation
 
+translation_data TranslationBackup;
+
+void SaveBackupTanslation()
+{
+  //Here we save a copy of the original SCRPT
+  //I don't really know how yet but we'll figure it out eventually
+
+  //Script
+  char* trans_backup_script[sizeof(TranslationData[0].trans_script)/sizeof(TranslationData[0].trans_script[0])] = {};
+  int i_trans_script = 0;
+  for (int i = 0; i < sizeof(SCRPT)/sizeof(SCRPT[0]); i++)
+  {
+    if (SCRPT[i].t == N)
+    {
+      trans_backup_script[i_trans_script] = SCRPT[i].c; //Bad, the pointer then get change and it's a real mess.
+      i_trans_script++;
+    }
+  }
+  TranslationBackup.trans_script = &trans_backup_script;
+
+  //Choices
+
+  //Menu
+
+  //Characters
+
+
+}
+
 void ExportTranslation() //TODO: add a function to escape some characters (\n,\t,%...)
 {
   FILE* translation_file;
@@ -9,7 +38,7 @@ void ExportTranslation() //TODO: add a function to escape some characters (\n,\t
 
   //// PRINT SCRPT
   fprintf_s(translation_file, "//SCRPT :\n");
-  fprintf_s(translation_file, "char* translation_script[] = {\n");
+  fprintf_s(translation_file, "char* trans_00_script[] = {\n");
   for (int i = 0; i < sizeof(SCRPT)/sizeof(SCRPT[0]); i++)
   {
     if (SCRPT[i].t == N)
@@ -26,20 +55,17 @@ void ExportTranslation() //TODO: add a function to escape some characters (\n,\t
 
   //// PRINT CHOICES
   fprintf_s(translation_file, "//CHOICES :\n");
-  fprintf_s(translation_file, "char* translation_choice[] = {\n");
+  fprintf_s(translation_file, "char* trans_00_choice[] = {\n");
   for (int i = 0; i < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i++)
   {
-    if (SCRPT[i].t == N)
-    {
-      fprintf_s(translation_file, "\t/*[%d] \"%s\" -> %s*/\n",i,ListeChoix[i].txt, ListeChoix[i].jmp);
-      fprintf_s(translation_file, "\t\"\",\n");
-    }
+    fprintf_s(translation_file, "\t/*[%d] \"%s\" -> %s*/\n",i,ListeChoix[i].txt, ListeChoix[i].jmp);
+    fprintf_s(translation_file, "\t\"\",\n");
   }
   fprintf_s(translation_file, "};\n\n");
 
   //// PRINT MENU
   fprintf_s(translation_file, "//MENU :\n");
-  fprintf_s(translation_file, "char* translation_menu[] = {\n");
+  fprintf_s(translation_file, "char* trans_00_menu[] = {\n");
   for (int i_page = 0; i_page < MenuPageNumber; i_page++)
   {
     fprintf_s(translation_file, "//%s-------\n", ListMenuPage[i_page].title);
@@ -55,8 +81,90 @@ void ExportTranslation() //TODO: add a function to escape some characters (\n,\t
   }
   fprintf_s(translation_file, "};\n\n");
 
+  //// PRINT CHARACTERS
+  fprintf_s(translation_file, "//CHARACTERS :\n");
+  fprintf_s(translation_file, "char* trans_00_characters[] = {\n");
+  for (int i_chara = 0; i_chara < CHARACTER_NUMBER; i_chara++)
+  {
+    fprintf_s(translation_file, "\t/*[%d] \"%s\"*/\n", i_chara, CharaList[i_chara].name);
+    fprintf_s(translation_file, "\t\"\",\n");
+  }
+  fprintf_s(translation_file, "};\n\n");
+
+  //TODO: Store the characters names
+
   
 
   fclose(translation_file);
+
+
+  ///--- Make a original translation file (with the original content on it, as a< back up) (?)
   
+}
+
+void LOADTRANSLATION()
+{
+  char key[3] = "eng";
+  translation_data translate_data_to_apply;
+  if (strcmp(current_language, default_language)==0)
+  {
+    strcpy(current_language,key);
+    //Search the translation data for a matching key, store the index
+    // language_index = 0;
+    
+    for (int i = 0; i < sizeof(TranslationData)/sizeof(TranslationData[0]); i++)
+    {
+      if (strcmp(key, TranslationData[i].key) == 0)
+      {
+        translate_data_to_apply = TranslationData[i];
+      }
+    }
+  }
+  else
+  {
+    strcpy(current_language,default_language);
+
+    translate_data_to_apply = TranslationBackup;
+    //Reset the SCRPT
+  }
+  
+  // current_language = "eng";
+  // char* key_translation = "english";
+
+  //Script
+  int i_trans_script = 0;
+  for (int i_script = 0; i_script < sizeof(SCRPT)/sizeof(SCRPT[0]); i_script++)
+  {
+    if (SCRPT[i_script].t == N)
+    {
+      //replace string
+      char* translate_script = translate_data_to_apply.trans_script[i_trans_script];
+      if (strcmp(translate_script,"")!=0)
+      {
+        SCRPT[i_script].c = translate_script;
+      }
+
+      i_trans_script++;
+    }
+  }
+
+  //Choice
+  for (int i = 0; i < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i++)
+  {
+      char* translate_choice = translate_data_to_apply.trans_choice[i];
+      if (strcmp(translate_choice,"")!=0)
+      {
+        // ListeChoix[i].txt = translate_choice;
+        // strcpy(ListeChoix[i].txt,translate_choice);
+      }
+  }
+
+
+  //Menu
+
+  //Character
+
+  
+  
+
 }

@@ -45,7 +45,30 @@ UI_IMG UI_IMAGE={
       .textbox_file = "textbox",
 };
 
-extern Passage SCRPT[] = {
+//Translation
+typedef struct translation_data
+{
+      char* key;
+      char** trans_script;
+      char** trans_choice;
+      char** trans_characters;
+      char** trans_menu;
+      /* data */
+} translation_data;
+
+//Include your translated files here
+#include "../translation/translation_english.h"
+
+char *default_language = "fra";
+char current_language[3] = "fra";
+
+translation_data TranslationData[] ={
+      {"eng", &trans_english_script, &trans_english_choice, &trans_english_characters, &trans_english_menu}
+      //{"key", &trans_000_script, &trans_000_choice, &trans_000_characters, &trans_000_menu}
+};
+
+
+Passage SCRPT[] = {
 {LABEL,"START"},
       // {N, "En cette fin d'apres-midi,\ntu marches sur la plage."},
       // {N, "Il y a peu de monde ici.\nC'est calme."},
@@ -1251,7 +1274,7 @@ extern Passage SCRPT[] = {
   {N, "Ange s'est deconnecte"}
 };
 
-extern const Choice ListeChoix[]= {
+Choice ListeChoix[]= {
   {"back_start","Retour au début","START"},
 
 

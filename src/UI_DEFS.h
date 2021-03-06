@@ -98,6 +98,7 @@ void loadUI_Texture()
 bool SAVEGAME();
 bool LOADGAME();
 void NEWGAME();
+void LOADTRANSLATION();
 
 #define choice_menu_index 0
 #define pause_menu_index 1
@@ -127,6 +128,7 @@ MENU_PAGE ListMenuPage[]={
     .items = {
       {"BTN1",  true,CHOICE_ITEM, 0},
       {"Slider",  true,SLIDER, 0, &OPTION.volume,{0,100}},
+      {"TRANSLATE",true,SCRIPT_RUNNER, .function=LOADTRANSLATION},
       {"RETOUR",true,MENU_NAV, pause_menu_index},
     }
   },

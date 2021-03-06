@@ -1,12 +1,5 @@
 // Script parser
 
-//Visual Novel Content
-#if FRENCH
-#include "script_fr.h"
-#else
-#include "script_en.h"
-#endif
-
 typedef struct
 {
   char *name;
@@ -170,8 +163,21 @@ void init_dial() //Handle parsing and logic
       //Parse le texte pour chercher les noms
       //On veux éviter de faire ça à chaque fois si possible
       inMenuChoice = false;
+      char* line;
+      //*TranslationData[i].trans_script[0]
 
-      strncpy(buffText, SCRPT[index].c, min(strlen(SCRPT[index].c),60));
+      // if (strcmp(current_language, default_language)==0)
+      {
+        line = SCRPT[index].c;
+      }
+      // else
+      // {
+      //   line = TranslationData[language_index].trans_script[0];
+      // }
+
+      strncpy(buffText, line, min(strlen(line),60));
+
+      
       first_word = strtok(buffText, " ");
 
       for (int i = 0; i < CHARACTER_NUMBER; i++)
@@ -180,8 +186,10 @@ void init_dial() //Handle parsing and logic
         {
           if (strcmp(first_word, CharaList[i].key) == 0)
           {
-            chara_name = CharaList[i].name;
-            text_to_display = SCRPT[index].c + strlen(first_word) + 1;
+            chara_name = CharaList[i].name; 
+            text_to_display = line + strlen(first_word) + 1;
+            
+            
             // init_done = true; //what?
 
             UI_TEXTBOX_NAME_COLOR = CharaList[i].color_name;
@@ -192,7 +200,9 @@ void init_dial() //Handle parsing and logic
           else
           {
             chara_name = "";
-            text_to_display = SCRPT[index].c;
+
+            //text_to_display = SCRPT[index].c;
+            text_to_display = line;
 
             UI_TEXTBOX_NAME_COLOR = DARKGRAY;
           }

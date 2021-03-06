@@ -25,16 +25,16 @@ enum DIAL_T
 typedef struct Passage Passage;
 struct Passage
 {
-  enum DIAL_T t; //Type de passage
-  char *c;       //Content, en general le texte affiché
+  enum DIAL_T t; //Passage type
+  char *c;       //Content, in general the text to display or a command
 };
 
 typedef struct Choice Choice;
 struct Choice
 {
   char *key;
-  char *txt; //Texte du choix
-  char *jmp; //Indice du label de destination
+  char *txt; //Display text of the choice
+  char *jmp; //Label to jump to
 };
 
 //---- Flags
