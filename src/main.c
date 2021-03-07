@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <math.h>
 
+
 #include "NSTD_custom_lib.h"
 
 float time;
@@ -138,7 +139,7 @@ void UpdateMenu()
       {
         if (BTNP("A"))
         {
-          item_menu.function(item_menu.variable); //It's super hacky, but I love it
+          item_menu.function((int)item_menu.variable); //It's super hacky, but I love it
         }
         break;
       }
@@ -193,7 +194,7 @@ void UpdateMenu()
 
           choice_sel = 0;
           // cursor = 0;
-          memset(disp_text,0,sizeof(text_to_display));
+          memset(disp_text,0,sizeof(disp_text));
 
           init_dial();
         }
@@ -421,8 +422,8 @@ void updt_dial()
 
 void draw_menu()
 {
-  int logoX;
-  int logoY;
+  float logoX;
+  float logoY;
 
   logoX = screenWidth/2-UI_IMAGE.mainmenu_logo.width/2;
   logoY = screenHeight/2-UI_IMAGE.mainmenu_logo.height/2;
@@ -476,15 +477,16 @@ int main(int argc, char *argv[])
 {
   // Initialization
   //--------------------------------------------------------------------------------------
-
+  fflush(stdout);
   InitGame();
   SaveBackupTanslation();
-
-  ExportTranslation();
+  // ExportTranslation();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
   //--------------------------------------------------------------------------------------
   init_dial();
+
+  // printf("Hey !\n");
 
   // Main game loop
   while (!WindowShouldClose()) // Detect window close button or ESC key

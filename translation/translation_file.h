@@ -5,7 +5,7 @@
 //SCRPT :
 char* trans_00_script[] = {
 //START-------
-	/*[2] "Here is a [wave]BBCODE[/wave] test !"*/
+	/*[2] "Here is a [wave]BBCODE[/wave] test ! :D"*/
 	"",
 	/*[3] "Here is a [wave]BBCODE[/wave] test !
 Here is a [wave]BBCODE[/wave] test !"*/

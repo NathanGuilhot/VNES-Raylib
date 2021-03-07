@@ -1,10 +1,14 @@
 {
-    "files.associations": {
-        "typeinfo": "cpp",
-        "script_parser.h": "c",
-        "input_manager.h": "c",
-        "menudefinition.h": "c",
-        "saveload_system.h": "c",
-        "graphics_system.h": "c"
-    }
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/*.o": true,
+		"**/*.exe": true,
+	},
+	"files.associations": {
+		"*.m": "cpp"
+	}
 }

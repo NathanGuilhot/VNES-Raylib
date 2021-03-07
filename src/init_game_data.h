@@ -52,17 +52,14 @@ void loadCharacterSprites()
     CharaList[i].gotox = CharaList[i].x;
     CharaList[i].gotoy = CharaList[i].y;
 
-    char buff[1];
-
     //Load expressions
     for (int i2 = 0; i2 < MAX_EXPRESSION; i2++)
     {
-      itoa(i2 + 1, buff, 10);
-      char file_expression[32];
-      strcpy(file_expression, expression_filename);
-      strcat(file_expression, buff);
+      char file_expression[32]; 
+      strcpy(file_expression, TextFormat("%s%d",expression_filename, i2+1));
       strcat(file_expression, ".png");
-      // printf(file_expression);
+      // printf("File : %s\n",file_expression);
+      // printf("Index : %d/%d\n",i2,MAX_EXPRESSION);
       CharaList[i].expression[i2] = VN_LoadTexture(file_expression);
     }
 
@@ -138,7 +135,7 @@ void InitGame()
   InitWindow(screenWidth, screenHeight, "VNES_PC");
   VN_InitAudioDevice();
 
-  Music music_test;
+  // Music music_test;
   // music_test = VN_LoadMusicStream("./assets/audio/music/nichijou1.mp3");
   beep = VN_LoadSound("./assets/audio/sound/beep1.wav");
 

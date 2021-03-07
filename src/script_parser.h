@@ -167,15 +167,15 @@ void init_dial() //Handle parsing and logic
       //*TranslationData[i].trans_script[0]
 
       // if (strcmp(current_language, default_language)==0)
-      {
-        line = SCRPT[index].c;
-      }
+      // {
+      line = SCRPT[index].c;
+      // }
       // else
       // {
       //   line = TranslationData[language_index].trans_script[0];
       // }
-
-      strncpy(buffText, line, min(strlen(line),60));
+      
+      strncpy(buffText, line, min(strlen(line),60)); //Cause a Segmentation fault in debug build :(
 
       
       first_word = strtok(buffText, " ");

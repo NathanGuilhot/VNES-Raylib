@@ -108,12 +108,13 @@ void LOADTRANSLATION()
   translation_data translate_data_to_apply;
   if (strcmp(current_language, default_language)==0)
   {
-    strcpy(current_language,key);
+    strncpy(current_language,key,3);
     //Search the translation data for a matching key, store the index
     // language_index = 0;
     
     for (int i = 0; i < sizeof(TranslationData)/sizeof(TranslationData[0]); i++)
     {
+      printf("Key : %s",TranslationData[i].key);
       if (strcmp(key, TranslationData[i].key) == 0)
       {
         translate_data_to_apply = TranslationData[i];
@@ -122,7 +123,7 @@ void LOADTRANSLATION()
   }
   else
   {
-    strcpy(current_language,default_language);
+    strncpy(current_language,default_language,3);
 
     translate_data_to_apply = TranslationBackup;
     //Reset the SCRPT
@@ -139,7 +140,7 @@ void LOADTRANSLATION()
     {
       //replace string
       char* translate_script = translate_data_to_apply.trans_script[i_trans_script];
-      if (strcmp(translate_script,"")!=0)
+      if (translate_script != "")
       {
         SCRPT[i_script].c = translate_script;
       }
@@ -149,15 +150,16 @@ void LOADTRANSLATION()
   }
 
   //Choice
-  for (int i = 0; i < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i++)
-  {
-      char* translate_choice = translate_data_to_apply.trans_choice[i];
-      if (strcmp(translate_choice,"")!=0)
-      {
-        // ListeChoix[i].txt = translate_choice;
-        // strcpy(ListeChoix[i].txt,translate_choice);
-      }
-  }
+  // for (int i = 0; i < sizeof(ListeChoix)/sizeof(ListeChoix[0]); i++)
+  // {
+  //     char* translate_choice = translate_data_to_apply.trans_choice[i];
+  //     if (strcmp(translate_choice,"")!=0)
+  //     {
+  //       // ListeChoix[i].txt = translate_choice;
+  //       // strcpy(ListeChoix[i].txt,translate_choice);
+  //       // memset(ListeChoix[i].txt,"0",sizeof(ListeChoix[i]));
+  //     }
+  // }
 
 
   //Menu

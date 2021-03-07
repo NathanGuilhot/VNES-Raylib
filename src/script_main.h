@@ -40,7 +40,7 @@ extern Sound_list SoundList = {
 };
 
 
-UI_IMG UI_IMAGE={
+extern UI_IMG UI_IMAGE={
       .mainmenu_logo_file = "mainmenu_logo",
       .textbox_file = "textbox",
 };
@@ -48,7 +48,7 @@ UI_IMG UI_IMAGE={
 //Translation
 typedef struct translation_data
 {
-      char* key;
+      char key[3];
       char** trans_script;
       char** trans_choice;
       char** trans_characters;
@@ -75,7 +75,7 @@ Passage SCRPT[] = {
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
 
       {MUSIC,"play"},
-      {N, "Here is a [wave]BBCODE[/wave] test !"},
+      {N, "Here is a [wave]BBCODE[/wave] test ! :D"},
       {N, "Here is a [wave]BBCODE[/wave] test !\nHere is a [wave]BBCODE[/wave] test !"},
       {N, "~Whoooaaa~, this *effect* looks __**so cool**__ !"},
       {N, "Tu trouves enfin **la pers*onne\nque tu** cherch*ais."},
@@ -1274,9 +1274,8 @@ Passage SCRPT[] = {
   {N, "Ange s'est deconnecte"}
 };
 
-Choice ListeChoix[]= {
+extern Choice ListeChoix[]= {
   {"back_start","Retour au début","START"},
-
 
   {"deep_conversation","Oui ca va! Et toi?","cava"},
   {"excuse_retard","Desole du retard","retard"},
