@@ -308,7 +308,7 @@ void DrawUI(int pCursor){
   }
 };
 
-int GetVisibleChoiceNumber(pPage){
+int GetVisibleChoiceNumber(int pPage){
   static int count;
   count = 0;
 

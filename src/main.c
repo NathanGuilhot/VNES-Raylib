@@ -36,22 +36,22 @@ enum GAME_STATE
   DIAL,
   END
 };
-enum GAME_STATE game_st = MAIN_MENU;
+enum GAME_STATE game_st = DIAL;
 
 //-----Variables utiles
 
-unsigned int index = 0; //index //We absolutlty need to change the name before porting
+unsigned int index = 3; //index //We absolutlty need to change the name before porting
 float timer_typing; //Used (this is global to be used in UpdateMenu(), It might change later)
 
-char disp_text[144]; //Current text being displayed
+char disp_text[256]; //Current text being displayed
 
 
 int choice_sel;
 int nb_choice;
-char *text_to_display; //Text to be displayed
+char text_to_display[256]; //Text to be displayed
 
 char *chara_name = "Character Name";
-char buffText[64];
+char buffText[256];
 char *first_word; //TODO:Replace by all of them by a char* array Word[]
 char *second_word;
 char *third_word;
@@ -346,7 +346,7 @@ void updt_dial()
           {
           if (current_char == '[')
           {
-            //TODO: Test if it crash when a bracket isn't closed
+            // //TODO: Test if it crash when a bracket isn't closed
             int i_displacement;
             for (i_displacement = cursor; i_displacement < strlen(text_to_display); i_displacement++)
             {
@@ -371,7 +371,7 @@ void updt_dial()
           }
         }
       }
-      strncpy(&disp_text, text_to_display, cursor);
+      strncpy(disp_text, text_to_display, cursor);
     }
   }
 
@@ -472,6 +472,32 @@ void updt_end()
   }
 }
 
+void draw_splash()
+{
+  char* splash_screen_string = "NIGHTEN";
+  float font_size = 20+time*4;
+  VN_DrawText(splash_screen_string,
+  screenWidth/2-VN_MeasureText(splash_screen_string, font_size)/2,
+  screenHeight/2-font_size/2, font_size, (Color){0,0,0,0+time*4});
+}
+
+void updt_splash()
+{
+  time += GetFrameTime();
+
+  if (time>2)
+  {
+    // game_st = MAIN_MENU;
+    index = 0;
+  }
+
+  if (BTNP("A"))
+  {
+    game_st = MAIN_MENU;
+    index = 0;
+  }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -518,8 +544,13 @@ int main(int argc, char *argv[])
     }
     case END:
     {
-      
       updt_end();
+
+      break;
+    }
+    case SPLASH_SCREEN:
+    {
+      updt_splash();
 
       break;
     }
@@ -545,6 +576,12 @@ int main(int argc, char *argv[])
     case END:
     {
       draw_end();
+
+      break;
+    }
+    case SPLASH_SCREEN:
+    {
+      draw_splash();
 
       break;
     }

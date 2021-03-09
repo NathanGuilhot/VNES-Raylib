@@ -30,7 +30,6 @@ bool SAVEGAME(){
     - CharaList (especially: bool visible, int x, int y, int zindex, int expression_index)
     And... that's it?    
     */
-   char* save_data;
 
    SaveFileOpen = fopen(save_file_path, "w");
     //    fprintf(SaveFileOpen, "Bonjour !\n");

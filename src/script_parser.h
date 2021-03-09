@@ -187,7 +187,8 @@ void init_dial() //Handle parsing and logic
           if (strcmp(first_word, CharaList[i].key) == 0)
           {
             chara_name = CharaList[i].name; 
-            text_to_display = line + strlen(first_word) + 1;
+            // text_to_display = line + strlen(first_word) + 1;
+            strcpy(text_to_display, line + strlen(first_word) + 1);
             
             
             // init_done = true; //what?
@@ -202,7 +203,9 @@ void init_dial() //Handle parsing and logic
             chara_name = "";
 
             //text_to_display = SCRPT[index].c;
-            text_to_display = line;
+            // text_to_display = line;
+            strcpy(text_to_display, line);
+
 
             UI_TEXTBOX_NAME_COLOR = DARKGRAY;
           }

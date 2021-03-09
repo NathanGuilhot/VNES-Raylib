@@ -75,8 +75,8 @@ Passage SCRPT[] = {
       // {N, "Rythme par le son de la mer,\ntu avances sur le sable."},
 
       {MUSIC,"play"},
-      {N, "Here is a [wave]BBCODE[/wave] test ! :D"},
-      {N, "Here is a [wave]BBCODE[/wave] test !\nHere is a [wave]BBCODE[/wave] test !"},
+      {N, "Here is a [color=#F60000]BBCODE[/color] test !"},
+      {N, "Hey look ! ~[b][color=#F60000]C[color=#FF8C00]O[color=#FFEE00]L[color=#4DE94C]O[color=#3783FF]R[color=#4815AA]S[/color][/b]~ ! :D"},
       {N, "~Whoooaaa~, this *effect* looks __**so cool**__ !"},
       {N, "Tu trouves enfin **la pers*onne\nque tu** cherch*ais."},
       

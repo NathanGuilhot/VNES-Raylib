@@ -40,10 +40,25 @@ Font Text_font_bolditalic;
 
 typedef enum BBCODE_COMMAND
 {
+    //Style
+    BOLD_ON,
+    BOLD_OFF,
+    ITAL_ON,
+    ITAL_OFF,
+    UNDERL_ON,
+    UNDERL_OFF,
+    CROSS_ON,
+    CROSS_OFF,
+
+    //Color
+    COLOR_ON,
+    COLOR_OFF,
+
+    //Animation
     WAVE_ON,
     WAVE_OFF,
 } BBCODE_COMMAND;
-// typedef enum BBCODE_COMMAND BBCODE_COMMAND;
+
 
 //----- Load
 
@@ -68,23 +83,83 @@ void VN_UnloadFont(Font font){
 
 //----- Draw
 
-//TODO: Change the return value to a struct (so we can pass parameters along side the command)
-BBCODE_COMMAND BBCODE_PARSER(const char *bbcode)
+typedef struct BBCODE_RETURN
 {
-    // playSomeSound();
-    // DrawText(bbcode,300,200,20,BLACK);
-    
-    //Do a parse strtok to check the first word
-    // strtok(bbcode_copy, " ");
+    BBCODE_COMMAND COMMAND;
+    Color color;
 
-    if (strcmp(bbcode,"wave")==0)
+} BBCODE_RETURN;
+
+//Input "#rrggbb", get Color
+Color ColorFromHexa(char* pHexa)
+{
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+    r,g,b,a = 255;
+
+    char red_str[3], green_str[3], blue_str[3];
+
+    sscanf(pHexa, "#%2s%2s%2s",red_str, green_str, blue_str);
+    r = (int)strtol(red_str,NULL,16);
+    g = (int)strtol(green_str,NULL,16);
+    b = (int)strtol(blue_str,NULL,16);
+
+    return (Color){r, g, b, a}; //Todo: Maybe return values for keywords ? (blue, red, cyan...)
+}
+
+
+
+BBCODE_RETURN BBCODE_PARSER(const char *bbcode)
+{
+    //Basic formating
+    if (strcmp(bbcode,"b")==0)
+        return (BBCODE_RETURN){BOLD_ON};
+    else if (strcmp(bbcode,"/b")==0)
+        return (BBCODE_RETURN){BOLD_OFF};
+    else if (strcmp(bbcode,"i")==0)
+        return (BBCODE_RETURN){ITAL_ON};
+    else if (strcmp(bbcode,"/i")==0)
+        return (BBCODE_RETURN){ITAL_OFF};
+    else if (strcmp(bbcode,"u")==0)
+        return (BBCODE_RETURN){UNDERL_ON};
+    else if (strcmp(bbcode,"/u")==0)
+        return (BBCODE_RETURN){UNDERL_OFF};
+    else if (strcmp(bbcode,"s")==0)
+        return (BBCODE_RETURN){CROSS_ON};
+    else if (strcmp(bbcode,"/s")==0)
+        return (BBCODE_RETURN){CROSS_OFF};
+
+    //From here, we probably need to parse the input
+
+    //color
+    else
     {
-        return WAVE_ON;
+        char main_code[6];
+        char first_argument[8];
+        sscanf(bbcode,"%[^ =]=%s",&main_code,&first_argument);
+        printf("Value : %s\n",main_code);
+        if (strcmp(main_code,"color")==0)
+        {
+            return (BBCODE_RETURN){COLOR_ON, ColorFromHexa(first_argument)};
+        }
+        else if (strcmp(main_code,"/color")==0)
+            return (BBCODE_RETURN){COLOR_OFF};
+        
+        //Animation
+        else if (strcmp(main_code,"wave")==0)
+            return (BBCODE_RETURN){WAVE_ON};
+        else if (strcmp(main_code,"/wave")==0)
+            return (BBCODE_RETURN){WAVE_OFF};
+        else
+        {
+            return (BBCODE_RETURN){BOLD_OFF};
+        }
+        
     }
-    else if (strcmp(bbcode,"/wave")==0)
-    {
-        return WAVE_OFF;
-    }
+    
+    
 
 }
 
@@ -110,9 +185,10 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
     //Style flags
     bool flag_bold = false;
     bool flag_italic = false;
-    bool flag_wave = false;
     bool flag_crossed = false;
     bool flag_underline = false;
+    bool flag_wave = false;
+
 
     float wave_x_range_default = 1;
     float wave_y_range_default = 2;
@@ -129,6 +205,10 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
     float wave_y_offset = wave_y_offset_default;
 
     Color default_color = color;
+    // Color current_color = default_color;
+
+    printf("disp_text : %s, l: %d \n",text, length);
+
     
 
     for (int i = 0; i < length;)
@@ -183,40 +263,83 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
             codepointByteCount += 1;
 
         }
+        // else if (false) 
         else if (codepoint == '[') 
         {
             //BBCODE PARSER
-            char bbcode_cmd[64];
-            // bbcode_cmd = text + i +1;//strcpy(bbcode_cmd, text);
-            strcpy(bbcode_cmd, text + i +1);
-            // bbcode_cmd += i;
-
+            char bbcode_cmd[128];
+            
+            strncpy(bbcode_cmd, text + i +1, sizeof(bbcode_cmd));
+            
             int i_bis;
-            i_bis = i;
-            for (i_bis; i<length; i_bis++){
-                if (GetNextCodepoint(&text[i_bis], &codepointByteCount) == ']'){
+
+            for (i_bis=i; i_bis<length; i_bis++)
+            {
+                if (GetNextCodepoint(&text[i_bis], &codepointByteCount) == ']')
+                {
                     //We closed the BBCODE
                     bbcode_cmd[i_bis - i-1] = '\0';
 
-                    BBCODE_COMMAND bbcode_return;
+                    BBCODE_RETURN bbcode_return;
                     bbcode_return = BBCODE_PARSER(bbcode_cmd);
 
-                    switch (bbcode_return)
+                    switch (bbcode_return.COMMAND)
                     {
+                    //Style
+                    case BOLD_ON:
+                        flag_bold = true;
+                        break;
+                    case BOLD_OFF:
+                        flag_bold = false;
+                        break;
+
+                    case ITAL_ON:
+                        flag_italic = true;
+                        break;
+                    case ITAL_OFF:
+                        flag_italic = false;
+                        break;
+
+                    case UNDERL_ON:
+                        flag_underline = true;
+                        break;
+                    case UNDERL_OFF:
+                        flag_underline = false;
+                        break;
+
+                    case CROSS_ON:
+                        flag_crossed = true;
+                        break;
+                    case CROSS_OFF:
+                        flag_crossed = false;
+                        break;
+
+                    //Color
+                    case COLOR_ON:
+                        color = bbcode_return.color;
+                        break;
+                    case COLOR_OFF:
+                        color = default_color;
+                        break;
+
+                    //Animation
                     case WAVE_ON:
                         flag_wave = true;
                         break;
-                    
                     case WAVE_OFF:
                         flag_wave = false;
-
                         break;
                     }
+
+                    if (flag_bold && flag_italic) font = Text_font_bolditalic;
+                    else if (flag_bold)font = Text_font_bold;
+                    else if (flag_italic) font = Text_font_italic;
+                    else font = Text_font;
 
                     break;
                 }
             }
-            codepointByteCount += i_bis - i;
+            codepointByteCount += i_bis - i ;
             
         }
         else

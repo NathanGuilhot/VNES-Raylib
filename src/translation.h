@@ -8,7 +8,7 @@ void SaveBackupTanslation()
   //I don't really know how yet but we'll figure it out eventually
 
   //Script
-  char* trans_backup_script[sizeof(TranslationData[0].trans_script)/sizeof(TranslationData[0].trans_script[0])] = {};
+  char* trans_backup_script[sizeof(*TranslationData[0].trans_script)/sizeof(TranslationData[0].trans_script[0])] = {};
   int i_trans_script = 0;
   for (int i = 0; i < sizeof(SCRPT)/sizeof(SCRPT[0]); i++)
   {
@@ -105,7 +105,7 @@ void ExportTranslation() //TODO: add a function to escape some characters (\n,\t
 void LOADTRANSLATION()
 {
   char key[3] = "eng";
-  translation_data translate_data_to_apply;
+  translation_data translate_data_to_apply = (translation_data){"aaa",0,0,0,0};
   if (strcmp(current_language, default_language)==0)
   {
     strncpy(current_language,key,3);
@@ -118,6 +118,7 @@ void LOADTRANSLATION()
       if (strcmp(key, TranslationData[i].key) == 0)
       {
         translate_data_to_apply = TranslationData[i];
+        // memcpy(&translate_data_to_apply,&TranslationData[i],sizeof(translation_data));
       }
     }
   }
