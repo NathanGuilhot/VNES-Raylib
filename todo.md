@@ -27,7 +27,7 @@
   - [x] ~~crossed~~
   - [x] __Underline__
   - [x] ~Wave~
-  - [ ] More ? (animation, colors, basic emojis... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
+  - [x] More ? (animation, colors, basic emojis... the sky is the limit) -> which format ? [BBCode] (to steal from Godot) ? {Ren'Py} (for easier conversion) ? 🤔
     - [ ] Have a better parser system
 - [x] Avoid cursor stutter when parsing the text
 

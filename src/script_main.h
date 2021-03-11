@@ -11,38 +11,39 @@
 #include "SCRPT_DEFS.h"
 
 
-extern CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
+CHARA CharaList[CHARACTER_NUMBER] = { //This is a bad idea but that work for now //Or is it ?
       {.key="A", .name="Ange", .image_name="ange", .color_name=DARKBLUE},
       {.key="B", .name="Bange", .image_name="ange"},
 
 };
 
-extern BACKGROUND Background = {
+BACKGROUND Background = {
       .images={ /*Only PNG for now*/
             "bg_rose","bg_rouge" 
       }
 };
 
-extern FLAGS FlagList[FLAGS_NUMBER] = {
+FLAGS FlagList[FLAGS_NUMBER] = {
       {.key="LOVE", .value=0}
 };
 
-extern Music_list MusicList = {
+Music_list MusicList = {
       .music_name = {
             "nichijou1","nichijou2" //TODO: being able to specify the file extension (optionnal argument)
       }
 };
 
-extern Sound_list SoundList = {
+Sound_list SoundList = {
       .sound_name = {
             "beep1"
       }
 };
 
 
-extern UI_IMG UI_IMAGE={
+UI_IMG UI_IMAGE={
       .mainmenu_logo_file = "mainmenu_logo",
       .textbox_file = "textbox",
+      .splash_file = "LogoNighten",
 };
 
 //Translation

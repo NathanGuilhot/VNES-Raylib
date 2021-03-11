@@ -36,7 +36,7 @@ enum GAME_STATE
   DIAL,
   END
 };
-enum GAME_STATE game_st = DIAL;
+enum GAME_STATE game_st = SPLASH_SCREEN;
 
 //-----Variables utiles
 
@@ -428,7 +428,7 @@ void draw_menu()
   logoX = screenWidth/2-UI_IMAGE.mainmenu_logo.width/2;
   logoY = screenHeight/2-UI_IMAGE.mainmenu_logo.height/2;
   
-  VN_DrawTexture(UI_IMAGE.mainmenu_logo,logoX,logoY+sin(time)*10, WHITE);
+  VN_DrawTexture(UI_IMAGE.mainmenu_logo,logoX,logoY+sin(time)*10, (Color){255,255,255,min(time*40,255)});
   
   char *IntroMenuText = "PRESS A TO START";
   if (ListMenuPage[main_menu_index].visible==false)
@@ -474,27 +474,19 @@ void updt_end()
 
 void draw_splash()
 {
-  char* splash_screen_string = "NIGHTEN";
-  float font_size = 20+time*4;
-  VN_DrawText(splash_screen_string,
-  screenWidth/2-VN_MeasureText(splash_screen_string, font_size)/2,
-  screenHeight/2-font_size/2, font_size, (Color){0,0,0,0+time*4});
+
+  VN_DrawTexture(UI_IMAGE.splash,
+  screenWidth/2-UI_IMAGE.splash.width/2, screenHeight/2-UI_IMAGE.splash.height/2,
+  (Color){255,255,255,min(time*80,255)});
 }
 
 void updt_splash()
 {
-  time += GetFrameTime();
-
-  if (time>2)
-  {
-    // game_st = MAIN_MENU;
-    index = 0;
-  }
-
-  if (BTNP("A"))
+  if (time>3 || BTNP("A"))
   {
     game_st = MAIN_MENU;
     index = 0;
+    time = 0;
   }
 }
 
@@ -617,6 +609,13 @@ int main(int argc, char *argv[])
   for (int i = 0; i < MAX_BACKGROUND; i++)
   {
     VN_UnloadTexture(Background.texture[i]);
+  }
+
+  //UI
+  {
+    VN_UnloadTexture(UI_IMAGE.ctc);
+    VN_UnloadTexture(UI_IMAGE.textbox);
+    VN_UnloadTexture(UI_IMAGE.splash);
   }
 
   //Sound/Musics

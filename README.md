@@ -20,6 +20,7 @@ This repo is a port of [the original VNES](https://github.com/NightenDushi/VNES_
 - Basic Save/Load system
 - Backgrounds *(finally)*
 - Music and sound system *(hell yeah)*
+- Basic Markdown and BBCode support 😎
 
 ## ▲PLAИИED
 

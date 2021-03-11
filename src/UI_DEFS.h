@@ -1,6 +1,4 @@
-//UI variable (should be int or define ?)
-#define screenWidth 800
-#define screenHeight 450
+//UI DEFINITION
 
 enum MENU_ITEM_TYPE
 {
@@ -59,9 +57,11 @@ typedef struct UI_IMG
   char* mainmenu_logo_file;
   char* textbox_file;
   char* ctc_file;
+  char* splash_file;
   Texture2D textbox;
   Texture2D mainmenu_logo;
   Texture2D ctc;
+  Texture2D splash;
 
   Color ctc_color;
 } UI_IMG;
@@ -70,14 +70,14 @@ UI_IMG UI_IMAGE;
 
 void loadUI_Texture()
 {
-  char filename[32] = "./assets/img/";
+  char filename[64] = "./assets/img/";
   strcat(filename, UI_IMAGE.textbox_file);
   strcat(filename, ".png");
 
-  UI_IMAGE.textbox = VN_LoadTexture("./assets/img/textbox.png");
+  UI_IMAGE.textbox = VN_LoadTexture(filename);
   // UI_IMAGE.mainmenu_logo_name = "mainmenu_logo";
 
-  strcpy(filename, "./assets/img/");
+  strncpy(filename, "./assets/img/", sizeof(filename)-1);
   strcat(filename, UI_IMAGE.mainmenu_logo_file);
   strcat(filename, ".png");
 
@@ -85,13 +85,19 @@ void loadUI_Texture()
 
   UI_IMAGE.ctc_file = "ctc";
 
-  strcpy(filename, "./assets/img/");
+  strncpy(filename, "./assets/img/", sizeof(filename)-1);
   strcat(filename, UI_IMAGE.ctc_file);
   strcat(filename, ".png");
 
   UI_IMAGE.ctc = VN_LoadTexture(filename);
   // UI_IMAGE.ctc = VN_LoadTexture("./assets/img/ctc.png");
   UI_IMAGE.ctc_color = WHITE;
+
+  strncpy(filename, "./assets/img/", sizeof(filename)-1);
+  strcat(filename, UI_IMAGE.splash_file);
+  strcat(filename, ".png");
+
+  UI_IMAGE.splash = VN_LoadTexture(filename);
   
 }
 

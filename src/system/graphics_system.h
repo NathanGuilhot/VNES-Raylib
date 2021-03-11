@@ -1,6 +1,10 @@
 //Graphics System 
 //This is the file to update when changing graphics API
 
+//UI variable (should be int or define ?)
+#define screenWidth 800
+#define screenHeight 450
+
 ////// ------------ RAYLIB
 
 //----- Struct/type
@@ -209,7 +213,6 @@ void VN_DrawText(const char *text, int posX, int posY, float fontSize, Color col
 
     printf("disp_text : %s, l: %d \n",text, length);
 
-    
 
     for (int i = 0; i < length;)
     {
